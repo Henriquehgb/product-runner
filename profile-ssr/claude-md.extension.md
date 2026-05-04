@@ -71,14 +71,14 @@ npm run format                    # formatar tudo
 - Validar com `Schema.safeParse()`.
 - Chamar o service e retornar o resultado.
 - Sem lógica de negócio.
-- Detalhe em `docs/api-patterns.md`.
+- Detalhe em [[api-patterns]].
 
 #### UI
 - Componentes shadcn/ui como base (gerados via CLI).
 - Tailwind utility classes — sem CSS modules.
 - Formulários com React Hook Form + Zod resolver.
 - **Responsividade mobile validada em todo componente novo** (M4 — ver
-  `docs/ui-patterns.md`).
+  [[ui-patterns]]).
 - Considerar skill `ui-design-system` em revisões de componente.
 
 #### Validação visual no browser

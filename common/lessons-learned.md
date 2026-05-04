@@ -218,7 +218,7 @@ Complementam ou refinam as lições do DocManager.
 ## Etapa 9 — LLM como executor
 
 ### Princípios técnicos vs princípios LLM-first vs valores
-**Quando se aplica:** ao escrever `design-principles.md`.
+**Quando se aplica:** ao escrever [[design-principles]].
 **Por que importa:** tratar tudo como "princípios" mistura regras
 acionáveis com filosofia. Separação em 3 categorias:
 - **Técnicos** (4): regras universais de arquitetura.

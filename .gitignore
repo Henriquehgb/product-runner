@@ -1,0 +1,10 @@
+# Obsidian — config de UI muda toda hora, gera ruído nos diffs.
+# Mantém os outros (.obsidian/app.json, graph.json) que são config compartilhável.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/community-plugins.json
+
+# OS
+.DS_Store
+Thumbs.db

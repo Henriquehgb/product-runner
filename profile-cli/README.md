@@ -13,8 +13,8 @@ Use este perfil em projetos que:
 
 | Arquivo | Pra quê |
 |---|---|
-| `code-patterns.md` | Estrutura de pastas, schemas Zod, port/adapter pra integrações, padrões de erro, persistência |
-| `claude-md.extension.md` | Seções específicas pra CLI (comandos `npm run`, configuração `.env`, observability via arquivos) |
+| [[profile-cli/code-patterns\|code-patterns]] | Estrutura de pastas, schemas Zod, port/adapter pra integrações, padrões de erro, persistência |
+| [[profile-cli/claude-md.extension\|claude-md.extension]] | Seções específicas pra CLI (comandos `npm run`, configuração `.env`, observability via arquivos) |
 
 ## Como combinar com `common/`
 

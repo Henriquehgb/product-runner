@@ -13,7 +13,7 @@
 - **Formatter:** Prettier + lint-staged + husky (desde dia zero)
 - {Outras deps específicas do projeto}
 
-Detalhes do perfil em `claude-md.extension.md` mesclado.
+Detalhes do perfil em `claude-md.extension.md` mesclado (do `profile-{cli|ssr}/` correspondente).
 
 ## Arquitetura
 
@@ -35,13 +35,11 @@ pra estrutura recomendada.}
 
 Antes de implementar uma spec, consultar o doc relevante:
 
-- [`docs/design-principles.md`](docs/design-principles.md) — princípios
-  técnicos, princípios LLM-first, valores
-- [`docs/code-patterns.md`](docs/code-patterns.md) — schemas Zod,
-  services, padrões de código
-- [`docs/spec-guide.md`](docs/spec-guide.md) — como ler, escrever
-  e implementar specs (inclui critérios meta M1, M2, M3)
-- {Outros docs do perfil — api-patterns.md / ui-patterns.md no SSR}
+- [[design-principles]] — princípios técnicos, princípios LLM-first, valores
+- [[code-patterns]] — schemas Zod, services, padrões de código
+- [[spec-guide]] — como ler, escrever e implementar specs
+  (inclui critérios meta M1, M2, M3)
+- {Outros docs do perfil — [[api-patterns]] / [[ui-patterns]] no SSR}
 
 ## Padrão de dados
 
@@ -49,7 +47,7 @@ Zod entity como raiz. Tipos derivam via `z.infer`. Validação na
 fronteira (boot, resposta de I/O externo, leitura de arquivo).
 Dentro dos services, dados são tipados e confiáveis.
 
-Detalhes em `docs/code-patterns.md`.
+Detalhes em [[code-patterns]].
 
 ## Convenções de código
 
@@ -126,7 +124,7 @@ da implementação.
 - **Mudanças adjacentes vão pra outra spec.** Bug ou refactor tentador
   observado durante implementação não entra na spec atual. Anotar
   em "Decisões de implementação", abrir spec separada se relevante.
-  Detalhe em `docs/spec-guide.md`.
+  Detalhe em [[spec-guide]].
 - **Leitura consolidada de arquivos grandes.** Antes de fazer
   múltiplos `Read` do mesmo arquivo com offsets diferentes, considerar
   1 leitura com `limit` alto (ex: `limit: 2000` cobre arquivos até
@@ -135,7 +133,7 @@ da implementação.
 - **Decisões de implementação são obrigatórias.** Toda spec implementada
   termina com essa seção preenchida — escolhas, divergências, tentações
   não feitas. Sem isso, spec está incompleta. Reforçado pelo critério
-  meta **M1** (ver `docs/spec-guide.md`).
+  meta **M1** (ver [[spec-guide]]).
 
 ### Fixes diretos (sem spec)
 
@@ -159,7 +157,7 @@ parêntese, condição invertida, ajuste de mensagem), fix direto.
 
 ## Estado do refactor / desenvolvimento
 
-Roadmap completo em [`specs/_overview.md`](specs/_overview.md).
+Roadmap completo em [[_overview]].
 
 | #   | Spec                        | Status                     |
 | --- | --------------------------- | -------------------------- |

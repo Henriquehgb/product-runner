@@ -41,7 +41,7 @@ cp -r ~/Developer/templates/profile-ssr/* docs/   # ou profile-cli/
 # 4. git init + primeira spec setup/00
 ```
 
-Detalhes em `common/spec-guide.md`.
+Detalhes em [[spec-guide]].
 
 ## Como evolui
 
@@ -78,6 +78,6 @@ pra `~/Developer/templates/`), não enquanto você está implementando
 spec de outro projeto. Senão acumula churn entre o template e o
 projeto real, e fica difícil saber qual é fonte da verdade.
 
-Exceção: anotação rápida de aprendizado em `lessons-learned.md` ou
-em `_candidates-for-extraction.md` — pode ser feita inline no
+Exceção: anotação rápida de aprendizado em [[lessons-learned]] ou
+em [[_candidates-for-extraction]] — pode ser feita inline no
 projeto, mas a refatoração do template formal vem em sessão própria.
