@@ -344,3 +344,79 @@ violam "fases verticais entregam valor".
 *Lições adicionais extraídas do tradeBot. Padrão: cada lição tem
 contexto, "quando se aplica", "por que importa" — não é máxima
 abstrata.*
+
+---
+
+# Lições adicionais — projeto painel (2026-06)
+
+Aprendizados do **trade-bot-painel**, o 3º projeto. Aqui o **pipeline de
+agentes** ([[pipeline]]) rodou de ponta a ponta pela 1ª vez (conceituação →
+documentação funcional → geração de spec → implementação) no Incremento 1.
+
+## Etapa 11 — Pipeline de agentes (conceituação → spec)
+
+### Separar conceituação de geração de spec paga
+**Quando se aplica:** projeto novo de produto, não mudança pequena.
+**Por que importa:** a conceituação (`agente-conceituacao`) produz um LDoc
+estável (dor, casos de uso, roadmap de incrementos, DER amplo) que vira
+fonte de verdade; o gerador (`agente-gerador-spec`) só **recorta e
+redistribui** isso em specs verticais. Não inventar na geração — se está
+escrevendo do zero algo que já está no LDoc, o corte está errado.
+
+### LDoc é fonte da verdade; HDoc deriva estrito
+**Quando se aplica:** qualquer artefato de documentação do pipeline.
+**Por que importa:** o `.md` para LLM (LDoc) é editado; o doc humano (HDoc)
+é sempre regerado dele, nunca editado à mão. Tutorial e exemplos moram no
+LDoc (não só no HDoc) — servem ao gerador de spec como referência de
+comportamento. Evita duas fontes divergindo.
+
+### Protocolo de gates > regra de gate em prosa
+**Quando se aplica:** qualquer ponto de confirmação humana num agente.
+**Por que importa:** os agentes "declaravam rigor e cediam a um ok genérico"
+em ponto de alto risco. Externalizar para [[protocolo-de-gates]] (alto
+risco = lista numerada, "ok" genérico não fecha, valores verificáveis =
+alto risco automático) é o mesmo aprendizado dos critérios meta — checklist
+binário vence atenção. Limite honesto: mais forte que prosa, não à prova
+de falha.
+
+### Roadmap por incremento, estável mas não congelado
+**Quando se aplica:** projeto que entrega em fatias de produto.
+**Por que importa:** detalhar só o Incremento 1 em alta resolução e manter
+os demais em baixa (nome + valor + UCs) evita compromisso prematuro. O
+re-entry (detalhar o próximo incremento) inclui um checkpoint "o macro
+ainda vale?" — captura aprendizado sem repetir o diálogo macro.
+
+### Schema frouxo ≠ dado ausente
+**Quando se aplica:** ao cortar/justificar spec a partir de schemas.
+**Por que importa:** `z.array(z.unknown())` significa "forma ainda não
+tipada", não "o dado é vazio". No painel, `buyStack`/`sellStack` estavam
+`z.unknown()` (vazios na amostra) — quando o dado real apareceu, o shape
+foi determinado e as specs `monitor/01` e `03` tiparam. Tratar forma do
+schema como forma, nunca como evidência sobre presença/conteúdo do dado.
+
+### Confronto com dado real reconcilia o DER amplo
+**Quando se aplica:** geração de spec quando há exemplo real do dado.
+**Por que importa:** o DER amplo (raso, por decisão) supôs `orderId` como
+`string`; o JSON real tinha `number`. As specs corrigiram (fonte de verdade
+= dado real) e registraram a divergência pra reconciliação a jusante. Não
+infira a forma do dado da conceituação quando há o dado na mão.
+
+### Docs de orientação descasam do roadmap real — reconciliar cedo
+**Quando se aplica:** quando o pipeline reorganiza o trabalho (ex.: de
+domínio `tradebot/` para incremento `monitor/`).
+**Por que importa:** `_overview`, `CLAUDE.md` (tabela de estado) e o doc de
+entrada passam a mentir sobre "qual a próxima spec". A spec em si é
+autocontida (não bloqueia), mas o roadmap desatualizado confunde. Issue de
+roadmap precisa de candidato e fechamento, igual bug.
+
+### Briefing congelado precisa de nota, não de reescrita
+**Quando se aplica:** quando um snapshot canônico (ex.: `Kickoff.md`) fica
+obsoleto.
+**Por que importa:** reescrever um doc deliberadamente congelado apaga
+história e contradiz a decisão de congelá-lo. Uma nota no topo apontando o
+roadmap vigente resolve a confusão sem perder o snapshot.
+
+---
+
+*Lições do painel. O pipeline de agentes teve aqui sua 1ª validação real —
+tratar como método vivo, não consolidado, até acumular mais runs.*

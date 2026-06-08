@@ -498,6 +498,50 @@ templates/
 
 ---
 
+## 2026-06 — painel: pipeline de agentes validado (3º projeto)
+
+O **trade-bot-painel** é o 3º projeto — o gatilho que estava marcado em
+"Não criar templates separados por perfil ainda" (aguardava o 3º pra
+extração honesta). Vários "A acompanhar" agora têm dado.
+
+### Hipóteses confirmadas pelo painel
+
+- **3 categorias de princípios seguram no SSR.** A divisão técnicos/
+  LLM-first/valores (criada no tradeBot) foi aplicada no painel sem atrito.
+  → Confirmada; é princípio estável.
+- **Critérios meta M1-M4 funcionam em SSR.** M1-M3 mais M4 (responsivo)
+  referenciados nas specs de UI. → Padrão portável.
+- **Padrão port/adapter replica em projeto com I/O diferente.** No painel
+  virou `BotDataReader`/`BotDataWriter` (lê/escreve os JSONs do bot) — o
+  mesmo padrão do `BrokerClient`, sem Binance. → Confirma a previsão da
+  nota "adaptação CLI → SSR".
+- **`outDir` separado desde o início evitou o bug recorrente.** A previsão
+  ("quando montar painel SSR, considerar `outDir` separado") foi aplicada
+  no `setup/01` e fechou a issue de stale `.js` de saída. → Validada.
+
+### Padrão novo extraído: pipeline de agentes (→ promovido a `common/`)
+
+Surgiu no painel e foi promovido a template (`common/agents/` +
+`common/pipeline.md`): conceituação → documentação funcional → geração de
+spec, com protocolo de gates compartilhado. Detalhe e limites em
+[[pipeline]] e [[lessons-learned]] (Etapa 11). **A acompanhar:** rodar em
+um 4º projeto (não-trading, idealmente) pra confirmar que as diretivas dos
+agentes não carregam viés do domínio do painel.
+
+### Candidatos ainda em aberto (decisões do plano de merge não tomadas)
+
+- **`project-kickoff` (skill, gen 0) ↔ pipeline.** O discovery do kickoff
+  (build-vs-buy, orçamento, "o que o framework não faz") não está nos
+  agentes. Decidir se o kickoff vira a porta de entrada que delega ao
+  pipeline, ou se o discovery entra como Fase 0 da conceituação. (§3.8 do
+  plano — adiado.)
+- **Conteúdo perdido da gen 0:** princípios "o que a máquina escreveu é
+  sagrado" e "booleanos independentes > enum composto", e as seções
+  `## Service functions`/`## API routes`/`## UI` do template de spec antigo.
+  Recuperar ou confirmar descarte. (§3.9 — adiado.)
+
+---
+
 ## A acompanhar (espaços abertos pra próximas seções)
 
 Itens que vão preencher conforme tradeBot evolui:
