@@ -1,6 +1,14 @@
 # Spec guide
 
-Como ler, escrever e implementar specs neste projeto.
+Como ler, escrever e implementar specs neste projeto. Este guia é a
+**referência de formato e critérios** da spec: o template, os critérios
+meta, a granularidade, as regras de implementação e o review.
+
+A **geração** das specs (cortar um incremento conceituado em N specs
+verticais) é o [[agente-gerador-spec]], que consome este guia e o preenche
+a partir dos artefatos a montante — ver [[pipeline]]. Para mudanças
+pequenas ou projetos sem conceituação formal, escreva a spec direto neste
+template (o pipeline inteiro não é obrigatório — ver "Fixes vs specs").
 
 ---
 
@@ -104,6 +112,15 @@ e neste guia foram observadas como insuficientes — Claude Code
 lê uma vez e tende a esquecer durante a sessão. Critério binário
 em checklist vence atenção.
 
+> **Relação com os gates.** M1-M3 são a **aplicação à etapa de spec** do
+> mesmo princípio do [[protocolo-de-gates]] (fonte canônica de gate e
+> calibragem por stakes): checklist binário vence atenção textual. O
+> protocolo governa os gates dos estágios a montante (conceituação,
+> doc-funcional, geração); M1-M3 governam o fechamento da implementação.
+> Em specs de UI, aplica-se também **M4** (responsividade — detalhe em
+> `ui-patterns.md` do perfil SSR). Specs referenciam por nome:
+> "aplicam-se M1, M2, M3" (e M4 quando houver UI).
+
 ### M1 — Decisões de implementação preenchidas
 
 - [ ] A seção `## Decisões de implementação` da spec contém ao
@@ -186,15 +203,20 @@ spec usar.
 
 ## Workflow
 
+Este é o **trecho de implementação** do método (spec→implementa→review).
+Quando o projeto passa pelo pipeline completo, a "escrita da spec" é o
+[[agente-gerador-spec]] cortando o incremento conceituado — ver [[pipeline]].
+Em mudança pequena, a spec é escrita direto neste template.
+
 ### Quem faz o quê
 
-| Etapa                     | Onde                       | Quem                    |
-| ------------------------- | -------------------------- | ----------------------- |
-| Análise, gap, decisão     | Cowork (esta sessão)       | LLM + você              |
-| Escrita da spec           | Cowork                     | LLM (com validação sua) |
-| Implementação             | Claude Code (outra sessão) | LLM em sessão dedicada  |
-| Review                    | Cowork (volta aqui)        | LLM + você              |
-| Decisões de implementação | Cowork (review preenche)   | LLM + você              |
+| Etapa                     | Onde                       | Quem                                |
+| ------------------------- | -------------------------- | ----------------------------------- |
+| Análise, gap, decisão     | Cowork (esta sessão)       | LLM + você                          |
+| Escrita da spec           | Cowork                     | LLM ([[agente-gerador-spec]] no pipeline) + validação sua |
+| Implementação             | Claude Code (outra sessão) | LLM em sessão dedicada              |
+| Review                    | Cowork (volta aqui)        | LLM + você                          |
+| Decisões de implementação | Cowork (review preenche)   | LLM + você                          |
 
 ### Ciclo
 
