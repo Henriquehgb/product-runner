@@ -8,11 +8,15 @@ evoluem conforme aprendizados de projetos reais.**
 ```
 templates/
 ├── common/                  ← universal (qualquer projeto Node/TS)
+│   ├── pipeline.md          ← a espinha: discovery → spec → implementação
 │   ├── design-principles.md
 │   ├── spec-guide.md
 │   ├── claude-md.template.md
+│   ├── _overview.template.md
 │   ├── _open-issues.template.md
-│   └── lessons-learned.md
+│   ├── lessons-learned.md
+│   └── agents/              ← diretivas do pipeline (conceituação, doc-funcional,
+│       └── …                  gerador-spec, protocolo-de-gates)
 ├── profile-cli/             ← extensões pra CLI / script Node
 │   ├── README.md
 │   ├── code-patterns.md
@@ -41,7 +45,10 @@ cp -r ~/Developer/templates/profile-ssr/* docs/   # ou profile-cli/
 # 4. git init + primeira spec setup/00
 ```
 
-Detalhes em [[spec-guide]].
+Método completo (discovery → conceituação → doc-funcional → geração de
+spec → implementação) em [[pipeline]]; formato e critérios da spec em
+[[spec-guide]]. `cp -r common/*` já traz `pipeline.md`, `agents/` e o
+`_overview.template.md`.
 
 ## Como evolui
 
@@ -60,6 +67,7 @@ como histórico imutável de "como o projeto X estava em data Y".
 | Pasta | Origem |
 |---|---|
 | `common/` | Merge: DocManager (`retro-20260419`) + tradeBot (`tradebot-202605`) — pega o estado da arte de cada um |
+| `common/agents/` + `common/pipeline.md` | **trade-bot-painel** (2026-06) — pipeline de agentes validado no Incremento 1; `_overview.template.md` recuperado do `retro-20260419` |
 | `profile-cli/` | Snapshot tradeBot 2026-05-01 (final do ciclo de refactor estrutural) |
 | `profile-ssr/` | DocManager (`retro-20260419`) + atualizações importadas do tradeBot (princípios LLM-first, M1/M2/M3, etc.) |
 

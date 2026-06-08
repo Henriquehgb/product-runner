@@ -38,7 +38,10 @@ Antes de implementar uma spec, consultar o doc relevante:
 - [[design-principles]] — princípios técnicos, princípios LLM-first, valores
 - [[code-patterns]] — schemas Zod, services, padrões de código
 - [[spec-guide]] — como ler, escrever e implementar specs
-  (inclui critérios meta M1, M2, M3)
+  (inclui critérios meta M1, M2, M3 — e M4 em specs de UI)
+- [[pipeline]] — como uma ideia vira spec: discovery → conceituação →
+  doc-funcional → geração de spec → implementação. Agentes em
+  [[agents/README|agents/]]; gates em [[protocolo-de-gates]]
 - {Outros docs do perfil — [[api-patterns]] / [[ui-patterns]] no SSR}
 
 ## Padrão de dados
