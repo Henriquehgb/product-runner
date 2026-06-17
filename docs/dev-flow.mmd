@@ -1,0 +1,114 @@
+flowchart TD
+    START(["Projeto novo: Porquê · Como · O que e"]) --> CONC
+
+    subgraph CONC["1 · Conceituacao (agente testado)"]
+        direction TB
+        C_F1["Fase 1 — macro: conceitos + casos de uso + roadmap de incrementos"]
+        C_G1{{"Gate 1"}}
+        C_PONTE["Ponte — DER amplo (raso, oportunista: exemplo real se houver)"]
+        C_G15{{"Gate 1.5"}}
+        C_F2["Fase 2 — drilldown do Incremento N: estrutura de dados (do DER) + sequencias + exemplo/aceite"]
+        C_G2{{"Gate 2"}}
+        C_F3["Fase 3 — gera HDoc do LDoc"]
+        C_G3{{"Gate 3"}}
+        C_F1 --> C_G1 --> C_PONTE --> C_G15 --> C_F2 --> C_G2 --> C_F3 --> C_G3
+    end
+
+    CONC --> LCONC[["conceituacao.ldoc.md (fonte da verdade)"]]
+    LCONC --> HCONC[["conceito.hdoc.md (derivado)"]]
+
+    LCONC --> FUNC
+    DSREADY[/"DS/DP + patterns .md (ja existentes)"/] --> FUNC
+
+    subgraph FUNC["2 · Documentacao Funcional (agente testado)"]
+        direction TB
+        F_LD["gera/atualiza como-funciona.ldoc.md (tom presente; realimenta do anterior no Inc 2+)"]
+        F_HD["deriva como-funciona.hdoc.md"]
+        F_G{{"Gate humano"}}
+        F_LD --> F_HD --> F_G
+    end
+
+    FUNC --> LFUNC[["como-funciona.ldoc.md"]]
+
+    LCONC --> GERA
+    LFUNC --> GERA
+    DSREADY --> GERA
+    SPECGUIDE[/"spec-guide.md (template + M1-M4)"/] --> GERA
+
+    subgraph GERA["3 · Gerador de Spec (agente testado)"]
+        direction TB
+        G_F1["Fase 1 — corte: 1 incremento -> N specs verticais (ordem por dependencia)"]
+        G_GATE{{"Gate de corte (alto risco)"}}
+        G_F2["Fase 2 — detalha 1 spec por vez; confronta com dado real; valida consistencia (1a ordem)"]
+        G_GATE2{{"Gate por spec"}}
+        G_F1 --> G_GATE --> G_F2 --> G_GATE2
+    end
+
+    GERA --> SPECS[["specs/dominio/NN-*.md"]]
+    SPECS --> IMPL
+
+    subgraph IMPL["Implementacao (Claude Code, via spec-guide)"]
+        direction TB
+        I_CODE["Test + Code (data) + Code (interface)"]
+        I_REPORT["report + Decisoes de implementacao"]
+        I_CODE --> I_REPORT
+    end
+
+    IMPL --> RCODE
+
+    subgraph RCODE["Review.Code (agente — escrito, nao rodado)"]
+        direction TB
+        RC_X["cruza spec x repo real (grep, leitura, test/build) — nao confia no report"]
+        RC_CLASS{"classifica achado"}
+        RC_X --> RC_CLASS
+    end
+
+    RC_CLASS -->|"falha de implementacao"| SPECS
+    RC_CLASS -->|"adjacente (fora de escopo)"| ISSUES[["_open-issues.md"]]
+    RC_CLASS -->|"impeditivo: concepcao profunda -> BLOQUEIA"| RPROD
+    RC_CLASS -->|"passou / so visual pendente"| UREV
+
+    UREV{{"User Review (BURACO — nao desenhado)"}}
+    UREV -->|feedback| RPROD
+    UREV -->|"falha visual confirmada"| RCODE
+
+    subgraph RPROD["Review.Product (agente — escrito, nao rodado)"]
+        direction TB
+        RP["classifica por causa-raiz + roteia (gate de roteamento, alto risco)"]
+    end
+
+    RPROD -->|"causa: concepcao"| CONC
+    RPROD -->|"causa: como-funciona"| FUNC
+    RPROD -->|"causa: design"| DSREADY
+    RPROD -->|"causa: processo"| RLLM
+
+    subgraph RLLM["Review.LLM (agente — escrito, nao rodado)"]
+        direction TB
+        RL_VAL["valida que a falha e real (nao artefato velho)"]
+        RL_TYPE["classifica por tipo (lista fechada) + grava na fila meta"]
+        RL_REINC{"match de tipo na fila? (reincidencia)"}
+        RL_FIX["propoe correcao (mecaniza regra) + integridade entre .md — tudo com gate"]
+        RL_MARCO["por marco (a cada ~2 incrementos, humano dispara): consolida .md"]
+        RL_VAL --> RL_TYPE --> RL_REINC
+        RL_REINC -->|"sim / estrutural"| RL_FIX
+        RL_REINC -->|"isolada"| RL_NOOP["so registra (nao muda diretiva)"]
+        RL_TYPE -.-> RL_MARCO
+    end
+
+    RL_FIX -.->|"atualiza diretivas/skills"| AGENTS[["diretivas dos agentes + protocolo-de-gates"]]
+    RL_MARCO -.->|".md de aprendizados"| RETRO{{"Retrospectiva ampla (BURACO — manual por ora)"}}
+    RETRO -.->|"decide o que vira template"| TEMPLATES[["templates vivos"]]
+
+    C_G3 -->|"OK -> proximo incremento (re-entry: pula Fase 1, checkpoint de macro)"| CONC
+
+    DSG{{"Design System como estagio (BURACO — pulado; usa arquivos prontos)"}} -.-> DSREADY
+
+    classDef done fill:#E1F5EE,stroke:#0F6E56,color:#085041;
+    classDef written fill:#FAEEDA,stroke:#854F0B,color:#633806;
+    classDef hole fill:#FBEAF0,stroke:#993556,color:#72243E,stroke-dasharray: 5 4;
+    classDef artifact fill:#E6F1FB,stroke:#185FA5,color:#0C447C;
+
+    class CONC,FUNC,GERA done;
+    class RCODE,RPROD,RLLM written;
+    class UREV,RETRO,DSG hole;
+    class LCONC,HCONC,LFUNC,SPECS,ISSUES,AGENTS,TEMPLATES,DSREADY,SPECGUIDE artifact;
