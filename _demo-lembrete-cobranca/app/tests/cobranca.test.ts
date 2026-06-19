@@ -122,4 +122,12 @@ describe("montarLinkWaMe", () => {
     const link = montarLinkWaMe("+5511999990000", "olá mundo");
     expect(link).toBe("https://wa.me/5511999990000?text=ol%C3%A1%20mundo");
   });
+
+  it("escapa ()!'* — parênteses crus quebram o markdown link do Telegram", () => {
+    const link = montarLinkWaMe("+5511999990000", "Pix (copia e cola)!");
+    // a URL inteira não pode conter parêntese cru (wa.me não tem parêntese no host).
+    expect(link).not.toMatch(/[()]/);
+    expect(link).toContain("%28"); // (
+    expect(link).toContain("%29"); // )
+  });
 });

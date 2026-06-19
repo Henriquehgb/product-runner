@@ -61,4 +61,24 @@ GitHub Actions roda em UTC; o horário do lembrete precisa considerar BR (-03).
 
 ---
 
+## #5 — Markdown do Telegram quebra com caracteres crus
+
+**Detectado em:** validação humana de `cobranca/02` (primeiro envio real ao Telegram)
+**Arquivo(s):** `src/services/cobranca/whatsapp.ts`, `src/services/cobranca/resumo.ts`
+
+O resumo usa `parse_mode: Markdown` e embute a URL do `wa.me` num link `[txt](url)`.
+`encodeURIComponent` não escapa `( ) ! ' *`; o `)` cru de "(copia e cola)" encerrava a
+URL no meio e o Telegram devolvia HTTP 400 ("can't find end of the entity"). Bug
+**latente** porque o smoke check de envio era "pendente-humano" — exatamente o
+risco do `lessons-learned` ("smoke check em código > pendente humano").
+
+**Impacto em produção:** alto (era) — nenhuma rodada conseguia enviar.
+
+**Candidato a endereçamento:** **resolvido** em `whatsapp.ts` (escapa `()!'*` na URL,
+RFC 3986) + teste de regressão. **Resíduo aberto:** `nome`/`pix` ainda entram crus no
+Markdown do `resumo.ts`; um nome com `_ * [ ` ` quebraria de novo. Candidato a uma spec
+de hardening (escapar o texto do resumo ou migrar pra `MarkdownV2`/HTML).
+
+---
+
 *Cada item DEVE ter "Candidato a endereçamento" explícito — sem isso, vira lixo acumulado.*

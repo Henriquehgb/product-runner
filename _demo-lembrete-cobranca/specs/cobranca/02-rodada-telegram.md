@@ -81,3 +81,10 @@ estado** (commit de volta no repo). Rodar de novo no mesmo dia **não** reenvia.
   bot/secrets/Actions reais — não validável neste ambiente. A lógica está coberta por testes.
 - **Instalei `@types/node`** (não estava no bootstrap) pra o `tsc --noEmit` passar — achado
   adjacente, anotado; o runtime via `tsx`/`vitest` já funcionava sem ele.
+- **[validação humana 2026-06-19] Bug latente no envio real.** O primeiro `npm run rodada`
+  de verdade falhou (Telegram HTTP 400): a URL do `wa.me` no markdown link tinha `( )` crus
+  (`encodeURIComponent` não escapa `()!'*`) e o parser encerrava a URL no `)` de
+  "(copia e cola)". Corrigido em `whatsapp.ts` (escapa esses chars) + teste de regressão
+  (17/17). O critério "envia 1 mensagem ao Telegram" estava ✅ na lógica mas ❌ no envio
+  real — confirma a lição "smoke check em código > pendente-humano". Resíduo (escape de
+  `nome`/`pix` no resumo) anotado em `_open-issues.md#5`.
