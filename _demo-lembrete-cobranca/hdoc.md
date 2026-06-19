@@ -128,10 +128,42 @@ WhatsApp** com a mensagem pronta e o **Pix copia-e-cola** já com o valor. Você
 clica, envia, e pronto. Se a rodada rodar de novo no mesmo dia, o João **não**
 recebe de novo.
 
+## O Incremento 2 na prática (estado inicial → resultado)
+
+**Antes:** o João (R$ 150) e a Maria (R$ 200) já foram lembrados neste mês. Você
+recebeu o cliente João no Pix e, no Telegram, respondeu **`pago João`**.
+
+**A próxima rodada roda e:**
+
+```mermaid
+sequenceDiagram
+    participant Cron as GitHub Actions (cron)
+    participant W as Worker
+    participant TG as Telegram
+    participant FS as Estado (JSON)
+
+    Cron->>W: dispara rodada
+    W->>TG: lê suas respostas novas (getUpdates)
+    W->>W: entende "pago João" e acha o cliente
+    W->>FS: marca o João como pago (com a data)
+    W->>TG: manda o resumo do ciclo (quem pagou / quem falta)
+```
+
+**Depois:** chega no seu Telegram o resumo do mês, mostrando o ciclo inteiro de
+relance:
+
+> 📊 **Ciclo 06/2026**
+> ✅ **João Silva** — R$ 150,00 *(pago 19/06)*
+> ⏳ **Maria Souza** — R$ 200,00 *(devendo)*
+
+Você marca pagamento **respondendo no Telegram**, sem sair do app, e enxerga num
+relance quem ainda falta. Se houver dois clientes com o mesmo nome, o robô pede
+pra você especificar; sua resposta é lida na rodada seguinte.
+
 ## Pontos a resolver na implementação
 
 1. Chave Pix e token do Telegram em **secret** (não no JSON versionado); cuidar da PII dos clientes (repo privado).
 2. Idempotência (cron pode rodar várias vezes/dia).
-3. Cadência do cron × janela de 24h do Telegram `getUpdates` (relevante a partir do Inc 2).
+3. Cadência do cron × janela de 24h do Telegram `getUpdates` — **endereçado no desenho do Inc 2**: a rodada lê os updates com offset persistido e, rodando ≥1x/dia, cobre a janela sem servidor sempre-ligado.
 4. Fuso horário (GitHub Actions roda em UTC).
 5. Virada de ciclo automática (entra no Inc 3).

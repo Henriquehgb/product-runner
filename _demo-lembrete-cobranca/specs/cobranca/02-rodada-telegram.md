@@ -48,13 +48,13 @@ estado** (commit de volta no repo). Rodar de novo no mesmo dia **não** reenvia.
 
 ## Critérios de aceite
 
-- [ ] `npm run rodada` com João elegível envia 1 mensagem ao Telegram configurado.
-- [ ] Após a rodada, `estado.json` tem `Cobranca{joão, "2026-06", "lembrado", dataLembrete}`.
-- [ ] Rodar `npm run rodada` de novo no mesmo dia **não** envia mensagem do João.
-- [ ] Sem nenhum elegível, a rodada termina sem enviar nada e sai 0.
-- [ ] Falha simulada no `sendMessage` → João **não** é marcado lembrado; processo sai ≠ 0.
-- [ ] O workflow `rodada.yml` dispara no cron e commita o estado *(smoke check humano — exige o Action rodando)*.
-- [ ] Aplicam-se M1, M2, M3.
+- [x] `npm run rodada` com João elegível envia 1 mensagem ao Telegram configurado. *(validado por humano 2026-06-19, após o fix #5)*
+- [x] Após a rodada, `estado.json` tem `Cobranca{joão, "2026-06", "lembrado", dataLembrete}`.
+- [x] Rodar `npm run rodada` de novo no mesmo dia **não** envia mensagem do João.
+- [x] Sem nenhum elegível, a rodada termina sem enviar nada e sai 0.
+- [x] Falha simulada no `sendMessage` → João **não** é marcado lembrado; processo sai ≠ 0.
+- [ ] O workflow `rodada.yml` dispara no cron e commita o estado *(smoke check humano — exige o Action rodando; **ainda pendente**, só rodado na mão até 2026-06-19)*.
+- [x] Aplicam-se M1, M2, M3.
 
 ## Notas pra implementação
 
@@ -64,7 +64,8 @@ estado** (commit de volta no repo). Rodar de novo no mesmo dia **não** reenvia.
 
 ## Decisões de implementação
 
-**Status: ✅** (2 critérios pendente-humano) — 16/16 testes; `tsc --noEmit` limpo.
+**Status: ✅** (1 critério pendente-humano: Action no cron) — 17/17 testes; `tsc --noEmit` limpo.
+Reconciliação 2026-06-19: envio real validado na mão (`npm run rodada` → mensagem no Telegram, após o fix #5). Resta o Action disparando no cron + commit de estado — não rodado ainda.
 
 - **Núcleo testável `executarRodada` com `enviar` injetável.** Separei a orquestração pura
   (recebe a função de envio) do wrapper de IO (`main`). Isso permite testar a ordem
