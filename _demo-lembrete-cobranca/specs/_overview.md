@@ -22,7 +22,7 @@ entrega no Telegram pra você enviar com 1 clique. Cobre CU1(básico), CU2, CU3,
 | Spec | Entrega | Depende de | Status |
 | --- | --- | --- | --- |
 | `cobranca/01-cobranca-pronta` | Seleção (competência + janela inclusive + idempotência) + Pix copia-e-cola + mensagem + link `wa.me` | `setup/00` | ✅ implementada |
-| `cobranca/02-rodada-telegram` | Rodada agendada: resumo no Telegram, marca lembrado, persiste estado, GitHub Actions | `cobranca/01` | ✅ implementada (envio real + Action: smoke humano) |
+| `cobranca/02-rodada-telegram` | Rodada agendada: resumo no Telegram, marca lembrado, persiste estado, GitHub Actions | `cobranca/01` | ✅ implementada · envio real validado na mão (2026-06-19) · ⏳ Action no cron pendente-humano |
 
 ## Incrementos seguintes (baixa resolução)
 
