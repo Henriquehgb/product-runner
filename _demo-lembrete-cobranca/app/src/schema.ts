@@ -5,6 +5,10 @@ export const ClienteSchema = z.object({
   nome: z.string().min(1),
   // E.164: + seguido de 12 a 13 dígitos (BR: +55 + DDD + 8/9 dígitos).
   telefone: z.string().regex(/^\+\d{12,13}$/, "telefone deve ser E.164, ex: +5511999990000"),
+  // chat_id do Telegram do cliente (o número, como string). OPCIONAL: sem ele a
+  // rodada pula o cliente e avisa no recap. O cliente precisa dar /start no bot
+  // antes; descubra o chat_id com `npm run telegram:chats`.
+  telegramChatId: z.string().min(1).optional(),
   valorMensal: z.number().positive(),
   diaVencimento: z.number().int().min(1).max(31),
   ativo: z.boolean(),

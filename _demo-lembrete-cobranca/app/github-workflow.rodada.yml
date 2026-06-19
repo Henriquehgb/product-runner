@@ -31,6 +31,9 @@ jobs:
           DIAS_ANTECEDENCIA: ${{ secrets.DIAS_ANTECEDENCIA }}
         run: npm run rodada
       - name: Persistir estado
+        # always(): mesmo se a rodada sair ≠ 0 por falha em ALGUM cliente, os que
+        # foram cobrados já estão marcados — precisamos commitar pra não recobrar.
+        if: always()
         run: |
           git config user.name "rodada-bot"
           git config user.email "bot@users.noreply.github.com"

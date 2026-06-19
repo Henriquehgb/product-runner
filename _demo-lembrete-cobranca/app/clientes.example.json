@@ -2,6 +2,7 @@
   {
     "nome": "João Silva",
     "telefone": "+5511999990000",
+    "telegramChatId": "123456789",
     "valorMensal": 150.0,
     "diaVencimento": 10,
     "ativo": true

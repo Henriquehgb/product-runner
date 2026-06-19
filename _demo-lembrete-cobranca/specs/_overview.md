@@ -16,8 +16,9 @@ valor visível de ponta a ponta. Specs em `specs/{domínio}/NN-nome.md`.
 
 ## Incremento 1 — Lembrete com 1 clique
 
-**Valor:** sistema descobre quem vence, monta Pix + mensagem + link `wa.me` e
-entrega no Telegram pra você enviar com 1 clique. Cobre CU1(básico), CU2, CU3, CU4.
+**Valor:** sistema descobre quem vence, monta Pix + mensagem e **cobra direto no
+Telegram de cada cliente** (você recebe só um recap). Cobre CU1(básico), CU2, CU3, CU4.
+_(pivô 2026-06-19: era resumo com link `wa.me` pra você clicar; WhatsApp adiado.)_
 
 | Spec | Entrega | Depende de | Status |
 | --- | --- | --- | --- |
@@ -44,7 +45,7 @@ setup/00 → cobranca/01 → cobranca/02
 
 | Entity | Domínio | Descrição |
 | --- | --- | --- |
-| Cliente | setup | nome, telefone, valorMensal, diaVencimento, ativo |
+| Cliente | setup | nome, telefone, telegramChatId (opc.), valorMensal, diaVencimento, ativo |
 | Config | setup | chavePix, recebedor (nome/cidade), Telegram, diasAntecedencia |
 | Cobranca | setup/cobranca | clienteId, competencia, status, dataLembrete |
 | Elegivel / CobrancaPronta | cobranca | derivados em runtime (seleção + Pix + mensagem + link) |

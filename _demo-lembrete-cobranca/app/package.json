@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Lembrete de cobrança mensal — gera Pix + mensagem e avisa no Telegram.",
+  "description": "Lembrete de cobrança mensal — gera Pix + mensagem e cobra direto no Telegram do cliente.",
   "scripts": {
     "dev": "tsx src/index.ts",
     "preview": "tsx src/preview.ts",
     "rodada": "tsx src/rodada.ts",
+    "telegram:chats": "tsx src/telegram-chats.ts",
     "test": "vitest run",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },

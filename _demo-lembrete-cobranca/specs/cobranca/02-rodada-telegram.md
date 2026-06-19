@@ -82,6 +82,16 @@ Reconciliação 2026-06-19: envio real validado na mão (`npm run rodada` → me
   bot/secrets/Actions reais — não validável neste ambiente. A lógica está coberta por testes.
 - **Instalei `@types/node`** (não estava no bootstrap) pra o `tsc --noEmit` passar — achado
   adjacente, anotado; o runtime via `tsx`/`vitest` já funcionava sem ele.
+- **[pivô 2026-06-19] Cobrança vai DIRETO pro Telegram do cliente.** Antes a rodada mandava
+  um resumo com link `wa.me` pra VOCÊ clicar; agora ela envia a mensagem da cobrança pro
+  `telegramChatId` de cada cliente e você só recebe um **recap** (quem foi cobrado/pulado/falhou).
+  Mudanças: `Cliente.telegramChatId` (opcional) no schema; `enviarResumo`→`enviarMensagem`
+  (texto puro, sem Markdown — Pix copia limpo e mata o open-issue #5); `montarResumo`→`montarRecap`;
+  novo `telegram/updates.ts` + `npm run telegram:chats` pra descobrir `chat_id` (o bot não
+  endereça por telefone e só fala com quem deu `/start`). **Envio por cliente:** marca lembrado
+  só quem recebeu — falha/pulado retenta na próxima (idempotência por cliente, melhor que o
+  all-or-nothing anterior). Workflow: passo de persistir estado vira `if: always()` pra não
+  recobrar quem já recebeu quando um cliente falha. WhatsApp adiado (validar o canal Telegram 1º).
 - **[validação humana 2026-06-19] Bug latente no envio real.** O primeiro `npm run rodada`
   de verdade falhou (Telegram HTTP 400): a URL do `wa.me` no markdown link tinha `( )` crus
   (`encodeURIComponent` não escapa `()!'*`) e o parser encerrava a URL no `)` de

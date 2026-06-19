@@ -31,7 +31,10 @@ function main(): void {
       `• ${c.elegivel.cliente.nome} — R$ ${formatarValor(c.elegivel.cliente.valorMensal)}`,
     );
     console.log(`  vence ${formatarDataDDMM(c.elegivel.vencimento)}`);
-    console.log(`  WhatsApp: ${c.linkWhatsApp}`);
+    console.log(
+      `  Telegram: ${c.elegivel.cliente.telegramChatId ?? "(sem telegramChatId — vai pular; peça /start no bot)"}`,
+    );
+    console.log(`  WhatsApp (link, fallback): ${c.linkWhatsApp}`);
     console.log(`  Pix: ${c.pixCopiaECola}\n`);
   }
 }

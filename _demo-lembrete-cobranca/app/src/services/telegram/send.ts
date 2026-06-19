@@ -2,15 +2,21 @@ import { z } from "zod";
 
 const TelegramResponseSchema = z.object({ ok: z.literal(true) });
 
-/** Envia uma mensagem ao chat via Bot API. Lança em falha (não marcar lembrado se falhar). */
-export async function enviarResumo(token: string, chatId: string, texto: string): Promise<void> {
+/**
+ * Envia uma mensagem de texto a um chat via Bot API. Lança em falha
+ * (assim a rodada não marca como lembrado quem não recebeu de fato).
+ *
+ * Texto puro (sem `parse_mode`): a mensagem da cobrança traz o Pix copia-e-cola
+ * inline, e texto puro garante que ele copie limpo e que nada quebre o parser
+ * (foi o que mordeu o resumo com Markdown — ver `whatsapp.ts`/open-issue #5).
+ */
+export async function enviarMensagem(token: string, chatId: string, texto: string): Promise<void> {
   const resp = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: chatId,
       text: texto,
-      parse_mode: "Markdown",
       disable_web_page_preview: true,
     }),
   });
