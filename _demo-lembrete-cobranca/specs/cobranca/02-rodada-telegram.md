@@ -64,4 +64,20 @@ estado** (commit de volta no repo). Rodar de novo no mesmo dia **não** reenvia.
 
 ## Decisões de implementação
 
-(Preencher após implementação.)
+**Status: ✅** (2 critérios pendente-humano) — 16/16 testes; `tsc --noEmit` limpo.
+
+- **Núcleo testável `executarRodada` com `enviar` injetável.** Separei a orquestração pura
+  (recebe a função de envio) do wrapper de IO (`main`). Isso permite testar a ordem
+  **envia-antes-de-marca** sem rede: teste com sender que lança confirma que o estado fica
+  intacto (ninguém marcado). Alternativa descartada: mockar `fetch` global (mais frágil).
+- **Guarda `import.meta.url === file://argv[1]`** no `rodada.ts` pra não disparar IO ao
+  ser importado nos testes (lição do `spec-guide` sobre side-effects no top-level).
+- **Workflow fora de `.github/`** (`github-workflow.rodada.yml`): de propósito, pra **não
+  disparar** no repo de templates. Traz `permissions: contents:write`, `[skip ci]` no commit
+  de estado (evita loop — open-issue #2) e cron em UTC com nota de fuso (#4).
+- **Falha de envio não marca lembrado:** `await enviar(...)` antes de `marcarLembrados`;
+  se lançar, `saveEstado` nunca roda. Coberto por teste.
+- **⚠️ Pendente-humano:** o envio real ao Telegram e o disparo do Action no cron exigem
+  bot/secrets/Actions reais — não validável neste ambiente. A lógica está coberta por testes.
+- **Instalei `@types/node`** (não estava no bootstrap) pra o `tsc --noEmit` passar — achado
+  adjacente, anotado; o runtime via `tsx`/`vitest` já funcionava sem ele.

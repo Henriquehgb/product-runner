@@ -1,0 +1,5 @@
+node_modules/
+# PII real fica fora do versionamento; use clientes.example.json como base.
+clientes.json
+estado.json
+.env

@@ -73,4 +73,18 @@ Schemas Zod (fonte da verdade; tipos via `z.infer` — ver `code-patterns.md`):
 
 ## Decisões de implementação
 
-(Preencher após implementação.)
+**Status: ✅** — todos os critérios passam (`npm run dev` exit 0 com config válida;
+exit 1 citando o campo faltante; `valorMensal` negativo barrado; `npm test` 2/2;
+`npm run format` aplica Prettier).
+
+- **`clienteId` = telefone.** O DER não definia chave; usei o `telefone` (E.164) como
+  id estável do cliente, por ser único e já presente. Decisão minha — registrada para o
+  gerador/review reconciliarem se um id dedicado for preferível.
+- **`tsx` em vez de build.** Roda TS direto (sem etapa de compilação) — simplicidade
+  para um worker pequeno. Alternativa descartada: `tsc` + `node dist`.
+- **`CLIENTES_PATH`/`ESTADO_PATH` via env.** Para testabilidade (apontar a fixtures);
+  default `clientes.json`/`estado.json`.
+- **Limites de tamanho no schema da Config** (`nomeRecebedor ≤ 25`, `cidadeRecebedor ≤ 15`):
+  antecipam os limites dos campos 59/60 do BR Code (usados em `cobranca/01`). Adicionado aqui
+  por morar no schema; não altera o escopo da spec.
+- **Tentação não executada:** não implementei seleção/Pix/Telegram (são specs seguintes).

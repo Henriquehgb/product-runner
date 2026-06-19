@@ -1,0 +1,9 @@
+[
+  {
+    "nome": "João Silva",
+    "telefone": "+5511999990000",
+    "valorMensal": 150.0,
+    "diaVencimento": 10,
+    "ativo": true
+  }
+]

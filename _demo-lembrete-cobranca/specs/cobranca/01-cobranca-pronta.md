@@ -67,4 +67,17 @@ mensagem pronta. Quem já foi lembrado no mês **não** aparece.
 
 ## Decisões de implementação
 
-(Preencher após implementação.)
+**Status: ✅** (1 critério pendente-humano) — 12/12 testes passam; `npm run preview`
+imprime a cobrança pronta do João.
+
+- **Já-vencidos no mês entram.** A regra `dias <= diasAntecedencia` cobre vencidos
+  (`dias < 0`) além da janela futura. Decisão consciente: melhor lembrar de algo já
+  vencido do que silenciar. Coerente com a nota da spec sobre clampar o dia ao mês.
+- **CRC16 testado pelo vetor canônico** `crc16("123456789") === "29B1"` (CRC-16/CCITT-FALSE),
+  mais um teste de consistência interna do BR Code (o sufixo bate com o CRC do payload).
+  Não usei vetor oficial do BCB para não fixar uma string que eu não pudesse validar de fato.
+- **`montarCobranca`** num arquivo próprio (`cobranca-pronta.ts`) compõe pix+mensagem+link;
+  os quatro geradores seguem puros e testáveis isolados.
+- **Critério "Pix aceito por app de banco": ⚠️ pendente-humano.** Exige app/validador real;
+  a estrutura EMV e o CRC consistente dão confiança, mas a validação final é sua (M3).
+- **Tentação não executada:** não enviei Telegram nem persisti `lembrado` (é `cobranca/02`).

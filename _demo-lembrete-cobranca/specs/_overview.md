@@ -12,7 +12,7 @@ valor visível de ponta a ponta. Specs em `specs/{domínio}/NN-nome.md`.
 
 | Spec | Entrega | Status |
 | --- | --- | --- |
-| `setup/00-bootstrap` | TS+Zod+Prettier+Vitest; carrega e valida `clientes.json` + config (fail-fast); lista clientes ativos | ⏳ pendente |
+| `setup/00-bootstrap` | TS+Zod+Prettier+Vitest; carrega e valida `clientes.json` + config (fail-fast); lista clientes ativos | ✅ implementada |
 
 ## Incremento 1 — Lembrete com 1 clique
 
@@ -21,8 +21,8 @@ entrega no Telegram pra você enviar com 1 clique. Cobre CU1(básico), CU2, CU3,
 
 | Spec | Entrega | Depende de | Status |
 | --- | --- | --- | --- |
-| `cobranca/01-cobranca-pronta` | Seleção (competência + janela inclusive + idempotência) + Pix copia-e-cola + mensagem + link `wa.me` | `setup/00` | ⏳ pendente |
-| `cobranca/02-rodada-telegram` | Rodada agendada: resumo no Telegram, marca lembrado, persiste estado, GitHub Actions | `cobranca/01` | ⏳ pendente |
+| `cobranca/01-cobranca-pronta` | Seleção (competência + janela inclusive + idempotência) + Pix copia-e-cola + mensagem + link `wa.me` | `setup/00` | ✅ implementada |
+| `cobranca/02-rodada-telegram` | Rodada agendada: resumo no Telegram, marca lembrado, persiste estado, GitHub Actions | `cobranca/01` | ✅ implementada (envio real + Action: smoke humano) |
 
 ## Incrementos seguintes (baixa resolução)
 

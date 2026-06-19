@@ -1,0 +1,24 @@
+{
+  "name": "lembrete-cobranca",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lembrete de cobrança mensal — gera Pix + mensagem e avisa no Telegram.",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "preview": "tsx src/preview.ts",
+    "rodada": "tsx src/rodada.ts",
+    "test": "vitest run",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.21",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
