@@ -2,7 +2,7 @@
 
 > Documentação funcional (LDoc), fonte da verdade. Descreve **o que o sistema é
 > e como usá-lo**, em tom presente. O `como-funciona.hdoc.md` é derivado deste.
-> Cobre o **Incremento 1** (Lembrete com 1 clique).
+> Cobre os **Incrementos 1–2** (lembrete com 1 clique + controle de pago/devendo).
 
 ## O que é
 
@@ -12,8 +12,9 @@ verifica quais clientes estão para vencer e te entrega, no Telegram, um resumo
 embutido) e um **link do WhatsApp** com a mensagem escrita. Você só abre, confere
 e envia com um clique. Você não monta mensagem nem gera Pix na mão.
 
-Neste incremento o sistema **avisa e prepara**; marcar quem pagou ainda é feito
-por você, fora do sistema (entra num incremento seguinte).
+Além de avisar e preparar a cobrança, o sistema **fecha o ciclo**: quando um
+cliente paga, você marca respondendo no Telegram (`pago João`), e o resumo passa
+a mostrar **quem já pagou e quem ainda falta** no mês.
 
 ## Como funciona
 
@@ -24,14 +25,21 @@ O sistema tem quatro partes:
 - **Configuração** — sua **chave Pix**, seu **nome e cidade** (que o Pix exige),
   os dados do **bot do Telegram** e quantos **dias de antecedência** você quer ser
   avisado. Os segredos (chave Pix, token do bot) ficam em *secrets*, não no arquivo.
-- **A rodada diária** — roda sozinha num horário (no GitHub Actions). Ela lê a
-  lista, descobre quem vence dentro da janela de antecedência e **ainda não foi
-  avisado neste mês**, e para cada um gera o Pix copia-e-cola e o link do WhatsApp.
-- **O resumo no Telegram** — a mensagem que chega pra você, com um item por
-  cliente a cobrar: nome, valor, link do WhatsApp e o Pix.
+- **A rodada diária** — roda sozinha num horário (no GitHub Actions). Primeiro
+  ela **lê as suas respostas no Telegram** e registra os pagamentos que você
+  marcou; depois descobre quem vence dentro da janela de antecedência e **ainda
+  não foi avisado neste mês**, e para cada um gera o Pix copia-e-cola e o link
+  do WhatsApp.
+- **O resumo no Telegram** — a mensagem que chega pra você. Traz cada cliente a
+  cobrar (nome, valor, link do WhatsApp e Pix) e o **resumo do ciclo**: todos os
+  clientes do mês com ✅ pago ou ⏳ devendo.
 
 O sistema lembra quem já foi avisado no mês. Se a rodada rodar de novo no mesmo
 dia, **o mesmo cliente não aparece duas vezes**.
+
+Para marcar um pagamento, você **responde no Telegram** com `pago` e o nome do
+cliente. Na rodada seguinte o robô reconhece a resposta, marca o cliente como
+**pago** (guardando a data) e ele sai da lista de quem deve.
 
 ## Como usar
 
@@ -86,6 +94,26 @@ mensagem **já escrita**, por exemplo:
 
 Confira e envie. O cliente copia o Pix da própria mensagem e paga.
 
+### 5. Marcar quem pagou
+
+Quando o cliente te paga, **responda no Telegram** com `pago` seguido do nome:
+
+> pago João
+
+Na próxima rodada o robô reconhece, marca o João como **pago** (com a data) e
+ele sai da lista de quem deve. Se houver dois clientes com o mesmo nome, o robô
+responde pedindo pra você especificar — responda de novo com o nome completo e
+ele resolve na rodada seguinte.
+
+### 6. Acompanhar o ciclo
+
+A cada rodada chega também um resumo do mês inteiro, com quem já pagou e quem
+ainda falta:
+
+> 📊 **Ciclo 06/2026**
+> ✅ **João Silva** — R$ 150,00 *(pago 19/06)*
+> ⏳ **Maria Souza** — R$ 200,00 *(devendo)*
+
 ### Exemplo ponta a ponta
 
 Hoje é **07/06**, antecedência configurada em **3 dias**. O João vence dia **10**
@@ -93,3 +121,8 @@ e custa **R$ 150,00**. Na rodada de hoje, o João entra na janela (vence até 10
 e ainda não foi avisado em junho. Você recebe o resumo acima, toca no link, e a
 mensagem de cobrança do João sai pelo WhatsApp com o Pix de R$ 150,00 pronto.
 Amanhã, se a rodada rodar de novo, o João **não** reaparece — já foi avisado.
+
+No dia seguinte o João te paga e você responde no Telegram **`pago João`**. Na
+rodada seguinte o robô lê a resposta, marca o João como pago (19/06) e o resumo
+do ciclo passa a mostrar **João ✅ R$ 150,00 (pago)** e, se a Maria (R$ 200,00)
+ainda não pagou, **Maria ⏳ devendo**.
