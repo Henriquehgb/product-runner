@@ -129,3 +129,91 @@ erDiagram
         number telegramUpdateOffset
     }
 ```
+
+## Inc 1 — Lembrete com 1 clique (detalhado, aprovado no Gate 2)
+
+Cobre CU1(básico), CU2, CU3, CU4. Os casos colapsam num fluxo único (a rodada
+agendada); CU1 é pré-condição (edição manual do `clientes.json`).
+
+**Recorte do incremento:** sem `pago`/`atrasado` (Inc 2) e sem log de `Lembrete`
+(Inc 3). Persiste-se o mínimo p/ idempotência (`status=lembrado` + `dataLembrete`).
+A chave Pix e o token do Telegram devem morar em **secret**, não no JSON (Q. aberta #1).
+
+### (a) Estrutura de dados do Inc 1
+
+```mermaid
+classDiagram
+    class Cliente {
+        <<lido: clientes.json>>
+        +string nome
+        +string telefone
+        +number valorMensal
+        +number diaVencimento
+        +boolean ativo
+    }
+    class Config {
+        <<lido: singleton global>>
+        +string chavePix
+        +string nomeRecebedor
+        +string cidadeRecebedor
+        +string telegramChatId
+        +number diasAntecedencia
+    }
+    class Cobranca {
+        <<persistido p/ idempotência>>
+        +string clienteId
+        +string competencia "YYYY-MM"
+        +status status "pendente|lembrado"
+        +date dataLembrete
+    }
+    class PixCopiaECola {
+        <<derivado offline>>
+        +string brCode "EMV + CRC, valor embutido"
+    }
+    class LinkWhatsApp {
+        <<derivado>>
+        +string url "wa.me/<tel>?text=<msg>"
+    }
+    Cliente "1" --> "N" Cobranca : gera por competência
+    Cobranca ..> PixCopiaECola : deriva
+    Cobranca ..> LinkWhatsApp : deriva
+    Config ..> PixCopiaECola : chavePix + recebedor
+    Config ..> Cobranca : diasAntecedencia (janela)
+```
+
+### (b) Sequência — Rodada de lembrete agendada (CU2+CU3+CU4)
+
+```mermaid
+sequenceDiagram
+    participant Cron as GitHub Actions (cron)
+    participant W as Worker
+    participant FS as Estado (JSON no repo)
+    participant TG as Telegram
+    participant Voce as Você
+
+    Cron->>W: dispara rodada (diária)
+    W->>FS: lê clientes.json + config + cobranças
+    W->>W: alvo = hoje + diasAntecedencia; filtra vencendo na janela e não lembrados
+    loop cada cliente elegível
+        W->>W: gera Pix copia-e-cola offline (BR Code + valor)  [CU4]
+        W->>W: monta mensagem + link wa.me                      [CU3]
+    end
+    W->>TG: envia resumo com os links prontos                    [CU2]
+    W->>FS: marca status=lembrado + dataLembrete (idempotência)
+    W->>FS: commita estado de volta
+    Voce->>TG: abre o resumo, clica no link e envia ao cliente
+```
+
+### (c) Exemplo concreto
+
+Estado inicial (hoje = 2026-06-07, `diasAntecedencia = 3`): João Silva,
+`+5511999990000`, R$ 150,00, vencimento dia 10, ativo. Config com chave Pix
+`joao@prestador.com`, recebedor "Maria Prestadora" / "SAO PAULO".
+
+Janela-alvo = vencimentos até 10/06 → João entra (sem `Cobranca 2026-06`
+ainda lembrada). Resultado: resumo no Telegram com nome, valor, link `wa.me` e
+Pix copia-e-cola; estado passa a ter
+`Cobranca{ joão, "2026-06", status: "lembrado", dataLembrete: "2026-06-07" }`.
+Rodar de novo no mesmo dia não reenvia (idempotência).
+
+> A string do Pix copia-e-cola (EMV + CRC16) é gerada em código na implementação.
