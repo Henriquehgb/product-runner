@@ -217,3 +217,113 @@ Pix copia-e-cola; estado passa a ter
 Rodar de novo no mesmo dia não reenvia (idempotência).
 
 > A string do Pix copia-e-cola (EMV + CRC16) é gerada em código na implementação.
+
+## Inc 2 — Controle de pago/devendo (detalhado, aprovado no Gate 2)
+
+Cobre CU5 (marcar pago) e CU6 (resumo pago/devendo). Re-entry: macro confirmado
+sem mudança (DER amplo já previa `status=pago`, `dataPagamento` e
+`telegramUpdateOffset`); **não houve reconciliação do DER amplo**.
+
+**Recorte:** introduz `pago` (não `atrasado` — Inc 3) e o log de `Lembrete`
+segue fora (Inc 3). As duas funções são **sub-fluxos da mesma rodada do Inc 1**:
+ela passa a *ler updates → processar pagos → recalcular → enviar resumo do ciclo*,
+sem deixar de fazer os lembretes. Decisão de produto: **marcar pago por texto
+`pago <nome>`** via `getUpdates` (alinhado ao `telegramUpdateOffset` já no DER e à
+Questão aberta #3 — cadência ≥1x/dia cobre a janela de 24h). Resumo (CU6) lista
+**todos** da competência. Botões inline (`callback_query`) foram considerados e
+descartados neste incremento por reabrirem o DER.
+
+### (a) Estrutura de dados do Inc 2
+
+```mermaid
+classDiagram
+    class Cliente {
+        <<lido: clientes.json>>
+        +string nome
+        +string telefone
+        +number valorMensal
+        +number diaVencimento
+        +boolean ativo
+    }
+    class Config {
+        <<lido/escrito: singleton>>
+        +string telegramChatId
+        +number telegramUpdateOffset
+    }
+    class Cobranca {
+        <<persistido>>
+        +string clienteId
+        +string competencia "YYYY-MM"
+        +status status "pendente|lembrado|pago"
+        +date dataLembrete
+        +date dataPagamento
+    }
+    class ComandoPago {
+        <<derivado: getUpdates, não persiste>>
+        +number updateId
+        +string textoCru "pago João"
+        +string alvoNome
+    }
+    Cliente "1" --> "N" Cobranca : por competência
+    Config ..> ComandoPago : offset pagina updates
+    ComandoPago ..> Cobranca : marca pago + dataPagamento
+```
+
+Mudança vs. Inc 1: `Cobranca` ganha `pago` no enum e o campo `dataPagamento`;
+`Config.telegramUpdateOffset` passa a ser **lido e reescrito** (inerte no Inc 1).
+`ComandoPago` é uma **view derivada** do `getUpdates`, não entidade persistida.
+
+### (b) Sequência — CU5 (marcar pago, dentro da rodada agendada)
+
+```mermaid
+sequenceDiagram
+    participant Cron as GitHub Actions (cron)
+    participant W as Worker
+    participant TG as Telegram
+    participant FS as Estado (JSON no repo)
+
+    Cron->>W: dispara rodada
+    W->>FS: lê config(offset), clientes, cobranças
+    W->>TG: getUpdates(offset)
+    TG-->>W: mensagens novas desde offset
+    loop cada "pago <nome>"
+        W->>W: parseia alvo; casa cliente ativo c/ cobrança não-paga no ciclo
+        alt 1 match
+            W->>FS: Cobranca.status=pago + dataPagamento
+        else ambíguo (2+) ou não encontrado
+            W->>TG: pede desambiguação (resolvida na próxima rodada)
+        end
+    end
+    W->>FS: telegramUpdateOffset = maior updateId + 1
+```
+
+### (b) Sequência — CU6 (resumo com pago/devendo)
+
+```mermaid
+sequenceDiagram
+    participant W as Worker
+    participant FS as Estado (JSON no repo)
+    participant TG as Telegram
+    participant Voce as Você
+
+    W->>FS: lê cobranças da competência atual
+    W->>W: monta resumo do ciclo (✅ pago / ⏳ devendo, todos)
+    W->>TG: envia resumo
+    Voce->>TG: vê quem pagou e quem falta
+```
+
+### (c) Exemplo concreto
+
+Estado inicial (competência `2026-06`): João Silva (R$ 150,00) e Maria Souza
+(R$ 200,00), ambos já `lembrado`. No Telegram você respondeu `pago João`.
+
+Rodada seguinte: `getUpdates(offset)` traz `pago João`; casa com João (único
+ativo); grava `Cobranca{joão, "2026-06", status: "pago", dataPagamento:
+"2026-06-19"}`; avança o offset (rodar de novo não remarca). Recalcula e envia:
+
+> 📊 **Ciclo 06/2026**
+> ✅ **João Silva** — R$ 150,00 *(pago 19/06)*
+> ⏳ **Maria Souza** — R$ 200,00 *(devendo)*
+
+> Maria Souza / R$ 200,00 é dado ilustrativo do exemplo (para haver um
+> "devendo"); o restante é herdado do exemplo do Inc 1.
