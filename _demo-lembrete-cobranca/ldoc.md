@@ -90,4 +90,42 @@ operacional recorrente; Inc 4 é conforto (baixa resolução de propósito).
 
 ---
 
-<!-- DER amplo: a gravar após Gate 1.5 -->
+## DER amplo (aprovado no Gate 1.5)
+
+Estrutural, amplo e raso. Decisões confirmadas por item:
+- Sem entidade `Pagamento` — vira `status=pago` + `dataPagamento` na `Cobranca`.
+- `Cliente : Cobranca = 1 : N` (uma por competência/mês).
+- `Lembrete` é entidade própria (`Cobranca : Lembrete = 1 : N`) — guarda histórico (vencimento + atrasos).
+- `Config` é singleton global (chave Pix, nome+cidade do recebedor p/ BR Code, Telegram).
+
+```mermaid
+erDiagram
+    CLIENTE ||--o{ COBRANCA : "gera mensalmente"
+    COBRANCA ||--o{ LEMBRETE : "dispara"
+
+    CLIENTE {
+        string nome
+        string telefone
+        number valorMensal
+        number diaVencimento
+        boolean ativo
+    }
+    COBRANCA {
+        string competencia "YYYY-MM"
+        number valor
+        enum status "pendente|lembrado|pago|atrasado"
+        date dataPagamento
+    }
+    LEMBRETE {
+        date enviadoEm
+        enum tipo "vencimento|atraso"
+    }
+    CONFIG {
+        string chavePix
+        string nomeRecebedor
+        string cidadeRecebedor
+        string telegramChatId
+        number diasAntecedencia
+        number telegramUpdateOffset
+    }
+```
