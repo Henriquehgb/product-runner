@@ -113,6 +113,23 @@ test("AUTO-MERGE: arquivo intocado pelo usuário mas com template novo", async (
   });
 });
 
+test("não confunde basename ambíguo com movido (docs/README vs agents/README)", async () => {
+  await withProject(async (dir) => {
+    // docs/README.md e docs/agents/README.md compartilham basename; remover o
+    // primeiro NÃO pode fazê-lo casar com o segundo — deve ser ADD.
+    await rm(join(dir, "docs", "README.md"));
+    const res = await update({
+      targetDir: dir,
+      dryRun: true,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    const item = res.plan.find((i) => i.templatePath === "docs/README.md");
+    assert.equal(item?.bucket, "add");
+    assert.equal(item?.moved, false);
+  });
+});
+
 test("modo legado: sem manifesto exige --profile e re-adiciona faltantes", async () => {
   await withProject(async (dir) => {
     await rm(manifestPath(dir));
