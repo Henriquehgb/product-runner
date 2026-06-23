@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, writeFile, rm, access } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile, rm, access } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { scaffold, sha256, MANIFEST_FILENAME } from "./scaffold.js";
@@ -157,6 +157,29 @@ test("modo legado: sem manifesto exige --profile e re-adiciona faltantes", async
     assert.equal(res.mode, "legacy");
     const item = res.plan.find((i) => i.templatePath === "docs/pipeline.md");
     assert.equal(item?.bucket, "add");
+  });
+});
+
+test("gerar handoffs preserva o marcador .last-check", async () => {
+  await withProject(async (dir) => {
+    // marcador de data pré-existente na pasta de trabalho
+    await mkdir(join(dir, "docs", HANDOFF_DIR), { recursive: true });
+    await writeFile(join(dir, "docs", HANDOFF_DIR, ".last-check"), "2026-06-23");
+
+    // força um REVIEW (edita um doc) e aplica
+    const p = join(dir, "docs", "design-principles.md");
+    await writeFile(p, (await readFile(p, "utf8")) + "\nedição\n");
+    await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+
+    // handoff foi gerado E o marcador sobreviveu
+    await access(join(dir, "docs", HANDOFF_DIR, "docs__design-principles.md.handoff.md"));
+    const mark = await readFile(join(dir, "docs", HANDOFF_DIR, ".last-check"), "utf8");
+    assert.equal(mark, "2026-06-23");
   });
 });
 

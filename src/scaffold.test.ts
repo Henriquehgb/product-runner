@@ -75,6 +75,23 @@ test("CLAUDE.md dobra a extensão sem meta-cabeçalho nem headings duplicados", 
   });
 });
 
+test("CLAUDE.md traz a rotina de verificação de atualização", async () => {
+  await withTempDir(async (dir) => {
+    const res = await scaffold({
+      name: "app",
+      profile: "cli",
+      targetDir: dir,
+      port: "3000",
+      force: false,
+    });
+    const claude = await readFile(res.claudeMdPath, "utf8");
+    assert.match(claude, /## Manutenção dos protocolos de doc/);
+    assert.match(claude, /npm view project-docs-blueprints version/);
+    assert.match(claude, /update --dry-run/);
+    assert.match(claude, /\.pdb-update\/\.last-check/);
+  });
+});
+
 test("scaffold escreve o manifesto docs/.project-docs-blueprints.json", async () => {
   await withTempDir(async (dir) => {
     const res = await scaffold({

@@ -77,16 +77,21 @@ Exit code 0. Confirme que existe `CLAUDE.md` na raiz e a pasta `docs/`.
 1. Revise o `CLAUDE.md` e preencha os placeholders `{...}` restantes (stack,
    descrição, princípio arquitetural). Só `{PROJECT_NAME}` e `{PORT}` já vêm
    preenchidos.
-2. `git init`, se ainda não for um repositório.
+2. `git init`, se ainda não for um repositório. Adicione `docs/.pdb-update/` ao
+   `.gitignore` (área de trabalho efêmera do `update`).
 3. Conduza o fluxo a partir de `docs/pipeline.md` (discovery → conceituação →
    doc-funcional → geração de spec) e escreva a primeira spec em
    `specs/setup/00-*.md` seguindo `docs/spec-guide.md`.
 
+A partir daqui, **a manutenção contínua é responsabilidade do `CLAUDE.md`**: ele
+traz a rotina de "verificação de atualização (≤ 1×/dia)" que checa se há versão
+nova dos templates e conduz o `update` junto com você. Este `START-HERE.md` pode
+ser apagado.
+
 ### Limitações a ter em mente
 
-- Não faz merge com `docs/`/`CLAUDE.md` existentes (só aborta ou sobrescreve
-  com `--force`).
-- O merge interno do `CLAUDE.md` é concatenação (base + extensão), não fusão
-  semântica → sempre revise.
 - Substitui só `{PROJECT_NAME}` e `{PORT}`; demais `{...}` são manuais.
 - Só perfis `cli` e `ssr`.
+- Para atualizar um projeto já existente contra uma versão nova dos templates,
+  use `npx project-docs-blueprints update` (com `--dry-run` primeiro) — não
+  `--force`. A rotina periódica fica registrada no `CLAUDE.md` gerado.
