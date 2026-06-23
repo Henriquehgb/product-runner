@@ -1,26 +1,37 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
 import { resolve } from "node:path";
-import { scaffold, type Profile } from "./scaffold.js";
+import {
+  scaffold,
+  initProject,
+  GUIDE_FILENAME,
+  type Profile,
+} from "./scaffold.js";
 
 const HELP = `project-docs-blueprints — scaffold de docs para projetos TS com AI
 
 Uso:
+  npx project-docs-blueprints init [--dir <path>] [--force]
   npx project-docs-blueprints --name <nome> --profile <cli|ssr> [opções]
 
-Opções:
+Comandos:
+  init                 Coloca o guia ${GUIDE_FILENAME} na raiz. Peça a uma LLM
+                       para ler esse arquivo e seguir — ela roda o resto.
+  (sem comando)        Gera docs/ + CLAUDE.md (o scaffold em si).
+
+Opções (scaffold):
   --name <string>      Nome do projeto (obrigatório). Substitui {PROJECT_NAME}.
   --profile <cli|ssr>  Perfil de templates (obrigatório).
   --dir <path>         Diretório alvo. Default: "." (atual).
   --port <number>      Porta default; substitui {PORT}. Default: 3000.
-  --force              Sobrescreve docs/ e CLAUDE.md existentes.
+  --force              Sobrescreve arquivos existentes.
   -h, --help           Mostra esta ajuda.
 
-Gera no diretório alvo:
-  docs/        common/ + profile-<perfil>/ (sem os fragmentos do CLAUDE.md)
-  CLAUDE.md    merge do template-base + extension do perfil, já substituído
+Fluxo recomendado:
+  1. npx project-docs-blueprints init
+  2. Peça à sua LLM: "leia ${GUIDE_FILENAME} e siga as instruções".
 
-Exemplo:
+Exemplo (scaffold direto):
   npx project-docs-blueprints --name meu-app --profile ssr --port 3000 --dir .
 `;
 
@@ -30,24 +41,30 @@ function fail(msg: string): never {
   process.exit(1);
 }
 
-async function main(): Promise<void> {
-  const { values } = parseArgs({
-    options: {
-      name: { type: "string" },
-      profile: { type: "string" },
-      dir: { type: "string", default: "." },
-      port: { type: "string", default: "3000" },
-      force: { type: "boolean", default: false },
-      help: { type: "boolean", short: "h", default: false },
-    },
-    allowPositionals: false,
-  });
-
-  if (values.help) {
-    console.log(HELP);
-    return;
+async function runInit(dir: string, force: boolean): Promise<void> {
+  const targetDir = resolve(dir);
+  try {
+    const { guidePath } = await initProject({ targetDir, force });
+    console.log(`✔ Guia criado em: ${guidePath}`);
+    console.log("\nPróximo passo:");
+    console.log(
+      `  Abra sua LLM (Claude Code/Cowork) neste diretório e peça:`,
+    );
+    console.log(`  "leia ${GUIDE_FILENAME} e siga as instruções".`);
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err));
   }
+}
 
+async function runScaffold(
+  values: {
+    name?: string;
+    profile?: string;
+    dir?: string;
+    port?: string;
+    force?: boolean;
+  },
+): Promise<void> {
   if (!values.name) fail("--name é obrigatório.");
   if (!values.profile) fail("--profile é obrigatório.");
   if (values.profile !== "cli" && values.profile !== "ssr") {
@@ -74,6 +91,38 @@ async function main(): Promise<void> {
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
   }
+}
+
+async function main(): Promise<void> {
+  const { values, positionals } = parseArgs({
+    options: {
+      name: { type: "string" },
+      profile: { type: "string" },
+      dir: { type: "string", default: "." },
+      port: { type: "string", default: "3000" },
+      force: { type: "boolean", default: false },
+      help: { type: "boolean", short: "h", default: false },
+    },
+    allowPositionals: true,
+  });
+
+  if (values.help) {
+    console.log(HELP);
+    return;
+  }
+
+  const command = positionals[0];
+
+  if (command === "init") {
+    await runInit(values.dir ?? ".", values.force ?? false);
+    return;
+  }
+
+  if (command !== undefined && command !== "scaffold") {
+    fail(`Comando desconhecido: "${command}". Use "init" ou nenhum comando.`);
+  }
+
+  await runScaffold(values);
 }
 
 main();
