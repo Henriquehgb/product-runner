@@ -177,13 +177,16 @@ checagem — **no máximo uma vez por dia**, e nunca aplicando nada sem o humano
 
 1. **Trava de data.** Leia `docs/.pdb-update/.last-check`. Se a data for hoje,
    **pule** toda esta rotina.
-2. **Compare versões:** `npm view project-docs-blueprints version` vs o campo
-   `version` do manifesto. Sem rede / comando falhou → registre a data (passo 5)
-   e siga com a tarefa, não trave.
-3. **Se NÃO houver versão nova:** registre a data (passo 5) e siga.
-4. **Se a publicada for MAIS NOVA:**
-   1. Rode `npx project-docs-blueprints@latest update --dry-run` (passe
-      `--profile <cli|ssr>` só se não houver manifesto).
+2. **Estado atual:**
+   - **Sem manifesto** (`docs/.project-docs-blueprints.json` não existe) → o
+     projeto é legado/desatualizado: vá ao passo 4 usando `--profile <cli|ssr>`.
+   - **Com manifesto** → rode `npm view project-docs-blueprints version` e
+     compare com o campo `version` do manifesto. Sem rede / comando falhou →
+     registre a data (passo 5) e siga com a tarefa, não trave.
+3. **Com manifesto e SEM versão nova:** registre a data (passo 5) e siga.
+4. **Atualização** (versão nova, ou projeto sem manifesto):
+   1. Rode `npx project-docs-blueprints@latest update --dry-run` (com
+      `--profile <cli|ssr>` se não houver manifesto).
    2. Resuma o plano ao humano (quantos _adiciona_ / _auto-merge_ / _revisar_) e
       **pergunte se quer atualizar agora**. Se adiar, registre a data e siga.
    3. Com OK: garanta o git limpo (commit/stash), rode o mesmo comando **sem**
