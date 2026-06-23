@@ -53,8 +53,15 @@ npx project-docs-blueprints --name <nome> --profile cli --dir .
 
 ### 4. Verifique o sucesso
 
-A saída deve terminar com `✔ docs criados...` e `✔ CLAUDE.md criado...`,
-exit code 0. Confirme que existe `CLAUDE.md` na raiz e a pasta `docs/`.
+A saída de sucesso **contém** estas duas linhas (depois delas ainda vem um
+bloco "Próximos passos:", então não são as últimas):
+
+```
+✔ docs criados em: <dir>/docs
+✔ CLAUDE.md criado em: <dir>/CLAUDE.md
+```
+
+Exit code 0. Confirme que existe `CLAUDE.md` na raiz e a pasta `docs/`.
 
 ### 5. Se der erro
 
