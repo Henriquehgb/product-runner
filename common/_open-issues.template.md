@@ -2,7 +2,7 @@
 
 Achados detectados durante implementação que NÃO foram endereçados
 na spec onde apareceram, conforme regra "mudanças adjacentes vão
-pra outra spec" do [[spec-guide]].
+pra outra spec" do [spec-guide](./spec-guide.md).
 
 Cada item lista: contexto, descrição, impacto, e candidato a spec
 onde será endereçado. Sem candidato explícito = lixo acumulando.

@@ -218,7 +218,7 @@ Complementam ou refinam as lições do DocManager.
 ## Etapa 9 — LLM como executor
 
 ### Princípios técnicos vs princípios LLM-first vs valores
-**Quando se aplica:** ao escrever [[design-principles]].
+**Quando se aplica:** ao escrever [design-principles](./design-principles.md).
 **Por que importa:** tratar tudo como "princípios" mistura regras
 acionáveis com filosofia. Separação em 3 categorias:
 - **Técnicos** (4): regras universais de arquitetura.
@@ -350,7 +350,7 @@ abstrata.*
 # Lições adicionais — projeto painel (2026-06)
 
 Aprendizados do **trade-bot-painel**, o 3º projeto. Aqui o **pipeline de
-agentes** ([[pipeline]]) rodou de ponta a ponta pela 1ª vez (conceituação →
+agentes** ([pipeline](./pipeline.md)) rodou de ponta a ponta pela 1ª vez (conceituação →
 documentação funcional → geração de spec → implementação) no Incremento 1.
 
 ## Etapa 11 — Pipeline de agentes (conceituação → spec)
@@ -373,7 +373,7 @@ comportamento. Evita duas fontes divergindo.
 ### Protocolo de gates > regra de gate em prosa
 **Quando se aplica:** qualquer ponto de confirmação humana num agente.
 **Por que importa:** os agentes "declaravam rigor e cediam a um ok genérico"
-em ponto de alto risco. Externalizar para [[protocolo-de-gates]] (alto
+em ponto de alto risco. Externalizar para [protocolo-de-gates](./agents/protocolo-de-gates.md) (alto
 risco = lista numerada, "ok" genérico não fecha, valores verificáveis =
 alto risco automático) é o mesmo aprendizado dos critérios meta — checklist
 binário vence atenção. Limite honesto: mais forte que prosa, não à prova

@@ -1,7 +1,7 @@
 # Overview das specs
 
 > **Template.** Mapa das specs do projeto: roadmap, dependências, estado.
-> Gerado e mantido junto com o gerador de spec (ver [[pipeline]]).
+> Gerado e mantido junto com o gerador de spec (ver [pipeline](./pipeline.md)).
 > Substitua os `{placeholders}` pelos do projeto.
 
 ## Princípio de organização
@@ -14,7 +14,7 @@ Duas formas, conforme o projeto:
 
 - **Por incremento de produto** — projetos que passam pelo pipeline de
   conceituação. Cada incremento é uma fatia de valor (1+ casos de uso),
-  decomposto em N specs verticais pelo [[agente-gerador-spec]].
+  decomposto em N specs verticais pelo [agente-gerador-spec](./agents/agente-gerador-spec.md).
 - **Por fase/domínio** — projetos menores, sem conceituação formal. Specs
   agrupadas por domínio estável; numeração indica ordem.
 
@@ -66,4 +66,4 @@ setup/00 → setup/01 → {incremento/fase 1}
 
 _Documento vivo. Atualizar ao implementar specs e ao detalhar novos
 incrementos. Dependências são duras: spec que depende de outra não
-implementada → parar e reportar (regra do [[spec-guide]])._
+implementada → parar e reportar (regra do [spec-guide](./spec-guide.md))._

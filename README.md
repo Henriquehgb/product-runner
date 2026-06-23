@@ -35,7 +35,7 @@ templates/
 
 ```bash
 # 1. Cria o repo
-mkdir ~/Developer/meu-projeto && cd ~/Developer/meu-projeto
+mkdir meu-projeto && cd meu-projeto
 
 # 2. Roda o scaffolder (não-interativo, pensado pra rodar por LLM ou humano)
 npx create-project-docs --name meu-projeto --profile ssr --port 3000 --dir .
@@ -57,14 +57,14 @@ O CLI:
 ### Manual (sem npm)
 
 ```bash
-cp -r ~/Developer/templates/common/* docs/
-cp -r ~/Developer/templates/profile-ssr/* docs/   # ou profile-cli/
+cp -r common/* docs/
+cp -r profile-ssr/* docs/   # ou profile-cli/
 # mescla os dois claude-md num único CLAUDE.md raiz e adapta os {...}
 ```
 
 Método completo (discovery → conceituação → doc-funcional → geração de
-spec → implementação) em [[pipeline]]; formato e critérios da spec em
-[[spec-guide]]. `cp -r common/*` já traz `pipeline.md`, `agents/` e o
+spec → implementação) em [pipeline](common/pipeline.md); formato e critérios da spec em
+[spec-guide](common/spec-guide.md). `cp -r common/*` já traz `pipeline.md`, `agents/` e o
 `_overview.template.md`.
 
 ## Como evolui
@@ -99,10 +99,10 @@ como histórico imutável de "como o projeto X estava em data Y".
 ## Anti-pattern: editar templates em sessão de projeto
 
 Templates devem ser editados **em sessão dedicada** (Cowork apontando
-pra `~/Developer/templates/`), não enquanto você está implementando
+pra este repositório de templates), não enquanto você está implementando
 spec de outro projeto. Senão acumula churn entre o template e o
 projeto real, e fica difícil saber qual é fonte da verdade.
 
-Exceção: anotação rápida de aprendizado em [[lessons-learned]] ou
-em [[_candidates-for-extraction]] — pode ser feita inline no
+Exceção: anotação rápida de aprendizado em [lessons-learned](common/lessons-learned.md) ou
+em [_candidates-for-extraction](_candidates-for-extraction.md) — pode ser feita inline no
 projeto, mas a refatoração do template formal vem em sessão própria.

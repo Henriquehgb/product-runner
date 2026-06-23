@@ -524,7 +524,7 @@ extração honesta). Vários "A acompanhar" agora têm dado.
 Surgiu no painel e foi promovido a template (`common/agents/` +
 `common/pipeline.md`): conceituação → documentação funcional → geração de
 spec, com protocolo de gates compartilhado. Detalhe e limites em
-[[pipeline]] e [[lessons-learned]] (Etapa 11). **A acompanhar:** rodar em
+[pipeline](common/pipeline.md) e [lessons-learned](common/lessons-learned.md) (Etapa 11). **A acompanhar:** rodar em
 um 4º projeto (não-trading, idealmente) pra confirmar que as diretivas dos
 agentes não carregam viés do domínio do painel.
 

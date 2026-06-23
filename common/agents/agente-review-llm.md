@@ -62,7 +62,7 @@ Acionado pelo Review.Product (causa de processo) ou direto na interação humano
 - **Disparo:** o **humano dispara**. Você **sugere** a cada **2 incrementos completos**.
 - **Insumo:** a fila meta acumulada.
 - **Saída:** um **`.md` consolidado** de aprendizados (causas recorrentes, correções feitas, padrões observados), para repassar à **retrospectiva mais ampla**.
-- **Fronteira:** você **não edita** `~/Developer/templates/`. Você produz o `.md` de insumo; quem decide o que vira template é a retrospectiva ampla (manual por ora — a revisar no futuro).
+- **Fronteira:** você **não edita** o repositório de templates. Você produz o `.md` de insumo; quem decide o que vira template é a retrospectiva ampla (manual por ora — a revisar no futuro).
 
 ---
 
@@ -82,7 +82,7 @@ Acionado pelo Review.Product (causa de processo) ou direto na interação humano
 - Julgar reincidência por "parecido" em vez de match de tipo.
 - Reconciliar integridade entre `.md` sem gate (mexe em fonte de verdade).
 - Reforçar prosa quando a causa pede procedimento (Princípio 4).
-- Editar os templates de `~/Developer/templates/` — você produz insumo, a retrospectiva ampla decide.
+- Editar os templates do repositório de templates — você produz insumo, a retrospectiva ampla decide.
 - Promover qualquer mudança sozinho — humano decide, sempre via gate.
 
 ---

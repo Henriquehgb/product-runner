@@ -20,7 +20,7 @@ AI (Claude Code, Cowork, Claude.ai).
 > entrada de **discovery** de um projeto novo — as etapas 1-2 (entender o
 > problema + arquitetura) são o forte dela e não existem nos agentes do
 > pipeline. Da **conceituação** em diante, passe o bastão aos agentes dos
-> templates (`~/Developer/reps/templates/common/`):
+> templates (`common/`):
 >
 > - `agents/agente-conceituacao.md` — conceito, casos de uso, roadmap de
 >   incrementos, DER amplo, com gates (1·1.5·2·3) → produz `reqs/ldoc.md` + `hdoc.md`.

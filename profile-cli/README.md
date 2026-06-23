@@ -13,19 +13,24 @@ Use este perfil em projetos que:
 
 | Arquivo | Pra quê |
 |---|---|
-| [[profile-cli/code-patterns\|code-patterns]] | Estrutura de pastas, schemas Zod, port/adapter pra integrações, padrões de erro, persistência |
-| [[profile-cli/claude-md.extension\|claude-md.extension]] | Seções específicas pra CLI (comandos `npm run`, configuração `.env`, observability via arquivos) |
+| [code-patterns](./code-patterns.md) | Estrutura de pastas, schemas Zod, port/adapter pra integrações, padrões de erro, persistência |
+| [claude-md.extension](../CLAUDE.md) | Seções específicas pra CLI (comandos `npm run`, configuração `.env`, observability via arquivos) |
 
 ## Como combinar com `common/`
 
-```bash
-# Copia universal + perfil CLI:
-cp ~/Developer/templates/common/*.md     meu-projeto/docs/
-cp ~/Developer/templates/profile-cli/*.md meu-projeto/docs/
+Use o CLI — ele copia `common/` + este perfil pra `docs/` e gera o
+`CLAUDE.md` raiz (mescla template + extension, substitui `{...}`):
 
-# CLAUDE.md raiz: mescla template + extension manualmente
-cat ~/Developer/templates/common/claude-md.template.md \
-    ~/Developer/templates/profile-cli/claude-md.extension.md \
+```bash
+npx create-project-docs --name meu-projeto --profile cli --dir .
+```
+
+Equivalente manual, se preferir sem npm:
+
+```bash
+cp common/*.md     meu-projeto/docs/
+cp profile-cli/*.md meu-projeto/docs/
+cat common/claude-md.template.md profile-cli/claude-md.extension.md \
     > meu-projeto/CLAUDE.md
 # Adapta valores entre {} pelos do projeto.
 ```

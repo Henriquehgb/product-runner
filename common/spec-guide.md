@@ -5,8 +5,8 @@ Como ler, escrever e implementar specs neste projeto. Este guia é a
 meta, a granularidade, as regras de implementação e o review.
 
 A **geração** das specs (cortar um incremento conceituado em N specs
-verticais) é o [[agente-gerador-spec]], que consome este guia e o preenche
-a partir dos artefatos a montante — ver [[pipeline]]. Para mudanças
+verticais) é o [agente-gerador-spec](./agents/agente-gerador-spec.md), que consome este guia e o preenche
+a partir dos artefatos a montante — ver [pipeline](./pipeline.md). Para mudanças
 pequenas ou projetos sem conceituação formal, escreva a spec direto neste
 template (o pipeline inteiro não é obrigatório — ver "Fixes vs specs").
 
@@ -113,7 +113,7 @@ lê uma vez e tende a esquecer durante a sessão. Critério binário
 em checklist vence atenção.
 
 > **Relação com os gates.** M1-M3 são a **aplicação à etapa de spec** do
-> mesmo princípio do [[protocolo-de-gates]] (fonte canônica de gate e
+> mesmo princípio do [protocolo-de-gates](./agents/protocolo-de-gates.md) (fonte canônica de gate e
 > calibragem por stakes): checklist binário vence atenção textual. O
 > protocolo governa os gates dos estágios a montante (conceituação,
 > doc-funcional, geração); M1-M3 governam o fechamento da implementação.
@@ -205,7 +205,7 @@ spec usar.
 
 Este é o **trecho de implementação** do método (spec→implementa→review).
 Quando o projeto passa pelo pipeline completo, a "escrita da spec" é o
-[[agente-gerador-spec]] cortando o incremento conceituado — ver [[pipeline]].
+[agente-gerador-spec](./agents/agente-gerador-spec.md) cortando o incremento conceituado — ver [pipeline](./pipeline.md).
 Em mudança pequena, a spec é escrita direto neste template.
 
 ### Quem faz o quê
@@ -213,7 +213,7 @@ Em mudança pequena, a spec é escrita direto neste template.
 | Etapa                     | Onde                       | Quem                                |
 | ------------------------- | -------------------------- | ----------------------------------- |
 | Análise, gap, decisão     | Cowork (esta sessão)       | LLM + você                          |
-| Escrita da spec           | Cowork                     | LLM ([[agente-gerador-spec]] no pipeline) + validação sua |
+| Escrita da spec           | Cowork                     | LLM ([agente-gerador-spec](./agents/agente-gerador-spec.md) no pipeline) + validação sua |
 | Implementação             | Claude Code (outra sessão) | LLM em sessão dedicada              |
 | Review                    | Cowork (volta aqui)        | LLM + você                          |
 | Decisões de implementação | Cowork (review preenche)   | LLM + você                          |
