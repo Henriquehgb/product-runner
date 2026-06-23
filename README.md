@@ -31,23 +31,40 @@ templates/
 
 ## Como usar pra começar projeto novo
 
+### Via CLI (`npx`) — recomendado
+
 ```bash
 # 1. Cria o repo
-mkdir ~/Developer/meu-projeto && cd ~/Developer/meu-projeto
+mkdir meu-projeto && cd meu-projeto
 
-# 2. Copia common + perfil apropriado
-cp -r ~/Developer/templates/common/* docs/
-cp -r ~/Developer/templates/profile-ssr/* docs/   # ou profile-cli/
+# 2. Roda o scaffolder (não-interativo, pensado pra rodar por LLM ou humano)
+npx project-docs-blueprints --name meu-projeto --profile ssr --port 3000 --dir .
+#   --profile cli | ssr        perfil de templates
+#   --port <n>                 porta default (substitui {PORT})
+#   --dir <path>               diretório alvo (default: atual)
+#   --force                    sobrescreve docs/ e CLAUDE.md existentes
+#   --help                     ajuda completa
 
-# 3. Mescla os dois claude-md (template + extension) num único CLAUDE.md
-#    raiz do projeto. Adapta valores ({PROJECT_NAME}, {STACK}, etc.).
+# 3. git init + primeira spec setup/00
+```
 
-# 4. git init + primeira spec setup/00
+O CLI:
+- copia `common/` + `profile-{cli|ssr}/` pra `docs/` (sem os fragmentos de CLAUDE.md);
+- gera o `CLAUDE.md` raiz mesclando `claude-md.template.md` + `claude-md.extension.md`;
+- substitui `{PROJECT_NAME}` e `{PORT}`. Os demais placeholders `{...}` ficam
+  pra você (ou o LLM) preencher na revisão.
+
+### Manual (sem npm)
+
+```bash
+cp -r common/* docs/
+cp -r profile-ssr/* docs/   # ou profile-cli/
+# mescla os dois claude-md num único CLAUDE.md raiz e adapta os {...}
 ```
 
 Método completo (discovery → conceituação → doc-funcional → geração de
-spec → implementação) em [[pipeline]]; formato e critérios da spec em
-[[spec-guide]]. `cp -r common/*` já traz `pipeline.md`, `agents/` e o
+spec → implementação) em [pipeline](common/pipeline.md); formato e critérios da spec em
+[spec-guide](common/spec-guide.md). `cp -r common/*` já traz `pipeline.md`, `agents/` e o
 `_overview.template.md`.
 
 ## Como evolui
@@ -82,10 +99,10 @@ como histórico imutável de "como o projeto X estava em data Y".
 ## Anti-pattern: editar templates em sessão de projeto
 
 Templates devem ser editados **em sessão dedicada** (Cowork apontando
-pra `~/Developer/templates/`), não enquanto você está implementando
+pra este repositório de templates), não enquanto você está implementando
 spec de outro projeto. Senão acumula churn entre o template e o
 projeto real, e fica difícil saber qual é fonte da verdade.
 
-Exceção: anotação rápida de aprendizado em [[lessons-learned]] ou
-em [[_candidates-for-extraction]] — pode ser feita inline no
+Exceção: anotação rápida de aprendizado em [lessons-learned](common/lessons-learned.md) ou
+em [_candidates-for-extraction](_candidates-for-extraction.md) — pode ser feita inline no
 projeto, mas a refatoração do template formal vem em sessão própria.

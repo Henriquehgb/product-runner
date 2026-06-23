@@ -2,14 +2,14 @@
 
 Diretivas reutilizáveis dos agentes que levam uma ideia até specs
 implementáveis. Cada arquivo é o prompt/diretriz de um **estágio** do
-pipeline. Visão geral e costura com o resto do método em [[pipeline]].
+pipeline. Visão geral e costura com o resto do método em [pipeline](../pipeline.md).
 
 | Arquivo | Estágio | Entrega |
 |---|---|---|
-| [[agente-conceituacao\|agente-conceituacao]] | Conceituação (Estágio 1) | `reqs/ldoc.md` + `reqs/hdoc.md` — dor→conceito, casos de uso, roadmap de incrementos, DER amplo, Incremento 1 detalhado |
-| [[agente-documentacao-funcional\|agente-documentacao-funcional]] | Documentação funcional | `funcional/como-funciona.ldoc.md` + `.hdoc.md` — como a app funciona e como usar |
-| [[agente-gerador-spec\|agente-gerador-spec]] | Geração de spec | `specs/{domínio}/NN.md` no template do [[spec-guide]] |
-| [[protocolo-de-gates\|protocolo-de-gates]] | (transversal) | Regras de gate e calibragem por stakes, comuns a todos os agentes |
+| [agente-conceituacao](./agente-conceituacao.md) | Conceituação (Estágio 1) | `reqs/ldoc.md` + `reqs/hdoc.md` — dor→conceito, casos de uso, roadmap de incrementos, DER amplo, Incremento 1 detalhado |
+| [agente-documentacao-funcional](./agente-documentacao-funcional.md) | Documentação funcional | `funcional/como-funciona.ldoc.md` + `.hdoc.md` — como a app funciona e como usar |
+| [agente-gerador-spec](./agente-gerador-spec.md) | Geração de spec | `specs/{domínio}/NN.md` no template do [spec-guide](../spec-guide.md) |
+| [protocolo-de-gates](./protocolo-de-gates.md) | (transversal) | Regras de gate e calibragem por stakes, comuns a todos os agentes |
 
 ## Como se conectam
 
@@ -22,10 +22,10 @@ conceituação → documentação funcional → gerador de spec → Claude Code 
 - **LDoc** (`.md`, para LLM ler) é a **fonte da verdade** de cada estágio;
   o **HDoc** é sempre **derivado** do LDoc, nunca editado à mão. Não são
   templates de arquivo aqui — nascem da execução dos agentes no projeto.
-- O `gerador-spec` **consome** o [[spec-guide]] (template, critérios meta
+- O `gerador-spec` **consome** o [spec-guide](../spec-guide.md) (template, critérios meta
   M1-M4, granularidade) — não duplica essas regras.
 - O `protocolo-de-gates` é a **fonte canônica** de gate/stakes; os
-  critérios meta M1-M3 do [[spec-guide]] são a aplicação dele à etapa de
+  critérios meta M1-M3 do [spec-guide](../spec-guide.md) são a aplicação dele à etapa de
   spec (checklist binário vence atenção textual).
 
 ## Origem
