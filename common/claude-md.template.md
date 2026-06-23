@@ -13,8 +13,6 @@
 - **Formatter:** Prettier + lint-staged + husky (desde dia zero)
 - {Outras deps específicas do projeto}
 
-Detalhes do perfil em `claude-md.extension.md` mesclado (do `profile-{cli|ssr}/` correspondente).
-
 ## Arquitetura
 
 ### Princípio central
