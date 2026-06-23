@@ -38,7 +38,7 @@ templates/
 mkdir meu-projeto && cd meu-projeto
 
 # 2. Roda o scaffolder (não-interativo, pensado pra rodar por LLM ou humano)
-npx create-project-docs --name meu-projeto --profile ssr --port 3000 --dir .
+npx project-docs-blueprints --name meu-projeto --profile ssr --port 3000 --dir .
 #   --profile cli | ssr        perfil de templates
 #   --port <n>                 porta default (substitui {PORT})
 #   --dir <path>               diretório alvo (default: atual)

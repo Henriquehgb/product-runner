@@ -3,10 +3,10 @@ import { parseArgs } from "node:util";
 import { resolve } from "node:path";
 import { scaffold, type Profile } from "./scaffold.js";
 
-const HELP = `create-project-docs — scaffold de docs para projetos TS com AI
+const HELP = `project-docs-blueprints — scaffold de docs para projetos TS com AI
 
 Uso:
-  npx create-project-docs --name <nome> --profile <cli|ssr> [opções]
+  npx project-docs-blueprints --name <nome> --profile <cli|ssr> [opções]
 
 Opções:
   --name <string>      Nome do projeto (obrigatório). Substitui {PROJECT_NAME}.
@@ -21,7 +21,7 @@ Gera no diretório alvo:
   CLAUDE.md    merge do template-base + extension do perfil, já substituído
 
 Exemplo:
-  npx create-project-docs --name meu-app --profile ssr --port 3000 --dir .
+  npx project-docs-blueprints --name meu-app --profile ssr --port 3000 --dir .
 `;
 
 function fail(msg: string): never {
