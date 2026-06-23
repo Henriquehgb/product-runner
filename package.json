@@ -1,0 +1,38 @@
+{
+  "name": "create-project-docs",
+  "version": "0.1.0",
+  "description": "Scaffold de docs para projetos TypeScript com desenvolvimento assistido por AI: gera CLAUDE.md + docs/ a partir de templates vivos (common + perfil cli/ssr).",
+  "type": "module",
+  "bin": {
+    "create-project-docs": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.js",
+    "common",
+    "profile-cli",
+    "profile-ssr"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "node --experimental-strip-types src/cli.ts",
+    "test": "npm run build && node --test dist/*.test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "scaffold",
+    "template",
+    "claude",
+    "ai-assisted",
+    "typescript",
+    "docs"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}

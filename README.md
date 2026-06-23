@@ -31,18 +31,35 @@ templates/
 
 ## Como usar pra começar projeto novo
 
+### Via CLI (`npx`) — recomendado
+
 ```bash
 # 1. Cria o repo
 mkdir ~/Developer/meu-projeto && cd ~/Developer/meu-projeto
 
-# 2. Copia common + perfil apropriado
+# 2. Roda o scaffolder (não-interativo, pensado pra rodar por LLM ou humano)
+npx create-project-docs --name meu-projeto --profile ssr --port 3000 --dir .
+#   --profile cli | ssr        perfil de templates
+#   --port <n>                 porta default (substitui {PORT})
+#   --dir <path>               diretório alvo (default: atual)
+#   --force                    sobrescreve docs/ e CLAUDE.md existentes
+#   --help                     ajuda completa
+
+# 3. git init + primeira spec setup/00
+```
+
+O CLI:
+- copia `common/` + `profile-{cli|ssr}/` pra `docs/` (sem os fragmentos de CLAUDE.md);
+- gera o `CLAUDE.md` raiz mesclando `claude-md.template.md` + `claude-md.extension.md`;
+- substitui `{PROJECT_NAME}` e `{PORT}`. Os demais placeholders `{...}` ficam
+  pra você (ou o LLM) preencher na revisão.
+
+### Manual (sem npm)
+
+```bash
 cp -r ~/Developer/templates/common/* docs/
 cp -r ~/Developer/templates/profile-ssr/* docs/   # ou profile-cli/
-
-# 3. Mescla os dois claude-md (template + extension) num único CLAUDE.md
-#    raiz do projeto. Adapta valores ({PROJECT_NAME}, {STACK}, etc.).
-
-# 4. git init + primeira spec setup/00
+# mescla os dois claude-md num único CLAUDE.md raiz e adapta os {...}
 ```
 
 Método completo (discovery → conceituação → doc-funcional → geração de

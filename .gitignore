@@ -9,3 +9,8 @@
 .DS_Store
 Thumbs.db
 /ds/
+
+# npm / build
+node_modules/
+dist/
+*.tgz
