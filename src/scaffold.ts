@@ -1,11 +1,4 @@
-import {
-  cp,
-  mkdir,
-  readFile,
-  writeFile,
-  access,
-  readdir,
-} from "node:fs/promises";
+import { mkdir, readFile, writeFile, access, readdir } from "node:fs/promises";
 import { constants } from "node:fs";
 import { createHash } from "node:crypto";
 import { dirname, join, relative, resolve, sep } from "node:path";
@@ -27,7 +20,7 @@ export interface ScaffoldOptions {
 }
 
 /** Raiz do pacote (um nível acima de dist/ ou src/), onde vivem os templates. */
-function templatesRoot(): string {
+export function templatesRoot(): string {
   const here = dirname(fileURLToPath(import.meta.url));
   return resolve(here, "..");
 }
@@ -72,10 +65,11 @@ function stripTemplateNotice(md: string): string {
   return out.join("\n");
 }
 
-function applySubstitutions(md: string, opts: ScaffoldOptions): string {
-  return md
-    .replaceAll("{PROJECT_NAME}", opts.name)
-    .replaceAll("{PORT}", opts.port);
+function applySubstitutions(
+  md: string,
+  sub: { name: string; port: string },
+): string {
+  return md.replaceAll("{PROJECT_NAME}", sub.name).replaceAll("{PORT}", sub.port);
 }
 
 // --- Merge do CLAUDE.md por diretivas (base + extensão do perfil) ---------
@@ -199,23 +193,6 @@ function mergeClaudeMd(base: string, extension: string): string {
   return lines.join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
-/** Copia uma árvore de diretórios, pulando arquivos por basename. */
-async function copyTree(
-  src: string,
-  dest: string,
-  skip: Set<string>,
-  force: boolean,
-): Promise<void> {
-  await cp(src, dest, {
-    recursive: true,
-    force,
-    filter: (source) => {
-      const base = source.split("/").pop() ?? "";
-      return !skip.has(base);
-    },
-  });
-}
-
 export interface ScaffoldResult {
   claudeMdPath: string;
   docsPath: string;
@@ -225,12 +202,12 @@ export interface ScaffoldResult {
 /** Nome do manifesto escrito em docs/ — base para futuros `update`. */
 export const MANIFEST_FILENAME = ".project-docs-blueprints.json";
 
-function sha256(content: string): string {
+export function sha256(content: string): string {
   return "sha256:" + createHash("sha256").update(content, "utf8").digest("hex");
 }
 
 /** Lista recursiva de arquivos (caminhos relativos POSIX) sob `dir`. */
-async function listFiles(dir: string, base = dir): Promise<string[]> {
+export async function listFiles(dir: string, base = dir): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const out: string[] = [];
   for (const entry of entries) {
@@ -245,19 +222,110 @@ async function listFiles(dir: string, base = dir): Promise<string[]> {
 }
 
 /** Versão do pacote (do package.json na raiz do pacote). */
-async function packageVersion(root: string): Promise<string> {
+export async function packageVersion(root: string): Promise<string> {
   const pkg = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
   return typeof pkg.version === "string" ? pkg.version : "0.0.0";
 }
 
-export async function scaffold(opts: ScaffoldOptions): Promise<ScaffoldResult> {
+/** Um arquivo que o scaffold emitiria: conteúdo final + origem no pacote. */
+export interface Artifact {
+  /** Conteúdo EXATO que iria pro disco (pós-merge/substituição). */
+  content: string;
+  /** Origem no pacote (path relativo, ou `merge:...` no caso do CLAUDE.md). */
+  fromTemplate: string;
+}
+
+/** Dados mínimos pra materializar os artefatos de um perfil. */
+export interface ArtifactMeta {
+  name: string;
+  profile: Profile;
+  port: string;
+}
+
+/**
+ * Calcula (SEM escrever) todos os arquivos que o scaffold emitiria, como um
+ * mapa destPath(relativo ao targetDir, POSIX) → Artifact. É a fonte única usada
+ * tanto pelo `scaffold` (escreve) quanto pelo `update` (compara). Garante que a
+ * "base" registrada no manifesto seja byte-idêntica ao que seria gerado.
+ */
+export async function buildArtifacts(
+  meta: ArtifactMeta,
+): Promise<Map<string, Artifact>> {
   const root = templatesRoot();
   const commonDir = join(root, "common");
-  const profileDir = join(root, `profile-${opts.profile}`);
+  const profileDir = join(root, `profile-${meta.profile}`);
+  const out = new Map<string, Artifact>();
 
+  // docs/* (common + perfil), exceto os fragmentos do CLAUDE.md
+  for (const [srcDir, prefix] of [
+    [commonDir, "common"],
+    [profileDir, `profile-${meta.profile}`],
+  ] as const) {
+    for (const rel of await listFiles(srcDir)) {
+      const base = rel.split("/").pop() ?? "";
+      if (CLAUDE_MD_PARTS.has(base)) continue;
+      // docs são copiados sem substituição → conteúdo emitido == origem
+      const content = await readFile(join(srcDir, rel), "utf8");
+      out.set(`docs/${rel}`, { content, fromTemplate: `${prefix}/${rel}` });
+    }
+  }
+
+  // CLAUDE.md = base com a extensão do perfil dobrada via diretivas
+  const template = await readFile(
+    join(commonDir, "claude-md.template.md"),
+    "utf8",
+  );
+  const extension = await readFile(
+    join(profileDir, "claude-md.extension.md"),
+    "utf8",
+  );
+  const merged =
+    applySubstitutions(
+      mergeClaudeMd(stripTemplateNotice(template), extension),
+      meta,
+    ).trimEnd() + "\n";
+  out.set("CLAUDE.md", {
+    content: merged,
+    fromTemplate: `merge:common/claude-md.template.md+profile-${meta.profile}/claude-md.extension.md`,
+  });
+
+  return out;
+}
+
+/**
+ * Escreve o manifesto em docs/ a partir dos artefatos emitidos. O hash de cada
+ * arquivo é do conteúdo EMITIDO — vira a "base" que torna o `update` 3-way.
+ */
+export async function writeManifest(
+  docsPath: string,
+  meta: ArtifactMeta,
+  artifacts: Map<string, Artifact>,
+): Promise<string> {
+  const files: Record<string, { fromTemplate: string; sha256: string }> = {};
+  for (const [path, art] of artifacts) {
+    files[path] = { fromTemplate: art.fromTemplate, sha256: sha256(art.content) };
+  }
+  const manifest = {
+    manifestVersion: 1,
+    package: "project-docs-blueprints",
+    version: await packageVersion(templatesRoot()),
+    profile: meta.profile,
+    projectName: meta.name,
+    port: meta.port,
+    files: Object.fromEntries(
+      Object.keys(files)
+        .sort()
+        .map((k) => [k, files[k]]),
+    ),
+  };
+  const manifestPath = join(docsPath, MANIFEST_FILENAME);
+  await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
+  return manifestPath;
+}
+
+export async function scaffold(opts: ScaffoldOptions): Promise<ScaffoldResult> {
   const docsPath = join(opts.targetDir, "docs");
   const claudeMdPath = join(opts.targetDir, "CLAUDE.md");
-  const manifestPath = join(docsPath, MANIFEST_FILENAME);
 
   if (!opts.force) {
     for (const p of [docsPath, claudeMdPath]) {
@@ -269,68 +337,16 @@ export async function scaffold(opts: ScaffoldOptions): Promise<ScaffoldResult> {
     }
   }
 
-  await mkdir(docsPath, { recursive: true });
+  const artifacts = await buildArtifacts(opts);
 
-  // 1. common/ e profile-X/ → docs/ (sem os fragmentos do CLAUDE.md)
-  await copyTree(commonDir, docsPath, CLAUDE_MD_PARTS, opts.force);
-  await copyTree(profileDir, docsPath, CLAUDE_MD_PARTS, opts.force);
-
-  // 2. CLAUDE.md = template-base com a extensão do perfil dobrada via diretivas
-  const template = await readFile(
-    join(commonDir, "claude-md.template.md"),
-    "utf8",
-  );
-  const extension = await readFile(
-    join(profileDir, "claude-md.extension.md"),
-    "utf8",
-  );
-
-  const merged =
-    applySubstitutions(
-      mergeClaudeMd(stripTemplateNotice(template), extension),
-      opts,
-    ).trimEnd() + "\n";
-
-  await writeFile(claudeMdPath, merged, "utf8");
-
-  // 3. Manifesto: registra versão/perfil e o hash do conteúdo EMITIDO de cada
-  //    arquivo gerado. É a "base" que torna o `update` 3-way possível depois.
-  const files: Record<string, { fromTemplate: string; sha256: string }> = {};
-  files["CLAUDE.md"] = {
-    fromTemplate: `merge:common/claude-md.template.md+profile-${opts.profile}/claude-md.extension.md`,
-    sha256: sha256(merged),
-  };
-  for (const [srcDir, prefix] of [
-    [commonDir, "common"],
-    [profileDir, `profile-${opts.profile}`],
-  ] as const) {
-    for (const rel of await listFiles(srcDir)) {
-      const base = rel.split("/").pop() ?? "";
-      if (CLAUDE_MD_PARTS.has(base)) continue;
-      // docs são copiados sem substituição → hash da origem == hash emitido
-      const content = await readFile(join(srcDir, rel), "utf8");
-      files[`docs/${rel}`] = {
-        fromTemplate: `${prefix}/${rel}`,
-        sha256: sha256(content),
-      };
-    }
+  // escreve cada artefato no destino (docs/* e CLAUDE.md na raiz)
+  for (const [rel, art] of artifacts) {
+    const dest = join(opts.targetDir, ...rel.split("/"));
+    await mkdir(dirname(dest), { recursive: true });
+    await writeFile(dest, art.content, "utf8");
   }
 
-  const manifest = {
-    manifestVersion: 1,
-    package: "project-docs-blueprints",
-    version: await packageVersion(root),
-    profile: opts.profile,
-    projectName: opts.name,
-    port: opts.port,
-    files: Object.fromEntries(
-      Object.keys(files)
-        .sort()
-        .map((k) => [k, files[k]]),
-    ),
-  };
-
-  await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
+  const manifestPath = await writeManifest(docsPath, opts, artifacts);
 
   return { claudeMdPath, docsPath, manifestPath };
 }

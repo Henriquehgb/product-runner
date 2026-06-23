@@ -1,0 +1,165 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { mkdtemp, readFile, writeFile, rm, access } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { scaffold, sha256, MANIFEST_FILENAME } from "./scaffold.js";
+import { update, HANDOFF_DIR } from "./update.js";
+
+async function withProject(
+  fn: (dir: string) => Promise<void>,
+  profile: "cli" | "ssr" = "ssr",
+): Promise<void> {
+  const dir = await mkdtemp(join(tmpdir(), "pdb-up-"));
+  try {
+    await scaffold({ name: "proj", profile, targetDir: dir, port: "3000", force: false });
+    await fn(dir);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+const manifestPath = (dir: string) => join(dir, "docs", MANIFEST_FILENAME);
+async function readManifest(dir: string) {
+  return JSON.parse(await readFile(manifestPath(dir), "utf8"));
+}
+
+test("projeto recém-scaffoldado: tudo em dia, nada a fazer", async () => {
+  await withProject(async (dir) => {
+    const res = await update({
+      targetDir: dir,
+      dryRun: true,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    assert.equal(res.mode, "3way");
+    assert.equal(res.counts.add, 0);
+    assert.equal(res.counts.automerge, 0);
+    assert.equal(res.counts.review, 0);
+    assert.ok(res.counts.uptodate > 0);
+  });
+});
+
+test("arquivo faltante é classificado como ADD e re-adicionado ao aplicar", async () => {
+  await withProject(async (dir) => {
+    await rm(join(dir, "docs", "pipeline.md"));
+    const plan = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    const item = plan.plan.find((i) => i.templatePath === "docs/pipeline.md");
+    assert.equal(item?.bucket, "add");
+    await access(join(dir, "docs", "pipeline.md")); // re-adicionado
+  });
+});
+
+test("arquivo editado vai pra REVIEW, é preservado e gera handoff", async () => {
+  await withProject(async (dir) => {
+    const p = join(dir, "docs", "design-principles.md");
+    const original = await readFile(p, "utf8");
+    await writeFile(p, original + "\n## Customização do projeto\n\nminha edição\n");
+
+    const res = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    const item = res.plan.find((i) => i.templatePath === "docs/design-principles.md");
+    assert.equal(item?.bucket, "review");
+
+    // original preservado (não foi sobrescrito)
+    const after = await readFile(p, "utf8");
+    assert.match(after, /minha edição/);
+
+    // handoff gerado, com as duas versões
+    const handoff = await readFile(
+      join(dir, "docs", HANDOFF_DIR, "docs__design-principles.md.handoff.md"),
+      "utf8",
+    );
+    assert.match(handoff, /Versão ATUAL/);
+    assert.match(handoff, /Versão NOVA/);
+    assert.match(handoff, /minha edição/);
+  });
+});
+
+test("AUTO-MERGE: arquivo intocado pelo usuário mas com template novo", async () => {
+  await withProject(async (dir) => {
+    const rel = "docs/design-principles.md";
+    const p = join(dir, rel);
+
+    // simula que o arquivo veio de um template ANTIGO: corpo "velho" no projeto
+    // e base do manifesto = hash desse corpo velho (usuário não editou desde então).
+    const oldBody = "# Design Principles (versão antiga)\n\nconteúdo velho\n";
+    await writeFile(p, oldBody);
+    const manifest = await readManifest(dir);
+    manifest.files[rel].sha256 = sha256(oldBody);
+    await writeFile(manifestPath(dir), JSON.stringify(manifest, null, 2) + "\n");
+
+    const res = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    const item = res.plan.find((i) => i.templatePath === rel);
+    assert.equal(item?.bucket, "automerge");
+
+    // ao aplicar, o arquivo passa a ser a versão nova do template
+    const after = await readFile(p, "utf8");
+    assert.doesNotMatch(after, /conteúdo velho/);
+  });
+});
+
+test("modo legado: sem manifesto exige --profile e re-adiciona faltantes", async () => {
+  await withProject(async (dir) => {
+    await rm(manifestPath(dir));
+
+    // sem profile → erro
+    await assert.rejects(
+      update({
+        targetDir: dir,
+        dryRun: true,
+        normalizeLinks: false,
+        formatNormalize: true,
+      }),
+      /profile/,
+    );
+
+    // com profile → modo legado funciona
+    await rm(join(dir, "docs", "pipeline.md"));
+    const res = await update({
+      targetDir: dir,
+      profile: "ssr",
+      dryRun: true,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    assert.equal(res.mode, "legacy");
+    const item = res.plan.find((i) => i.templatePath === "docs/pipeline.md");
+    assert.equal(item?.bucket, "add");
+  });
+});
+
+test("aplicar reescreve o manifesto (próximo update já é 3-way)", async () => {
+  await withProject(async (dir) => {
+    await rm(manifestPath(dir));
+    await update({
+      targetDir: dir,
+      profile: "ssr",
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    await access(manifestPath(dir)); // manifesto recriado
+    const res = await update({
+      targetDir: dir,
+      dryRun: true,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    assert.equal(res.mode, "3way");
+  });
+});
