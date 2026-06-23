@@ -137,3 +137,39 @@ export async function scaffold(opts: ScaffoldOptions): Promise<ScaffoldResult> {
 
   return { claudeMdPath, docsPath };
 }
+
+export interface InitOptions {
+  /** Diretório alvo onde o arquivo-guia será criado. */
+  targetDir: string;
+  /** Sobrescreve o guia se já existir. */
+  force: boolean;
+}
+
+export interface InitResult {
+  guidePath: string;
+}
+
+/** Nome do arquivo-guia colocado na raiz pelo comando `init`. */
+export const GUIDE_FILENAME = "START-HERE.md";
+
+/**
+ * Copia o arquivo-guia (assets/START-HERE.md) para a raiz do projeto. É o
+ * ponto de entrada: a partir dele uma LLM lê e roda o scaffold.
+ */
+export async function initProject(opts: InitOptions): Promise<InitResult> {
+  const root = templatesRoot();
+  const src = join(root, "assets", GUIDE_FILENAME);
+  const guidePath = join(opts.targetDir, GUIDE_FILENAME);
+
+  if (!opts.force && (await exists(guidePath))) {
+    throw new Error(
+      `Já existe "${guidePath}". Use --force para sobrescrever.`,
+    );
+  }
+
+  await mkdir(opts.targetDir, { recursive: true });
+  const content = await readFile(src, "utf8");
+  await writeFile(guidePath, content, "utf8");
+
+  return { guidePath };
+}

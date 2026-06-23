@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, access } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { scaffold } from "./scaffold.js";
+import { scaffold, initProject, GUIDE_FILENAME } from "./scaffold.js";
 
 async function withTempDir(fn: (dir: string) => Promise<void>): Promise<void> {
   const dir = await mkdtemp(join(tmpdir(), "cpd-"));
@@ -54,6 +54,26 @@ test("scaffold cli funciona sem placeholder de porta", async () => {
     const claude = await readFile(res.claudeMdPath, "utf8");
     assert.match(claude, /^# meu-cli/m);
     await access(join(dir, "docs", "code-patterns.md"));
+  });
+});
+
+test("init coloca o guia START-HERE.md na raiz", async () => {
+  await withTempDir(async (dir) => {
+    const { guidePath } = await initProject({ targetDir: dir, force: false });
+    await access(join(dir, GUIDE_FILENAME));
+    const content = await readFile(guidePath, "utf8");
+    assert.match(content, /Comece aqui/);
+    assert.match(content, /project-docs-blueprints --name/);
+  });
+});
+
+test("init aborta se o guia já existe sem --force", async () => {
+  await withTempDir(async (dir) => {
+    await initProject({ targetDir: dir, force: false });
+    await assert.rejects(
+      initProject({ targetDir: dir, force: false }),
+      /Já existe/,
+    );
   });
 });
 

@@ -31,7 +31,19 @@ templates/
 
 ## Como usar pra começar projeto novo
 
-### Via CLI (`npx`) — recomendado
+### Fluxo guiado por LLM (`init`) — mais simples
+
+```bash
+# No diretório do projeto:
+npx project-docs-blueprints init
+```
+
+Isso coloca um `START-HERE.md` na raiz. Aí é só abrir sua LLM (Claude
+Code/Cowork) no diretório e pedir: **"leia `START-HERE.md` e siga as
+instruções"** — ela escolhe o perfil, roda o scaffold e te guia a partir
+dali.
+
+### Via CLI direto (`npx`)
 
 ```bash
 # 1. Cria o repo
