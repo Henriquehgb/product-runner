@@ -200,7 +200,7 @@ export interface ScaffoldResult {
 }
 
 /** Nome do manifesto escrito em docs/ — base para futuros `update`. */
-export const MANIFEST_FILENAME = ".project-docs-blueprints.json";
+export const MANIFEST_FILENAME = ".product-runner.json";
 
 export function sha256(content: string): string {
   return "sha256:" + createHash("sha256").update(content, "utf8").digest("hex");
@@ -309,7 +309,7 @@ export async function writeManifest(
   }
   const manifest = {
     manifestVersion: 1,
-    package: "project-docs-blueprints",
+    package: "product-runner",
     version: await packageVersion(templatesRoot()),
     profile: meta.profile,
     projectName: meta.name,

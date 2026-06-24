@@ -39,7 +39,7 @@ review (Estágio 5):  Review.Code → User Review → Review.Product → Review.
 - O `kickoff` é o **Estágio 0**: faz o discovery (problema, arquitetura,
   esboço de dados) e **entrega o briefing** à conceituação. Como o discovery
   acontece antes de o projeto existir, a porta de entrada humana é a skill
-  `project-kickoff` (quando instalada) ou `npx project-docs-blueprints init`;
+  `project-kickoff` (quando instalada) ou `npx product-runner init`;
   este agente é a **diretriz versionada** desse estágio, copiada para
   `docs/agents/` no scaffold.
 

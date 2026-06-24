@@ -228,6 +228,33 @@ test("migration 0.3.0: renomeia _overview.template -> specs/ e gera handoff cond
   });
 });
 
+test("migration 0.5.0: fallback lê manifesto no nome antigo e renomeia pro novo", async () => {
+  await withProject(async (dir) => {
+    // simula projeto pré-rename: manifesto no nome ANTIGO, cursor 0.4.0
+    const m = await readManifest(dir); // lê o nome novo escrito pelo scaffold
+    m.version = "0.4.0";
+    await writeFile(
+      join(dir, "docs", ".project-docs-blueprints.json"),
+      JSON.stringify(m, null, 2) + "\n",
+    );
+    await rm(manifestPath(dir)); // remove o nome novo → só sobra o antigo
+
+    const res = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: false,
+    });
+
+    // a migration 0.5.0 está no caminho (0.4.0 -> pkg) e renomeou o arquivo
+    assert.ok(res.migrations.some((x) => x.version === "0.5.0"));
+    await access(manifestPath(dir)); // manifesto agora no nome novo
+    await assert.rejects(
+      access(join(dir, "docs", ".project-docs-blueprints.json")), // antigo sumiu
+    );
+  });
+});
+
 test("aplicar reescreve o manifesto (próximo update já é 3-way)", async () => {
   await withProject(async (dir) => {
     await rm(manifestPath(dir));

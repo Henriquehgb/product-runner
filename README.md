@@ -41,7 +41,7 @@ o manifesto. O resultado, **perfil `ssr`**:
 meu-projeto/
 ├── CLAUDE.md                          ← merge template + extensão do perfil
 ├── docs/
-│   ├── .project-docs-blueprints.json  ← manifesto (marca o projeto como "gerido")
+│   ├── .product-runner.json  ← manifesto (marca o projeto como "gerido")
 │   ├── pipeline.md
 │   ├── design-principles.md
 │   ├── spec-guide.md
@@ -80,7 +80,7 @@ O **perfil `cli`** é igual, mas sem `api-patterns.md`, `ui-patterns.md` e
 
 ```bash
 # No diretório do projeto:
-npx project-docs-blueprints init
+npx product-runner init
 ```
 
 Isso coloca um `START-HERE.md` na raiz. Aí é só abrir sua LLM (Claude
@@ -95,7 +95,7 @@ dali.
 mkdir meu-projeto && cd meu-projeto
 
 # 2. Roda o scaffolder (não-interativo, pensado pra rodar por LLM ou humano)
-npx project-docs-blueprints --name meu-projeto --profile ssr --port 3000 --dir .
+npx product-runner --name meu-projeto --profile ssr --port 3000 --dir .
 #   --profile cli | ssr        perfil de templates
 #   --port <n>                 porta default (substitui {PORT})
 #   --dir <path>               diretório alvo (default: atual)

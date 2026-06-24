@@ -9,12 +9,12 @@ import {
 } from "./scaffold.js";
 import { update, renderPlan, HANDOFF_DIR } from "./update.js";
 
-const HELP = `project-docs-blueprints — scaffold de docs para projetos TS com AI
+const HELP = `product-runner — scaffold de docs para projetos TS com AI
 
 Uso:
-  npx project-docs-blueprints init [--dir <path>] [--force]
-  npx project-docs-blueprints --name <nome> --profile <cli|ssr> [opções]
-  npx project-docs-blueprints update [--dir <path>] [--dry-run] [opções]
+  npx product-runner init [--dir <path>] [--force]
+  npx product-runner --name <nome> --profile <cli|ssr> [opções]
+  npx product-runner update [--dir <path>] [--dry-run] [opções]
 
 Comandos:
   init                 Coloca os agentes de bootstrap (${ENTRY_AGENT} +
@@ -42,14 +42,14 @@ Opções (update):
   --no-format-normalize Não normaliza formatação (Prettier) antes de comparar.
 
 Fluxo recomendado:
-  1. npx project-docs-blueprints init
+  1. npx product-runner init
   2. Peça à sua LLM: "leia ${ENTRY_AGENT} e siga as instruções".
 
 Exemplo (scaffold direto):
-  npx project-docs-blueprints --name meu-app --profile ssr --port 3000 --dir .
+  npx product-runner --name meu-app --profile ssr --port 3000 --dir .
 
 Exemplo (update):
-  npx project-docs-blueprints update --dry-run
+  npx product-runner update --dry-run
 `;
 
 function fail(msg: string): never {

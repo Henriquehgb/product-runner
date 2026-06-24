@@ -89,14 +89,14 @@ test("CLAUDE.md aponta a manutenção pro agente-pdb; o detalhe vive no agente",
     const claude = await readFile(res.claudeMdPath, "utf8");
     assert.match(claude, /## Manutenção dos protocolos de doc/);
     assert.match(claude, /agente-pdb/);
-    assert.doesNotMatch(claude, /npm view project-docs-blueprints version/);
+    assert.doesNotMatch(claude, /npm view product-runner version/);
 
     // o protocolo completo está no agente-pdb scaffoldado
     const pdb = await readFile(
       join(dir, "docs", "agents", "agente-pdb.md"),
       "utf8",
     );
-    assert.match(pdb, /npm view project-docs-blueprints version/);
+    assert.match(pdb, /npm view product-runner version/);
     assert.match(pdb, /update --dry-run/);
     assert.match(pdb, /\.pdb-update\/\.last-check/);
   });
@@ -118,7 +118,7 @@ test("scaffold emite _overview/_open-issues em specs/ (sem .template)", async ()
   });
 });
 
-test("scaffold escreve o manifesto docs/.project-docs-blueprints.json", async () => {
+test("scaffold escreve o manifesto docs/.product-runner.json", async () => {
   await withTempDir(async (dir) => {
     const res = await scaffold({
       name: "app-manifesto",

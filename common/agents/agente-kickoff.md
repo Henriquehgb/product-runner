@@ -73,7 +73,7 @@ Se o problema envolver troubleshooting ou análise de um sistema existente, acio
   - [ ] Integrações externas (APIs, serviços)
   - [ ] Background jobs (fila, worker)
   - [ ] Autenticação (se aplicável)
-- A decisão de stack determina o **perfil** dos templates: `profile-cli` (script/loop) ou `profile-ssr` (web). Consulte `design-principles.md` para princípios reutilizáveis. O perfil escolhido alimenta o scaffolder (`project-docs-blueprints`).
+- A decisão de stack determina o **perfil** dos templates: `profile-cli` (script/loop) ou `profile-ssr` (web). Consulte `design-principles.md` para princípios reutilizáveis. O perfil escolhido alimenta o scaffolder (`product-runner`).
 
 ## Etapa 3 — Esboço de modelo de dados
 
@@ -105,7 +105,7 @@ Ao final, o Estágio 0 entrega:
 - **Briefing** (ex.: `Kickoff.md`): problema e público, resultado do build-vs-buy, orçamento de serviços externos, limitações da plataforma, volume, decisões de stack/deploy/padrões **com o porquê**, **perfil escolhido** (`cli`|`ssr`) e o **esboço** do modelo de dados. Inclui explicitamente o que fica **deferido** para a conceituação.
 - **Handoff:** passe o bastão ao `agente-conceituacao` (Estágio 1), que parte deste briefing para conceito, casos de uso, roadmap de incrementos, DER amplo e Incremento 1 detalhado → produz `reqs/ldoc.md` + `reqs/hdoc.md`.
 
-> **Bootstrap do projeto.** A montagem física de `docs/` + `CLAUDE.md` é feita pelo scaffolder (`npx project-docs-blueprints …`) a partir do **perfil** decidido na Etapa 2 — não monte esses arquivos à mão. Visão geral do método em `pipeline.md`; workflow de specs e critérios meta no `spec-guide.md`.
+> **Bootstrap do projeto.** A montagem física de `docs/` + `CLAUDE.md` é feita pelo scaffolder (`npx product-runner …`) a partir do **perfil** decidido na Etapa 2 — não monte esses arquivos à mão. Visão geral do método em `pipeline.md`; workflow de specs e critérios meta no `spec-guide.md`.
 
 ---
 

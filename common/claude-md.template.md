@@ -196,8 +196,8 @@ rastro no conteúdo das specs**, não pela tabela acima.
 
 ## Manutenção dos protocolos de doc
 
-Estes docs e este `CLAUDE.md` vieram de `project-docs-blueprints` (manifesto em
-`docs/.project-docs-blueprints.json`). O protocolo completo de manutenção
+Estes docs e este `CLAUDE.md` vieram de `product-runner` (manifesto em
+`docs/.product-runner.json`). O protocolo completo de manutenção
 — diagnóstico do projeto, verificação de versão, `update`, migrations e handoffs —
 vive no agente [agente-pdb](./docs/agents/agente-pdb.md).
 
