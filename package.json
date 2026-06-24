@@ -1,6 +1,6 @@
 {
   "name": "project-docs-blueprints",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "Scaffold de docs para projetos TypeScript com desenvolvimento assistido por AI: gera CLAUDE.md + docs/ a partir de templates vivos (common + perfil cli/ssr).",
   "type": "module",
   "bin": {
@@ -21,6 +21,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "node --experimental-strip-types src/cli.ts",
     "test": "npm run build && node --test dist/*.test.js",
+    "prepare": "npm run build",
     "prepack": "npm run build",
     "prepublishOnly": "npm run build"
   },

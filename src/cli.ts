@@ -7,16 +7,21 @@ import {
   GUIDE_FILENAME,
   type Profile,
 } from "./scaffold.js";
+import { update, renderPlan, HANDOFF_DIR } from "./update.js";
 
 const HELP = `project-docs-blueprints — scaffold de docs para projetos TS com AI
 
 Uso:
   npx project-docs-blueprints init [--dir <path>] [--force]
   npx project-docs-blueprints --name <nome> --profile <cli|ssr> [opções]
+  npx project-docs-blueprints update [--dir <path>] [--dry-run] [opções]
 
 Comandos:
   init                 Coloca o guia ${GUIDE_FILENAME} na raiz. Peça a uma LLM
                        para ler esse arquivo e seguir — ela roda o resto.
+  update               Atualiza docs/ + CLAUDE.md de um projeto existente contra
+                       a versão atual dos templates (adiciona / auto-merge /
+                       revisar). Usa o manifesto se houver; senão, modo legado.
   (sem comando)        Gera docs/ + CLAUDE.md (o scaffold em si).
 
 Opções (scaffold):
@@ -27,12 +32,23 @@ Opções (scaffold):
   --force              Sobrescreve arquivos existentes.
   -h, --help           Mostra esta ajuda.
 
+Opções (update):
+  --dir <path>          Diretório do projeto. Default: "." (atual).
+  --dry-run             Só imprime o plano; não escreve nada.
+  --profile <cli|ssr>   Perfil (obrigatório se o projeto não tiver manifesto).
+  --normalize-links     Converte links dos arquivos novos pro estilo do projeto.
+  --only <glob>         Limita a ação aos paths que casam (ex.: "docs/agents/**").
+  --no-format-normalize Não normaliza formatação (Prettier) antes de comparar.
+
 Fluxo recomendado:
   1. npx project-docs-blueprints init
   2. Peça à sua LLM: "leia ${GUIDE_FILENAME} e siga as instruções".
 
 Exemplo (scaffold direto):
   npx project-docs-blueprints --name meu-app --profile ssr --port 3000 --dir .
+
+Exemplo (update):
+  npx project-docs-blueprints update --dry-run
 `;
 
 function fail(msg: string): never {
@@ -93,6 +109,71 @@ async function runScaffold(
   }
 }
 
+async function runUpdate(values: {
+  dir?: string;
+  profile?: string;
+  "dry-run"?: boolean;
+  "normalize-links"?: boolean;
+  only?: string;
+  "no-format-normalize"?: boolean;
+}): Promise<void> {
+  if (
+    values.profile !== undefined &&
+    values.profile !== "cli" &&
+    values.profile !== "ssr"
+  ) {
+    fail(`--profile deve ser "cli" ou "ssr" (recebido: "${values.profile}").`);
+  }
+
+  const targetDir = resolve(values.dir ?? ".");
+  const dryRun = values["dry-run"] ?? false;
+
+  try {
+    const result = await update({
+      targetDir,
+      profile: values.profile as Profile | undefined,
+      dryRun,
+      normalizeLinks: values["normalize-links"] ?? false,
+      only: values.only,
+      formatNormalize: !(values["no-format-normalize"] ?? false),
+    });
+
+    const modeNote =
+      result.mode === "legacy"
+        ? "⚠ Sem manifesto — modo legado (comparação 2-way normalizada).\n"
+        : "";
+    // Aviso crítico: normalização pedida mas Prettier ausente → REVISAR pode
+    // estar inflado só por diferença de formatação.
+    const formatNote =
+      !(values["no-format-normalize"] ?? false) && !result.prettierFound
+        ? "⚠ Prettier não encontrado em node_modules/.bin — comparei SEM normalizar\n" +
+          "  formatação. Arquivos podem cair em REVISAR só por estilo (aspas, tabelas).\n" +
+          "  Rode `npm install` no projeto e tente de novo, ou use --no-format-normalize\n" +
+          "  pra silenciar este aviso.\n"
+        : "";
+    const header = dryRun
+      ? "Plano de update — NADA será escrito.\n"
+      : "Update aplicado.\n";
+    console.log(modeNote + formatNote + header);
+    console.log(renderPlan(result));
+
+    const { add, automerge, review, uptodate } = result.counts;
+    console.log(
+      `\nResumo: ${add} adicionar · ${automerge} auto-merge · ${review} revisar · ${uptodate} em dia.`,
+    );
+
+    if (dryRun) {
+      console.log("\nRode sem --dry-run pra aplicar ADICIONA + AUTO-MERGE.");
+    } else if (review > 0) {
+      console.log(
+        `\n${review} arquivo(s) pra revisar: veja os handoffs em docs/${HANDOFF_DIR}/.`,
+      );
+    }
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err));
+  }
+}
+
 async function main(): Promise<void> {
   const { values, positionals } = parseArgs({
     options: {
@@ -102,6 +183,10 @@ async function main(): Promise<void> {
       port: { type: "string", default: "3000" },
       force: { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
+      "dry-run": { type: "boolean", default: false },
+      "normalize-links": { type: "boolean", default: false },
+      only: { type: "string" },
+      "no-format-normalize": { type: "boolean", default: false },
     },
     allowPositionals: true,
   });
@@ -118,8 +203,15 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (command === "update") {
+    await runUpdate(values);
+    return;
+  }
+
   if (command !== undefined && command !== "scaffold") {
-    fail(`Comando desconhecido: "${command}". Use "init" ou nenhum comando.`);
+    fail(
+      `Comando desconhecido: "${command}". Use "init", "update" ou nenhum comando.`,
+    );
   }
 
   await runScaffold(values);

@@ -1,28 +1,33 @@
-# Extension CLAUDE.md — Perfil CLI
+<!--
+Extensão do CLAUDE.md — Perfil CLI.
+Este arquivo NÃO é concatenado: cada bloco abaixo declara, via diretiva
+`pdb-merge`, como dobra numa seção do template-base (common/claude-md.template.md).
+Modos: replace (troca a seção), append (acrescenta ao fim da seção),
+after (insere logo após a seção). Edite o conteúdo, não as diretivas.
+-->
 
-> **Este arquivo é uma extensão.** Mescla com `common/claude-md.template.md`
-> ao criar `CLAUDE.md` raiz do projeto. Mantém só seções relevantes
-> ao perfil CLI.
+<!-- pdb-merge: append section="Stack" -->
 
-## Seções a adicionar/sobrescrever no template-base
-
-### Stack (extensão)
-
-Adicionar:
-- **Broker / lib externa:** {ex: `@binance/connector`, `openai`, etc.} — abstraído via `BrokerClient` (port/adapter)
+- **Broker / lib externa:** {ex: `@binance/connector`, `openai`, etc.} —
+  abstraído via `BrokerClient` (port/adapter)
 - **Config:** `dotenv` + `.env`
 - **Persistência:** arquivos JSON locais (`actualState.json`, `history/`)
-- **Observability:** arquivos JSON formato Kibana consumidos por OpenSearch local (ou similar)
+- **Observability:** arquivos JSON formato Kibana consumidos por OpenSearch
+  local (ou similar)
 - **Containerização:** Docker (`docker-compose.yml`) — opcional
 
-### Arquitetura — Princípio central (CLI)
+<!-- pdb-merge: replace section="Princípio central" -->
+
+### Princípio central
 
 Lógica de domínio (cálculo, decisão, regras) é código TypeScript
 puro, sem acoplamento com lib externa, file system ou env. Acesso
 à lib externa via interface (port). Persistência via funções
 dedicadas. Loop principal é casca fina que orquestra.
 
-### Estrutura alvo (CLI)
+<!-- pdb-merge: replace section="Estrutura de pastas" -->
+
+### Estrutura de pastas
 
 ```
 {project}/
@@ -41,7 +46,9 @@ dedicadas. Loop principal é casca fina que orquestra.
 └── dist/                        ← outDir do tsc (gitignored)
 ```
 
-### Comandos úteis (CLI)
+<!-- pdb-merge: replace section="Comandos úteis" -->
+
+## Comandos úteis
 
 ```bash
 npm install                       # deps
@@ -52,18 +59,22 @@ npx tsc --noEmit                  # typecheck
 docker compose up -d              # infra (OpenSearch local, etc.) — opcional
 ```
 
-### Configuração (CLI)
+<!-- pdb-merge: replace section="Configuração" -->
 
-| Arquivo | Conteúdo | Comitado? |
-|---|---|---|
-| `.env` | Segredos da lib externa (API keys, etc.) | ❌ NUNCA |
-| `.env.example` | Mesmas chaves sem valor | ✅ |
-| `global.json` ou similar | Defaults globais | ✅ |
-| `actualState.json` | Estado runtime (auto-gerado) | ❌ |
-| `history/*` | Logs estruturados | ❌ |
+## Configuração
+
+| Arquivo                  | Conteúdo                                  | Comitado? |
+| ------------------------ | ----------------------------------------- | --------- |
+| `.env`                   | Segredos da lib externa (API keys, etc.)  | ❌ NUNCA  |
+| `.env.example`           | Mesmas chaves sem valor                   | ✅        |
+| `global.json` ou similar | Defaults globais                          | ✅        |
+| `actualState.json`       | Estado runtime (auto-gerado)              | ❌        |
+| `history/*`              | Logs estruturados                         | ❌        |
 
 Hot-reload de configs (se aplicável): a cada N segundos no loop principal
 (definir `configCacheTime`).
+
+<!-- pdb-merge: append section="Convenções de código" -->
 
 ### Comportamento do loop após erro (CLI)
 
@@ -72,8 +83,8 @@ tratados disparam `console.error` + exit code != 0. Pattern:
 
 ```ts
 runTradingLoop({ broker }).catch((error) => {
-    console.error("FATAL: bot loop crashed", error);
-    process.exit(1);
+  console.error("FATAL: bot loop crashed", error);
+  process.exit(1);
 });
 ```
 
@@ -83,6 +94,7 @@ outros, mas erro de orquestração mata o processo.
 ### Observability (CLI)
 
 Status quo recomendado:
+
 - Logs estruturados em `history/*.json` formato Kibana (`_index`,
   `_source`, `_id`).
 - OpenSearch local via Docker pra dashboards (ou similar).
