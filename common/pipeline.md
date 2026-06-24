@@ -7,9 +7,13 @@ o protocolo de gates e o ciclo Cowork↔Claude Code do [spec-guide](./spec-guide
 ## Visão geral
 
 ```
-0 discovery → 1 conceituação → 2 doc-funcional → 3 gerador-spec → 4 Claude Code → 5 review/reconciliação
-  (kickoff)     (reqs/ldoc+hdoc)  (como-funciona)    (specs/)        (código+report)   (decisões de impl.)
-                      └──────────────── protocolo-de-gates governa os gates ──────────────┘
+0 discovery → 1 conceituação → 2 doc-funcional → 3 gerador-spec → 4 Claude Code → 5 review
+  (kickoff)     (reqs/ldoc+hdoc)  (como-funciona)    (specs/)        (código+report)    │
+                      └────────────── protocolo-de-gates governa os gates ───────────┘  │
+                                                                                         ↓
+5 · review (sub-cadeia):  Review.Code → User Review → Review.Product → Review.LLM
+                          (veredito)    (uso humano)   (roteia)        (corrige pipeline)
+                             └─ Impeditivo escala: User Review → Review.Product → Conceituação
 ```
 
 ## Os estágios
@@ -42,11 +46,61 @@ a montante. Gate de corte (alto risco). Saída: `specs/{domínio}/NN.md` +
 implementa → reporta (critérios ✅/❌ + decisões). Detalhe do ciclo e das
 regras operacionais no [spec-guide](./spec-guide.md).
 
-**5 · Review / reconciliação** — Cowork cruza os critérios com o código
-real e preenche "Decisões de implementação" na própria spec. A **volta de
-reconciliação** (corrigir conceituação/funcional contra o que foi de fato
-construído, puxando das decisões de implementação) é **fase futura** dos
-agentes — ainda não especificada.
+**5 · Review** — sub-cadeia própria, rodada **por incremento entregue**,
+um agente por papel ([agents/](./agents/README.md)):
+
+1. **Review.Code** ([agente-review-code](./agents/agente-review-code.md)) — review técnico: cruza
+   cada critério de aceite com o **código real** (grep, testes, diff), não
+   com o report. Rastro: veredito ✅/❌/⚠️ por critério + classificação dos
+   achados (correção do ciclo / issue / Impeditivo). Divergências legítimas
+   são apontadas para as "Decisões de implementação" da spec — ele não
+   reescreve a spec.
+2. **User Review** ([agente-user-review](./agents/agente-user-review.md)) — prepara o teste de
+   usabilidade (roteiro) e trata o feedback (corte binário ajuste /
+   mais-que-ajuste). O julgamento é humano e intransferível. Roda após o
+   Review.Code.
+3. **Review.Product** ([agente-review-product](./agents/agente-review-product.md)) — hub: classifica
+   o feedback por **causa-raiz** e roteia ao destino (Conceituação,
+   Doc-funcional, Design System ou Review.LLM). Acumula a fila de produto.
+4. **Review.LLM** ([agente-review-llm](./agents/agente-review-llm.md)) — meta: a partir de uma
+   falha **já diagnosticada com o humano**, corrige o **próprio pipeline**
+   (diretiva, skill, template) pra ela não repetir, e reconcilia a mesma
+   inconsistência se ela propagou.
+
+**Impeditivo** (concepção profunda achada no Review.Code) bloqueia o avanço
+e escala por User Review → Review.Product → Conceituação; só o humano
+bypassa. A **volta de reconciliação** (corrigir conceituação/funcional
+contra o que foi construído) é coberta por Review.Product → destino — antes
+era fase futura, agora está especificada nos agentes. Tratar como
+recém-especificado: método vivo até acumular runs.
+
+## Em que estágio estou? (orientar pelo rastro)
+
+"Qual a próxima etapa" / "X está pronto?" se descobre **lendo o conteúdo
+dos artefatos**, não a tabela de status. Cada estágio deixa um **rastro**
+detectável; o **primeiro estágio sem rastro é o próximo passo**:
+
+| Estágio | Rastro de que rodou |
+| --- | --- |
+| 1 conceituação | `reqs/ldoc.md` existe e preenchido |
+| 2 doc-funcional | `funcional/como-funciona.ldoc.md` existe |
+| 3 gerador-spec | `specs/{domínio}/NN.md` existem + `_overview` populado |
+| 4 implementação | report do Code (critérios ✅/❌/⚠️) + **"Decisões de implementação" preenchidas** (critério M1) |
+| 5 review | **veredito do Review.Code** (cruzamento critério × código) + saídas de User/Product/LLM (filas de produto/meta) |
+
+> **Cuidado — o erro clássico:** "Decisões de implementação" preenchidas
+> são rastro do **estágio 4** (Code as preenche por M1), **não** do review.
+> O estágio 5 tem rastro **próprio** (o veredito do Review.Code). Ver uma
+> spec com Decisões preenchidas e concluir "review feito" é confundir os
+> dois — aconteceu de verdade (ver [lessons-learned](./lessons-learned.md)). Se não há
+> veredito de review, **o próximo passo é rodar os fluxos de review.**
+
+**Regra de fonte:** a spec é a **fonte**; `_overview.md` e a tabela de
+estado do `CLAUDE.md` são **índice derivado** (mesmo princípio LDoc→HDoc
+abaixo). Confirme o status contra o **conteúdo da spec** antes de afirmar ou
+sugerir o próximo passo. Se o índice diverge da spec, a **spec ganha** e o
+índice é o que se corrige. Nunca responda status a partir de leitura
+truncada (`head -N`) do índice.
 
 ## LDoc / HDoc
 

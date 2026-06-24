@@ -3,6 +3,12 @@
 > **Template.** Mapa das specs do projeto: roadmap, dependências, estado.
 > Gerado e mantido junto com o gerador de spec (ver [pipeline](./pipeline.md)).
 > Substitua os `{placeholders}` pelos do projeto.
+>
+> **Índice derivado, não fonte.** Este mapa é conveniência e **drift-a**. O
+> estado real de cada spec é o **conteúdo da spec** (critérios marcados,
+> veredito de review). Não responda "qual a próxima etapa" a partir desta
+> tabela — confirme na spec. Mesmo princípio LDoc→HDoc. Como descobrir a
+> etapa pelo rastro: [pipeline](./pipeline.md) ("Em que estágio estou?").
 
 ## Princípio de organização
 
