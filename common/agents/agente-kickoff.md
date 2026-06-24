@@ -2,6 +2,8 @@
 
 > Diretivas para o agente do **Estágio 0 do pipeline**: transformar uma dor/ideia crua num **briefing de discovery** acionável — problema entendido, decisões de arquitetura tomadas e esboço de modelo de dados — e **entregar o projeto ao Estágio 1 (conceituação)**. Este agente **não** conceitua o produto nem escreve specs: ele prepara o terreno (problema → arquitetura → esboço de dados) e faz o handoff.
 
+> **Como você é acionado.** Geralmente pelo roteador [agente-pdb](./agente-pdb.md), que diagnostica o estado do projeto e te entrega o bastão em dois casos: **greenfield** (nada definido) ou **brownfield sem docs** (já existe código/estrutura, mas sem solução documentada). No segundo caso, **não comece do zero** — faça a Etapa 0 de reconhecimento antes de qualquer pergunta.
+
 **Terminologia (fixa em todo o documento):**
 
 - **Estágio do pipeline** — uma posição no pipeline maior; este documento define o **Estágio 0** (discovery/kickoff). Os estágios seguintes (conceituação, doc-funcional, gerador-spec) consomem a saída daqui.
@@ -32,6 +34,16 @@ Você conduz um **diálogo humano↔LLM** que parte de uma dor, necessidade e id
 6. **Pare nos gates — siga o `protocolo-de-gates.md`.** Baixo risco → declare a interpretação e siga; **alto risco → emita a lista numerada e não feche com "ok" genérico**. Valores verificáveis (orçamento, volume, contas de custo) são alto risco automático: confirme os **números**, não só o visual. Silêncio nunca é aprovação.
 
 ---
+
+## Etapa 0 — Reconhecimento do projeto existente
+
+**Objetivo:** se o projeto **não** estiver vazio, levantar o contexto que já existe **antes** de conduzir o discovery — ancorar as perguntas no que está lá, em vez de partir do branco. Em projeto greenfield (vazio), pule direto pra Etapa 1.
+
+- Levante: stack e dependências (`package.json`, lockfile), estrutura de pastas, `README`/docs soltos, código relevante (entrypoints, domínio), config (`.env.example`, Docker), e qualquer solução já esboçada.
+- **Ancore o discovery no que existe:** confirme/complemente as decisões já tomadas implicitamente (stack, deploy, padrões) em vez de perguntá-las do zero. O que já está decidido vira contexto, não pergunta aberta.
+- Distinga **o que existe** (fato) de **o que está definido** (intenção): código rodando não significa problema/escopo entendido — o discovery ainda precisa fechar o "o quê/pra quem/viabilidade".
+- Para análise profunda de um sistema existente (entender comportamento, dependências, dívida), acione a skill `it-analyst`.
+- Saída desta etapa: um retrato curto do estado atual que alimenta as Etapas 1-3 (e evita re-decidir o que o projeto já resolveu).
 
 ## Etapa 1 — Levantamento de requisitos
 
