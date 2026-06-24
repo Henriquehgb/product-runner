@@ -256,7 +256,8 @@ export async function buildArtifacts(
   const profileDir = join(root, `profile-${meta.profile}`);
   const out = new Map<string, Artifact>();
 
-  // docs/* (common + perfil), exceto os fragmentos do CLAUDE.md
+  // common/ e perfil → docs/, exceto: fragmentos do CLAUDE.md (pulados) e
+  // common/specs/* → specs/ (seeds preenchidos no projeto, fora de docs/).
   for (const [srcDir, prefix] of [
     [commonDir, "common"],
     [profileDir, `profile-${meta.profile}`],
@@ -266,7 +267,8 @@ export async function buildArtifacts(
       if (CLAUDE_MD_PARTS.has(base)) continue;
       // docs são copiados sem substituição → conteúdo emitido == origem
       const content = await readFile(join(srcDir, rel), "utf8");
-      out.set(`docs/${rel}`, { content, fromTemplate: `${prefix}/${rel}` });
+      const dest = rel.startsWith("specs/") ? rel : `docs/${rel}`;
+      out.set(dest, { content, fromTemplate: `${prefix}/${rel}` });
     }
   }
 
@@ -352,37 +354,54 @@ export async function scaffold(opts: ScaffoldOptions): Promise<ScaffoldResult> {
 }
 
 export interface InitOptions {
-  /** Diretório alvo onde o arquivo-guia será criado. */
+  /** Diretório alvo onde os agentes de bootstrap serão criados. */
   targetDir: string;
-  /** Sobrescreve o guia se já existir. */
+  /** Sobrescreve arquivos existentes. */
   force: boolean;
 }
 
 export interface InitResult {
-  guidePath: string;
+  /** Caminho do agente de entrada (agente-pdb.md) na raiz. */
+  entryPath: string;
+  /** Todos os arquivos de bootstrap escritos. */
+  files: string[];
 }
 
-/** Nome do arquivo-guia colocado na raiz pelo comando `init`. */
-export const GUIDE_FILENAME = "START-HERE.md";
+/** Agente que o humano deve abrir após o init ("leia <este> e siga"). */
+export const ENTRY_AGENT = "agente-pdb.md";
 
 /**
- * Copia o arquivo-guia (assets/START-HERE.md) para a raiz do projeto. É o
- * ponto de entrada: a partir dele uma LLM lê e roda o scaffold.
+ * Par de bootstrap colocado na raiz pelo `init`: o agente de entrada (roteador
+ * + ciclo de vida) e o de discovery, que o roteador aciona em projeto novo.
+ * Ambos voltam a viver em docs/agents/ após o scaffold.
+ */
+export const BOOTSTRAP_AGENTS = [ENTRY_AGENT, "agente-kickoff.md"];
+
+/**
+ * Copia o par de agentes de bootstrap (de common/agents/) para a raiz do
+ * projeto. O ponto de entrada é o `agente-pdb.md`: a LLM o lê, diagnostica o
+ * estado do projeto e roteia (discovery, conceituação, adoção legada…).
  */
 export async function initProject(opts: InitOptions): Promise<InitResult> {
-  const root = templatesRoot();
-  const src = join(root, "assets", GUIDE_FILENAME);
-  const guidePath = join(opts.targetDir, GUIDE_FILENAME);
+  const agentsDir = join(templatesRoot(), "common", "agents");
+  const dests = BOOTSTRAP_AGENTS.map((name) => join(opts.targetDir, name));
 
-  if (!opts.force && (await exists(guidePath))) {
-    throw new Error(
-      `Já existe "${guidePath}". Use --force para sobrescrever.`,
-    );
+  if (!opts.force) {
+    for (const dest of dests) {
+      if (await exists(dest)) {
+        throw new Error(`Já existe "${dest}". Use --force para sobrescrever.`);
+      }
+    }
   }
 
   await mkdir(opts.targetDir, { recursive: true });
-  const content = await readFile(src, "utf8");
-  await writeFile(guidePath, content, "utf8");
+  const files: string[] = [];
+  for (const name of BOOTSTRAP_AGENTS) {
+    const content = await readFile(join(agentsDir, name), "utf8");
+    const dest = join(opts.targetDir, name);
+    await writeFile(dest, content, "utf8");
+    files.push(dest);
+  }
 
-  return { guidePath };
+  return { entryPath: join(opts.targetDir, ENTRY_AGENT), files };
 }

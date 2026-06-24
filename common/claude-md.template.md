@@ -158,7 +158,7 @@ parêntese, condição invertida, ajuste de mensagem), fix direto.
 
 ## Estado do refactor / desenvolvimento
 
-Roadmap completo em [_overview](./docs/_overview.template.md).
+Roadmap completo em [_overview](./specs/_overview.md).
 
 | #   | Spec                        | Status                     |
 | --- | --------------------------- | -------------------------- |
@@ -167,40 +167,15 @@ Roadmap completo em [_overview](./docs/_overview.template.md).
 
 ## Manutenção dos protocolos de doc
 
-Estes docs e este `CLAUDE.md` vieram de `project-docs-blueprints`. A versão e a
-origem de cada arquivo ficam em `docs/.project-docs-blueprints.json` (manifesto).
+Estes docs e este `CLAUDE.md` vieram de `project-docs-blueprints` (manifesto em
+`docs/.project-docs-blueprints.json`). O protocolo completo de manutenção
+— diagnóstico do projeto, verificação de versão, `update`, migrations e handoffs —
+vive no agente [agente-pdb](./docs/agents/agente-pdb.md).
 
-### Verificação de atualização (no máximo 1×/dia)
+**No início de uma sessão de trabalho, ≤ 1×/dia:** siga a *Verificação de
+atualização* do [agente-pdb](./docs/agents/agente-pdb.md) — ele compara a versão
+publicada com a do manifesto e, havendo novidade, conduz o `update` com você.
+Nunca aplica nada (nem `--force`) sem sua aprovação.
 
-No início de uma sessão de trabalho, antes de mergulhar na tarefa, faça esta
-checagem — **no máximo uma vez por dia**, e nunca aplicando nada sem o humano:
-
-1. **Trava de data.** Leia `docs/.pdb-update/.last-check`. Se a data for hoje,
-   **pule** toda esta rotina.
-2. **Estado atual:**
-   - **Sem manifesto** (`docs/.project-docs-blueprints.json` não existe) → o
-     projeto é legado/desatualizado: vá ao passo 4 usando `--profile <cli|ssr>`.
-   - **Com manifesto** → rode `npm view project-docs-blueprints version` e
-     compare com o campo `version` do manifesto. Sem rede / comando falhou →
-     registre a data (passo 5) e siga com a tarefa, não trave.
-3. **Com manifesto e SEM versão nova:** registre a data (passo 5) e siga.
-4. **Atualização** (versão nova, ou projeto sem manifesto):
-   1. Rode `npx project-docs-blueprints@latest update --dry-run` (com
-      `--profile <cli|ssr>` se não houver manifesto).
-   2. Resuma o plano ao humano (quantos _adiciona_ / _auto-merge_ / _revisar_) e
-      **pergunte se quer atualizar agora**. Se adiar, registre a data e siga.
-   3. Com OK: garanta o git limpo (commit/stash), rode o mesmo comando **sem**
-      `--dry-run`, e revise o `git diff`.
-   4. Para cada handoff em `docs/.pdb-update/*.handoff.md`, **conduza a decisão
-      com o humano**: cada arquivo traz a versão atual e a nova — classifiquem
-      juntos o que é melhoria do template (trazer) vs customização do projeto
-      (preservar) e gravem a versão final. Em conflito real, exponha o tradeoff,
-      não decida sozinho.
-   5. Se algo executável mudou, rode typecheck/testes.
-5. **Registre a checagem:** grave a data de hoje (`YYYY-MM-DD`) em
-   `docs/.pdb-update/.last-check` (crie a pasta se preciso).
-
-> **Gitignore:** adicione `docs/.pdb-update/` ao `.gitignore` — é área de
-> trabalho efêmera (handoffs + marcador de data), não versionada.
-
-**Nunca** rode `update` sem `--dry-run` (nem `--force`) sem o humano aprovar o plano.
+> **Gitignore:** mantenha `docs/.pdb-update/` no `.gitignore` — é área de
+> trabalho efêmera do `update`, não versionada.

@@ -35,7 +35,7 @@ antes da spec. Saída: `funcional/como-funciona.ldoc.md` + `.hdoc.md`.
 **3 · Geração de spec** — [agente-gerador-spec](./agents/agente-gerador-spec.md). Corta o incremento em N
 specs verticais no template do [spec-guide](./spec-guide.md), redistribuindo os artefatos
 a montante. Gate de corte (alto risco). Saída: `specs/{domínio}/NN.md` +
-[_overview](./_overview.template.md) + [_open-issues](./_open-issues.template.md).
+[_overview](../specs/_overview.md) + [_open-issues](../specs/_open-issues.md).
 
 **4 · Implementação** — Claude Code, **uma spec por sessão**: lê
 [CLAUDE.md](../CLAUDE.md) → a spec → os `docs/` referenciados →

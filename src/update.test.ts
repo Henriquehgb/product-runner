@@ -37,6 +37,7 @@ test("projeto recém-scaffoldado: tudo em dia, nada a fazer", async () => {
     assert.equal(res.counts.automerge, 0);
     assert.equal(res.counts.review, 0);
     assert.ok(res.counts.uptodate > 0);
+    assert.deepEqual(res.migrations, []); // pacote não envia migrations ainda
   });
 });
 
@@ -194,6 +195,36 @@ test("gerar handoffs preserva o marcador .last-check", async () => {
     await access(join(dir, "docs", HANDOFF_DIR, "docs__design-principles.md.handoff.md"));
     const mark = await readFile(join(dir, "docs", HANDOFF_DIR, ".last-check"), "utf8");
     assert.equal(mark, "2026-06-23");
+  });
+});
+
+test("migration 0.3.0: renomeia _overview.template -> specs/ e gera handoff conduzido", async () => {
+  await withProject(async (dir) => {
+    // simula layout antigo: cursor 0.2.3 + docs/_overview.template.md, sem specs/
+    await rm(join(dir, "specs", "_overview.md"));
+    const manifest = await readManifest(dir);
+    manifest.version = "0.2.3";
+    await writeFile(manifestPath(dir), JSON.stringify(manifest, null, 2) + "\n");
+    await writeFile(join(dir, "docs", "_overview.template.md"), "roadmap do projeto");
+
+    const res = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: false,
+    });
+
+    // a migration 0.3.0 está no caminho (0.2.3 -> 0.3.0)
+    assert.ok(res.migrations.some((m) => m.version === "0.3.0"));
+    // rename aplicado, conteúdo preservado, origem removida
+    await access(join(dir, "specs", "_overview.md"));
+    await assert.rejects(access(join(dir, "docs", "_overview.template.md")));
+    assert.match(
+      await readFile(join(dir, "specs", "_overview.md"), "utf8"),
+      /roadmap do projeto/,
+    );
+    // handoff conduzido (parte não-mecânica: CLAUDE.md -> agente-pdb)
+    await access(join(dir, "docs", HANDOFF_DIR, "MIGRATION-0.3.0.md"));
   });
 });
 
