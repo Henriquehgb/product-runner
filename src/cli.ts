@@ -164,7 +164,7 @@ async function runUpdate(values: {
     );
 
     const autoMig = result.migrations.some((m) => m.autoApply && m.ops.length);
-    const conductMig = result.migrations.filter((m) => !m.autoApply).length;
+    const conductMig = result.migrations.filter((m) => m.body.trim().length > 0).length;
 
     if (dryRun) {
       if (autoMig) {

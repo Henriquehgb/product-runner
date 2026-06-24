@@ -343,11 +343,12 @@ export async function update(opts: UpdateOptions): Promise<UpdateResult> {
         await applyOps(opts.targetDir, mig.ops, await listProjectFiles(opts.targetDir));
       }
     }
-    // 2. migrations conduzidas (não-automáticas) → handoff pra decisão humana
-    const conducted = migrations.filter((m) => !m.autoApply);
-    if (conducted.length) {
+    // 2. corpo conduzido → handoff (mesmo em autoApply: parte mecânica roda
+    //    sozinha, mas o que precisa de decisão humana fica em MIGRATION-<v>.md)
+    const withBody = migrations.filter((m) => m.body.trim().length > 0);
+    if (withBody.length) {
       await mkdir(handoffDir, { recursive: true });
-      for (const mig of conducted) {
+      for (const mig of withBody) {
         await writeFile(
           join(handoffDir, `MIGRATION-${mig.version}.md`),
           migrationHandoff(mig),

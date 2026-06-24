@@ -187,6 +187,8 @@ export async function applyOps(
       for (const rel of projectFiles) {
         if (!matcher.test(rel)) continue;
         const abs = join(targetDir, ...rel.split("/"));
+        // um op anterior (rename) pode ter movido este arquivo — pula se sumiu
+        if (!(await exists(abs))) continue;
         const before = await readFile(abs, "utf8");
         const after = before.replace(find, op.replace ?? "");
         if (after !== before) {

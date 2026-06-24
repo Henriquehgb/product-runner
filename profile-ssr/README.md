@@ -42,7 +42,7 @@ Conteúdo extraído de:
 - **tradeBot** (`tradebot-202605`) — atualizações importadas:
   - Princípios LLM-first (em [design-principles](./design-principles.md))
   - Critérios meta M1/M2/M3 (em [spec-guide](./spec-guide.md))
-  - [_open-issues template](./_open-issues.template.md) (em `common/`)
+  - [_open-issues](../specs/_open-issues.md) (seed em `common/specs/`)
   - Adições de responsividade mobile e integração com skill
     `ui-design-system` (em [ui-patterns](./ui-patterns.md) deste perfil)
 

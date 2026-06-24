@@ -256,7 +256,8 @@ export async function buildArtifacts(
   const profileDir = join(root, `profile-${meta.profile}`);
   const out = new Map<string, Artifact>();
 
-  // docs/* (common + perfil), exceto os fragmentos do CLAUDE.md
+  // common/ e perfil → docs/, exceto: fragmentos do CLAUDE.md (pulados) e
+  // common/specs/* → specs/ (seeds preenchidos no projeto, fora de docs/).
   for (const [srcDir, prefix] of [
     [commonDir, "common"],
     [profileDir, `profile-${meta.profile}`],
@@ -266,7 +267,8 @@ export async function buildArtifacts(
       if (CLAUDE_MD_PARTS.has(base)) continue;
       // docs são copiados sem substituição → conteúdo emitido == origem
       const content = await readFile(join(srcDir, rel), "utf8");
-      out.set(`docs/${rel}`, { content, fromTemplate: `${prefix}/${rel}` });
+      const dest = rel.startsWith("specs/") ? rel : `docs/${rel}`;
+      out.set(dest, { content, fromTemplate: `${prefix}/${rel}` });
     }
   }
 

@@ -102,6 +102,22 @@ test("CLAUDE.md aponta a manutenção pro agente-pdb; o detalhe vive no agente",
   });
 });
 
+test("scaffold emite _overview/_open-issues em specs/ (sem .template)", async () => {
+  await withTempDir(async (dir) => {
+    await scaffold({
+      name: "app",
+      profile: "ssr",
+      targetDir: dir,
+      port: "3000",
+      force: false,
+    });
+    await access(join(dir, "specs", "_overview.md"));
+    await access(join(dir, "specs", "_open-issues.md"));
+    // o layout antigo (docs/_overview.template.md) não é mais emitido
+    await assert.rejects(access(join(dir, "docs", "_overview.template.md")));
+  });
+});
+
 test("scaffold escreve o manifesto docs/.project-docs-blueprints.json", async () => {
   await withTempDir(async (dir) => {
     const res = await scaffold({

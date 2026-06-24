@@ -158,7 +158,7 @@ parêntese, condição invertida, ajuste de mensagem), fix direto.
 
 ## Estado do refactor / desenvolvimento
 
-Roadmap completo em [_overview](./docs/_overview.template.md).
+Roadmap completo em [_overview](./specs/_overview.md).
 
 | #   | Spec                        | Status                     |
 | --- | --------------------------- | -------------------------- |
