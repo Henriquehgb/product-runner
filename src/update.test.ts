@@ -10,7 +10,7 @@ async function withProject(
   fn: (dir: string) => Promise<void>,
   profile: "cli" | "ssr" = "ssr",
 ): Promise<void> {
-  const dir = await mkdtemp(join(tmpdir(), "pdb-up-"));
+  const dir = await mkdtemp(join(tmpdir(), "prod-runner-up-"));
   try {
     await scaffold({ name: "proj", profile, targetDir: dir, port: "3000", force: false });
     await fn(dir);
@@ -223,7 +223,7 @@ test("migration 0.3.0: renomeia _overview.template -> specs/ e gera handoff cond
       await readFile(join(dir, "specs", "_overview.md"), "utf8"),
       /roadmap do projeto/,
     );
-    // handoff conduzido (parte não-mecânica: CLAUDE.md -> agente-pdb)
+    // handoff conduzido (parte não-mecânica: CLAUDE.md -> agente-prod-runner)
     await access(join(dir, "docs", HANDOFF_DIR, "MIGRATION-0.3.0.md"));
   });
 });

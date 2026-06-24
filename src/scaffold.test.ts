@@ -76,7 +76,7 @@ test("CLAUDE.md dobra a extensão sem meta-cabeçalho nem headings duplicados", 
   });
 });
 
-test("CLAUDE.md aponta a manutenção pro agente-pdb; o detalhe vive no agente", async () => {
+test("CLAUDE.md aponta a manutenção pro agente-prod-runner; o detalhe vive no agente", async () => {
   await withTempDir(async (dir) => {
     const res = await scaffold({
       name: "app",
@@ -85,20 +85,20 @@ test("CLAUDE.md aponta a manutenção pro agente-pdb; o detalhe vive no agente",
       port: "3000",
       force: false,
     });
-    // CLAUDE.md tem só o gatilho fino apontando pro agente-pdb
+    // CLAUDE.md tem só o gatilho fino apontando pro agente-prod-runner
     const claude = await readFile(res.claudeMdPath, "utf8");
     assert.match(claude, /## Manutenção dos protocolos de doc/);
-    assert.match(claude, /agente-pdb/);
+    assert.match(claude, /agente-prod-runner/);
     assert.doesNotMatch(claude, /npm view product-runner version/);
 
-    // o protocolo completo está no agente-pdb scaffoldado
-    const pdb = await readFile(
-      join(dir, "docs", "agents", "agente-pdb.md"),
+    // o protocolo completo está no agente-prod-runner scaffoldado
+    const entryAgent = await readFile(
+      join(dir, "docs", "agents", "agente-prod-runner.md"),
       "utf8",
     );
-    assert.match(pdb, /npm view product-runner version/);
-    assert.match(pdb, /update --dry-run/);
-    assert.match(pdb, /\.pdb-update\/\.last-check/);
+    assert.match(entryAgent, /npm view product-runner version/);
+    assert.match(entryAgent, /update --dry-run/);
+    assert.match(entryAgent, /\.prod-runner-update\/\.last-check/);
   });
 });
 

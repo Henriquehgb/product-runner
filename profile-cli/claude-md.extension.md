@@ -1,12 +1,12 @@
 <!--
 Extensão do CLAUDE.md — Perfil CLI.
 Este arquivo NÃO é concatenado: cada bloco abaixo declara, via diretiva
-`pdb-merge`, como dobra numa seção do template-base (common/claude-md.template.md).
+`prod-runner-merge`, como dobra numa seção do template-base (common/claude-md.template.md).
 Modos: replace (troca a seção), append (acrescenta ao fim da seção),
 after (insere logo após a seção). Edite o conteúdo, não as diretivas.
 -->
 
-<!-- pdb-merge: append section="Stack" -->
+<!-- prod-runner-merge: append section="Stack" -->
 
 - **Broker / lib externa:** {ex: `@binance/connector`, `openai`, etc.} —
   abstraído via `BrokerClient` (port/adapter)
@@ -16,7 +16,7 @@ after (insere logo após a seção). Edite o conteúdo, não as diretivas.
   local (ou similar)
 - **Containerização:** Docker (`docker-compose.yml`) — opcional
 
-<!-- pdb-merge: replace section="Princípio central" -->
+<!-- prod-runner-merge: replace section="Princípio central" -->
 
 ### Princípio central
 
@@ -25,7 +25,7 @@ puro, sem acoplamento com lib externa, file system ou env. Acesso
 à lib externa via interface (port). Persistência via funções
 dedicadas. Loop principal é casca fina que orquestra.
 
-<!-- pdb-merge: replace section="Estrutura de pastas" -->
+<!-- prod-runner-merge: replace section="Estrutura de pastas" -->
 
 ### Estrutura de pastas
 
@@ -46,7 +46,7 @@ dedicadas. Loop principal é casca fina que orquestra.
 └── dist/                        ← outDir do tsc (gitignored)
 ```
 
-<!-- pdb-merge: replace section="Comandos úteis" -->
+<!-- prod-runner-merge: replace section="Comandos úteis" -->
 
 ## Comandos úteis
 
@@ -59,7 +59,7 @@ npx tsc --noEmit                  # typecheck
 docker compose up -d              # infra (OpenSearch local, etc.) — opcional
 ```
 
-<!-- pdb-merge: replace section="Configuração" -->
+<!-- prod-runner-merge: replace section="Configuração" -->
 
 ## Configuração
 
@@ -74,7 +74,7 @@ docker compose up -d              # infra (OpenSearch local, etc.) — opcional
 Hot-reload de configs (se aplicável): a cada N segundos no loop principal
 (definir `configCacheTime`).
 
-<!-- pdb-merge: append section="Convenções de código" -->
+<!-- prod-runner-merge: append section="Convenções de código" -->
 
 ### Comportamento do loop após erro (CLI)
 

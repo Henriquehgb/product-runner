@@ -6,7 +6,7 @@ pipeline. Visão geral e costura com o resto do método em [pipeline](../pipelin
 
 | Arquivo | Estágio | Entrega |
 |---|---|---|
-| [agente-pdb](./agente-pdb.md) | (entrada / ciclo de vida) | Porta única (`leia agente-pdb.md e siga`): diagnostica o estado do projeto e roteia (kickoff / conceituação / adoção legada / manutenção); cuida de scaffold, manifesto, `update`, migrations e verificação de versão |
+| [agente-prod-runner](./agente-prod-runner.md) | (entrada / ciclo de vida) | Porta única (`leia agente-prod-runner.md e siga`): diagnostica o estado do projeto e roteia (kickoff / conceituação / adoção legada / manutenção); cuida de scaffold, manifesto, `update`, migrations e verificação de versão |
 | [agente-kickoff](./agente-kickoff.md) | Discovery (Estágio 0) | Briefing (ex.: `Kickoff.md`) — problema, build-vs-buy, arquitetura/stack, perfil, esboço de modelo de dados; entrega à conceituação |
 | [agente-conceituacao](./agente-conceituacao.md) | Conceituação (Estágio 1) | `reqs/ldoc.md` + `reqs/hdoc.md` — dor→conceito, casos de uso, roadmap de incrementos, DER amplo, Incremento 1 detalhado |
 | [agente-documentacao-funcional](./agente-documentacao-funcional.md) | Documentação funcional | `funcional/como-funciona.ldoc.md` + `.hdoc.md` — como a app funciona e como usar |
@@ -29,8 +29,8 @@ review (Estágio 5):  Review.Code → User Review → Review.Product → Review.
                         └─ Impeditivo escala: User Review → Review.Product → Conceituação
 ```
 
-- O `agente-pdb` é a **porta de entrada** (não é um estágio): o humano sempre
-  abre por ele (`leia agente-pdb.md e siga`), e ele diagnostica o projeto e
+- O `agente-prod-runner` é a **porta de entrada** (não é um estágio): o humano sempre
+  abre por ele (`leia agente-prod-runner.md e siga`), e ele diagnostica o projeto e
   despacha pro galho certo — inclusive a **adoção de projeto legado** (docs sem
   manifesto → `update` que traz pra gestão). Também é o dono da verificação
   periódica de atualização. No `init` ele vem na raiz junto do `kickoff`; depois

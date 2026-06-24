@@ -77,7 +77,7 @@ function applySubstitutions(
 // A extensão do perfil não é concatenada: ela declara, via diretivas, como cada
 // trecho dobra nas seções do template-base. Sintaxe de uma diretiva (linha):
 //
-//   <!-- pdb-merge: <modo> section="<texto do heading>" -->
+//   <!-- prod-runner-merge: <modo> section="<texto do heading>" -->
 //
 // Modos:
 //   replace  troca a seção-alvo inteira (heading + corpo) pelo conteúdo do bloco.
@@ -96,7 +96,7 @@ interface MergeDirective {
 }
 
 const DIRECTIVE_RE =
-  /^<!--\s*pdb-merge:\s*(replace|append|after)\s+section="([^"]+)"\s*-->\s*$/;
+  /^<!--\s*prod-runner-merge:\s*(replace|append|after)\s+section="([^"]+)"\s*-->\s*$/;
 
 function parseDirectives(extension: string): MergeDirective[] {
   const directives: MergeDirective[] = [];
@@ -150,7 +150,7 @@ function findSection(
   }
   if (start === -1) {
     throw new Error(
-      `Diretiva pdb-merge: seção "${heading}" não existe no CLAUDE.md base.`,
+      `Diretiva prod-runner-merge: seção "${heading}" não existe no CLAUDE.md base.`,
     );
   }
   let end = lines.length;
@@ -183,7 +183,7 @@ function applyDirective(lines: string[], d: MergeDirective): string[] {
   return [...before, ...body, "", ...content, "", ...after];
 }
 
-/** Dobra a extensão do perfil no template-base via diretivas pdb-merge. */
+/** Dobra a extensão do perfil no template-base via diretivas prod-runner-merge. */
 function mergeClaudeMd(base: string, extension: string): string {
   let lines = base.split("\n");
   for (const directive of parseDirectives(extension)) {
@@ -361,14 +361,14 @@ export interface InitOptions {
 }
 
 export interface InitResult {
-  /** Caminho do agente de entrada (agente-pdb.md) na raiz. */
+  /** Caminho do agente de entrada (agente-prod-runner.md) na raiz. */
   entryPath: string;
   /** Todos os arquivos de bootstrap escritos. */
   files: string[];
 }
 
 /** Agente que o humano deve abrir após o init ("leia <este> e siga"). */
-export const ENTRY_AGENT = "agente-pdb.md";
+export const ENTRY_AGENT = "agente-prod-runner.md";
 
 /**
  * Par de bootstrap colocado na raiz pelo `init`: o agente de entrada (roteador
@@ -379,7 +379,7 @@ export const BOOTSTRAP_AGENTS = [ENTRY_AGENT, "agente-kickoff.md"];
 
 /**
  * Copia o par de agentes de bootstrap (de common/agents/) para a raiz do
- * projeto. O ponto de entrada é o `agente-pdb.md`: a LLM o lê, diagnostica o
+ * projeto. O ponto de entrada é o `agente-prod-runner.md`: a LLM o lê, diagnostica o
  * estado do projeto e roteia (discovery, conceituação, adoção legada…).
  */
 export async function initProject(opts: InitOptions): Promise<InitResult> {

@@ -2,7 +2,7 @@
 
 > Diretivas para o agente do **Estágio 0 do pipeline**: transformar uma dor/ideia crua num **briefing de discovery** acionável — problema entendido, decisões de arquitetura tomadas e esboço de modelo de dados — e **entregar o projeto ao Estágio 1 (conceituação)**. Este agente **não** conceitua o produto nem escreve specs: ele prepara o terreno (problema → arquitetura → esboço de dados) e faz o handoff.
 
-> **Como você é acionado.** Geralmente pelo roteador [agente-pdb](./agente-pdb.md), que diagnostica o estado do projeto e te entrega o bastão em dois casos: **greenfield** (nada definido) ou **brownfield sem docs** (já existe código/estrutura, mas sem solução documentada). No segundo caso, **não comece do zero** — faça a Etapa 0 de reconhecimento antes de qualquer pergunta.
+> **Como você é acionado.** Geralmente pelo roteador [agente-prod-runner](./agente-prod-runner.md), que diagnostica o estado do projeto e te entrega o bastão em dois casos: **greenfield** (nada definido) ou **brownfield sem docs** (já existe código/estrutura, mas sem solução documentada). No segundo caso, **não comece do zero** — faça a Etapa 0 de reconhecimento antes de qualquer pergunta.
 
 **Terminologia (fixa em todo o documento):**
 

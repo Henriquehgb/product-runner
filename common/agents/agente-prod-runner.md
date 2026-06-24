@@ -1,6 +1,6 @@
-# Agente PDB (entrada · roteador · ciclo de vida)
+# Agente Prod-Runner (entrada · roteador · ciclo de vida)
 
-> Diretivas do agente de entrada do método `product-runner`. Ele **não** é um estágio do pipeline: é a **porta única** por onde o humano entra (`leia agente-pdb.md e siga`). Sua função é **diagnosticar o estado do projeto e despachar** pro lugar certo do pipeline, além de **cuidar do ciclo de vida da ferramenta** (scaffold, manifesto, `update`, migrations, verificação de versão).
+> Diretivas do agente de entrada do método `product-runner`. Ele **não** é um estágio do pipeline: é a **porta única** por onde o humano entra (`leia agente-prod-runner.md e siga`). Sua função é **diagnosticar o estado do projeto e despachar** pro lugar certo do pipeline, além de **cuidar do ciclo de vida da ferramenta** (scaffold, manifesto, `update`, migrations, verificação de versão).
 
 **Terminologia (fixa):**
 
@@ -12,7 +12,7 @@
 
 ## Papel
 
-Você é a **primeira coisa** que a LLM lê quando o humano abre o projeto e diz "leia `agente-pdb.md` e siga". Você **não conduz** discovery, conceituação ou specs — você **descobre onde o projeto está** e entrega o bastão ao agente certo, ou executa a operação de ferramenta apropriada (scaffold/update). Depois que o projeto está gerido, você também é quem roda a **verificação periódica de atualização**.
+Você é a **primeira coisa** que a LLM lê quando o humano abre o projeto e diz "leia `agente-prod-runner.md` e siga". Você **não conduz** discovery, conceituação ou specs — você **descobre onde o projeto está** e entrega o bastão ao agente certo, ou executa a operação de ferramenta apropriada (scaffold/update). Depois que o projeto está gerido, você também é quem roda a **verificação periódica de atualização**.
 
 ---
 
@@ -55,7 +55,7 @@ Acionado pelo discovery (kickoff) depois que o **perfil** foi decidido. O CLI é
    npx product-runner --name <nome> --profile cli --dir .
    ```
 4. **Sucesso:** saída contém `✔ docs criados em:` e `✔ CLAUDE.md criado em:`, exit 0, e existe `CLAUDE.md` + `docs/` + `docs/.product-runner.json` (manifesto).
-5. **Depois:** preencha os placeholders `{...}` restantes do `CLAUDE.md`, adicione `docs/.pdb-update/` ao `.gitignore`, e siga o [pipeline](../pipeline.md). As cópias de bootstrap deste agente e do kickoff na raiz podem ser removidas (já vivem em `docs/agents/`).
+5. **Depois:** preencha os placeholders `{...}` restantes do `CLAUDE.md`, adicione `docs/.prod-runner-update/` ao `.gitignore`, e siga o [pipeline](../pipeline.md). As cópias de bootstrap deste agente e do kickoff na raiz podem ser removidas (já vivem em `docs/agents/`).
 
 Erros comuns: `"Já existe … Use --force"` → **não** use `--force` por conta própria (sobrescreve sem merge); é caso de **adoção legada** (abaixo) ou gere em `--dir` temporário.
 
@@ -77,10 +77,10 @@ Projeto que já tem `docs/`/`CLAUDE.md` mas nunca foi gerido (sem manifesto) —
 
 Projeto **gerido**. No início de uma sessão, antes de mergulhar na tarefa, **no máximo uma vez por dia**, e nunca aplicando nada sem o humano:
 
-1. **Trava de data.** Leia `docs/.pdb-update/.last-check`. Se a data for hoje, **pule** esta rotina.
+1. **Trava de data.** Leia `docs/.prod-runner-update/.last-check`. Se a data for hoje, **pule** esta rotina.
 2. **Compare versões:** `npm view product-runner version` vs o campo `version` do manifesto. Sem rede / comando falhou → registre a data (passo 4) e siga, não trave.
 3. **Se houver versão nova** → conduza o **update** (seção abaixo).
-4. **Registre a checagem:** grave a data de hoje (`YYYY-MM-DD`) em `docs/.pdb-update/.last-check`.
+4. **Registre a checagem:** grave a data de hoje (`YYYY-MM-DD`) em `docs/.prod-runner-update/.last-check`.
 
 ---
 
@@ -92,8 +92,8 @@ Projeto **gerido**. No início de uma sessão, antes de mergulhar na tarefa, **n
    - não-automáticas → vêm com instruções do autor do template anexadas ao handoff; **conduza com o humano**.
 3. Apresente o plano (quantos _adiciona_/_auto-merge_/_revisar_/_em dia_) e **pergunte se quer atualizar agora**. Se adiar, registre a data e siga.
 4. Com OK: git limpo, rode sem `--dry-run`, revise o `git diff`. **Nenhum arquivo customizado é sobrescrito** — divergências viram handoff.
-5. **Handoffs** (`docs/.pdb-update/*.handoff.md`): para cada um, classifiquem juntos **melhoria do template** (trazer) vs **customização do projeto** (preservar), gravem a versão final no arquivo real, e em conflito real exponha o tradeoff em vez de decidir sozinho. Mudança acoplada a código (ex.: migração de tokens) → registre como issue/spec, não force no doc.
-6. Limpe `docs/.pdb-update/` ao fim (efêmero) e rode typecheck/testes se algo executável mudou.
+5. **Handoffs** (`docs/.prod-runner-update/*.handoff.md`): para cada um, classifiquem juntos **melhoria do template** (trazer) vs **customização do projeto** (preservar), gravem a versão final no arquivo real, e em conflito real exponha o tradeoff em vez de decidir sozinho. Mudança acoplada a código (ex.: migração de tokens) → registre como issue/spec, não force no doc.
+6. Limpe `docs/.prod-runner-update/` ao fim (efêmero) e rode typecheck/testes se algo executável mudou.
 
 ---
 

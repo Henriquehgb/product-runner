@@ -199,12 +199,12 @@ rastro no conteúdo das specs**, não pela tabela acima.
 Estes docs e este `CLAUDE.md` vieram de `product-runner` (manifesto em
 `docs/.product-runner.json`). O protocolo completo de manutenção
 — diagnóstico do projeto, verificação de versão, `update`, migrations e handoffs —
-vive no agente [agente-pdb](./docs/agents/agente-pdb.md).
+vive no agente [agente-prod-runner](./docs/agents/agente-prod-runner.md).
 
 **No início de uma sessão de trabalho, ≤ 1×/dia:** siga a *Verificação de
-atualização* do [agente-pdb](./docs/agents/agente-pdb.md) — ele compara a versão
+atualização* do [agente-prod-runner](./docs/agents/agente-prod-runner.md) — ele compara a versão
 publicada com a do manifesto e, havendo novidade, conduz o `update` com você.
 Nunca aplica nada (nem `--force`) sem sua aprovação.
 
-> **Gitignore:** mantenha `docs/.pdb-update/` no `.gitignore` — é área de
+> **Gitignore:** mantenha `docs/.prod-runner-update/` no `.gitignore` — é área de
 > trabalho efêmera do `update`, não versionada.

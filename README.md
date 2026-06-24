@@ -15,7 +15,7 @@ templates/
 │   ├── lessons-learned.md
 │   ├── specs/              ← seeds preenchidos no projeto (_overview, _open-issues)
 │   │   └── …
-│   └── agents/              ← diretivas do pipeline (pdb, kickoff, conceituação,
+│   └── agents/              ← diretivas do pipeline (prod-runner, kickoff, conceituação,
 │       └── …                  doc-funcional, gerador-spec, protocolo-de-gates)
 ├── profile-cli/             ← extensões pra CLI / script Node
 │   ├── README.md
@@ -53,7 +53,7 @@ meu-projeto/
 │   ├── DESIGN-SYSTEM.md               ← só ssr
 │   └── agents/
 │       ├── README.md
-│       ├── agente-pdb.md              ← porta de entrada (roteia kickoff/manutenção/adoção)
+│       ├── agente-prod-runner.md              ← porta de entrada (roteia kickoff/manutenção/adoção)
 │       ├── agente-kickoff.md
 │       ├── agente-conceituacao.md
 │       ├── agente-documentacao-funcional.md
@@ -68,7 +68,7 @@ meu-projeto/
     └── _open-issues.md                ← issues abertas (você preenche)
 ```
 
-> `docs/.pdb-update/` aparece só **durante** um `update` (handoffs efêmeros) —
+> `docs/.prod-runner-update/` aparece só **durante** um `update` (handoffs efêmeros) —
 > mande pro `.gitignore`.
 
 O **perfil `cli`** é igual, mas sem `api-patterns.md`, `ui-patterns.md` e

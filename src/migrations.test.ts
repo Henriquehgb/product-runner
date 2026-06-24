@@ -13,7 +13,7 @@ import {
 } from "./migrations.js";
 
 async function withTempDir(fn: (dir: string) => Promise<void>): Promise<void> {
-  const dir = await mkdtemp(join(tmpdir(), "pdb-mig-"));
+  const dir = await mkdtemp(join(tmpdir(), "prod-runner-mig-"));
   try {
     await fn(dir);
   } finally {

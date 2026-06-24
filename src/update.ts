@@ -73,7 +73,7 @@ interface Manifest {
 }
 
 /** Subpasta (dentro de docs/) onde vão os artefatos de handoff dos conflitos. */
-export const HANDOFF_DIR = ".pdb-update";
+export const HANDOFF_DIR = ".prod-runner-update";
 
 /**
  * Nome do manifesto ANTES do rename para `product-runner` (migration 0.5.0).
