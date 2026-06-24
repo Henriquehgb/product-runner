@@ -37,6 +37,7 @@ test("projeto recém-scaffoldado: tudo em dia, nada a fazer", async () => {
     assert.equal(res.counts.automerge, 0);
     assert.equal(res.counts.review, 0);
     assert.ok(res.counts.uptodate > 0);
+    assert.deepEqual(res.migrations, []); // pacote não envia migrations ainda
   });
 });
 

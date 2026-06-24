@@ -158,16 +158,32 @@ async function runUpdate(values: {
     console.log(renderPlan(result));
 
     const { add, automerge, review, uptodate } = result.counts;
+    const mig = result.migrations.length;
     console.log(
-      `\nResumo: ${add} adicionar · ${automerge} auto-merge · ${review} revisar · ${uptodate} em dia.`,
+      `\nResumo: ${mig} migration(s) · ${add} adicionar · ${automerge} auto-merge · ${review} revisar · ${uptodate} em dia.`,
     );
 
+    const autoMig = result.migrations.some((m) => m.autoApply && m.ops.length);
+    const conductMig = result.migrations.filter((m) => !m.autoApply).length;
+
     if (dryRun) {
-      console.log("\nRode sem --dry-run pra aplicar ADICIONA + AUTO-MERGE.");
-    } else if (review > 0) {
-      console.log(
-        `\n${review} arquivo(s) pra revisar: veja os handoffs em docs/${HANDOFF_DIR}/.`,
-      );
+      if (autoMig) {
+        console.log(
+          "\nNota: buckets calculados ANTES das migrations; renomeações declaradas\nacima podem reclassificar itens ao aplicar.",
+        );
+      }
+      console.log("\nRode sem --dry-run pra aplicar migrations + ADICIONA + AUTO-MERGE.");
+    } else {
+      if (conductMig > 0) {
+        console.log(
+          `\n${conductMig} migration(s) pra conduzir: veja docs/${HANDOFF_DIR}/MIGRATION-*.md.`,
+        );
+      }
+      if (review > 0) {
+        console.log(
+          `\n${review} arquivo(s) pra revisar: veja os handoffs em docs/${HANDOFF_DIR}/.`,
+        );
+      }
     }
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));

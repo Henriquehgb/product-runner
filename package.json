@@ -11,7 +11,8 @@
     "!dist/**/*.test.js",
     "common",
     "profile-cli",
-    "profile-ssr"
+    "profile-ssr",
+    "migrations"
   ],
   "engines": {
     "node": ">=18"
