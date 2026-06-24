@@ -14,11 +14,13 @@ o protocolo de gates e o ciclo Cowork↔Claude Code do [spec-guide](./spec-guide
 
 ## Os estágios
 
-**0 · Discovery / kickoff.** Entender o problema antes da solução:
-build-vs-buy, orçamento de serviços externos, o que o framework NÃO faz,
-volume, decisões de stack e modelo de dados. A skill `project-kickoff` é
-a porta de entrada humana (quando disponível). Saída: decisões
-consolidadas num briefing (ex.: `Kickoff.md`).
+**0 · Discovery / kickoff** — [agente-kickoff](./agents/agente-kickoff.md). Entender o problema antes da
+solução: build-vs-buy, orçamento de serviços externos, o que o framework
+NÃO faz, volume, decisões de stack e **esboço** de modelo de dados. A porta
+de entrada humana é a skill `project-kickoff` (quando instalada) ou `npx
+project-docs-blueprints init`; o [agente-kickoff](./agents/agente-kickoff.md) é a diretriz
+versionada do estágio, copiada para `docs/agents/` no scaffold. Saída:
+decisões consolidadas num briefing (ex.: `Kickoff.md`) + perfil escolhido.
 
 **1 · Conceituação** — [agente-conceituacao](./agents/agente-conceituacao.md). Dor→conceito: diagrama de
 conceitos, casos de uso, roadmap de incrementos (baixa resolução), DER

@@ -15,8 +15,8 @@ templates/
 │   ├── _overview.template.md
 │   ├── _open-issues.template.md
 │   ├── lessons-learned.md
-│   └── agents/              ← diretivas do pipeline (conceituação, doc-funcional,
-│       └── …                  gerador-spec, protocolo-de-gates)
+│   └── agents/              ← diretivas do pipeline (kickoff, conceituação,
+│       └── …                  doc-funcional, gerador-spec, protocolo-de-gates)
 ├── profile-cli/             ← extensões pra CLI / script Node
 │   ├── README.md
 │   ├── code-patterns.md
