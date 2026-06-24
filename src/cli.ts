@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import {
   scaffold,
   initProject,
-  GUIDE_FILENAME,
+  ENTRY_AGENT,
   type Profile,
 } from "./scaffold.js";
 import { update, renderPlan, HANDOFF_DIR } from "./update.js";
@@ -17,8 +17,9 @@ Uso:
   npx project-docs-blueprints update [--dir <path>] [--dry-run] [opções]
 
 Comandos:
-  init                 Coloca o guia ${GUIDE_FILENAME} na raiz. Peça a uma LLM
-                       para ler esse arquivo e seguir — ela roda o resto.
+  init                 Coloca os agentes de bootstrap (${ENTRY_AGENT} +
+                       agente-kickoff.md) na raiz. Peça a uma LLM para ler
+                       ${ENTRY_AGENT} e seguir — ele roteia o resto.
   update               Atualiza docs/ + CLAUDE.md de um projeto existente contra
                        a versão atual dos templates (adiciona / auto-merge /
                        revisar). Usa o manifesto se houver; senão, modo legado.
@@ -42,7 +43,7 @@ Opções (update):
 
 Fluxo recomendado:
   1. npx project-docs-blueprints init
-  2. Peça à sua LLM: "leia ${GUIDE_FILENAME} e siga as instruções".
+  2. Peça à sua LLM: "leia ${ENTRY_AGENT} e siga as instruções".
 
 Exemplo (scaffold direto):
   npx project-docs-blueprints --name meu-app --profile ssr --port 3000 --dir .
@@ -60,13 +61,12 @@ function fail(msg: string): never {
 async function runInit(dir: string, force: boolean): Promise<void> {
   const targetDir = resolve(dir);
   try {
-    const { guidePath } = await initProject({ targetDir, force });
-    console.log(`✔ Guia criado em: ${guidePath}`);
+    const { files } = await initProject({ targetDir, force });
+    console.log(`✔ Agentes de bootstrap criados (${files.length}):`);
+    for (const f of files) console.log(`  ${f}`);
     console.log("\nPróximo passo:");
-    console.log(
-      `  Abra sua LLM (Claude Code/Cowork) neste diretório e peça:`,
-    );
-    console.log(`  "leia ${GUIDE_FILENAME} e siga as instruções".`);
+    console.log(`  Abra sua LLM (Claude Code/Cowork) neste diretório e peça:`);
+    console.log(`  "leia ${ENTRY_AGENT} e siga as instruções".`);
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
   }

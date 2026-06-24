@@ -7,7 +7,8 @@ import { join } from "node:path";
 import {
   scaffold,
   initProject,
-  GUIDE_FILENAME,
+  ENTRY_AGENT,
+  BOOTSTRAP_AGENTS,
   MANIFEST_FILENAME,
 } from "./scaffold.js";
 
@@ -75,7 +76,7 @@ test("CLAUDE.md dobra a extensão sem meta-cabeçalho nem headings duplicados", 
   });
 });
 
-test("CLAUDE.md traz a rotina de verificação de atualização", async () => {
+test("CLAUDE.md aponta a manutenção pro agente-pdb; o detalhe vive no agente", async () => {
   await withTempDir(async (dir) => {
     const res = await scaffold({
       name: "app",
@@ -84,11 +85,20 @@ test("CLAUDE.md traz a rotina de verificação de atualização", async () => {
       port: "3000",
       force: false,
     });
+    // CLAUDE.md tem só o gatilho fino apontando pro agente-pdb
     const claude = await readFile(res.claudeMdPath, "utf8");
     assert.match(claude, /## Manutenção dos protocolos de doc/);
-    assert.match(claude, /npm view project-docs-blueprints version/);
-    assert.match(claude, /update --dry-run/);
-    assert.match(claude, /\.pdb-update\/\.last-check/);
+    assert.match(claude, /agente-pdb/);
+    assert.doesNotMatch(claude, /npm view project-docs-blueprints version/);
+
+    // o protocolo completo está no agente-pdb scaffoldado
+    const pdb = await readFile(
+      join(dir, "docs", "agents", "agente-pdb.md"),
+      "utf8",
+    );
+    assert.match(pdb, /npm view project-docs-blueprints version/);
+    assert.match(pdb, /update --dry-run/);
+    assert.match(pdb, /\.pdb-update\/\.last-check/);
   });
 });
 
@@ -143,17 +153,22 @@ test("scaffold cli funciona sem placeholder de porta", async () => {
   });
 });
 
-test("init coloca o guia START-HERE.md na raiz", async () => {
+test("init coloca o par de agentes de bootstrap na raiz", async () => {
   await withTempDir(async (dir) => {
-    const { guidePath } = await initProject({ targetDir: dir, force: false });
-    await access(join(dir, GUIDE_FILENAME));
-    const content = await readFile(guidePath, "utf8");
-    assert.match(content, /Comece aqui/);
-    assert.match(content, /project-docs-blueprints --name/);
+    const { entryPath, files } = await initProject({
+      targetDir: dir,
+      force: false,
+    });
+    assert.equal(files.length, BOOTSTRAP_AGENTS.length);
+    for (const name of BOOTSTRAP_AGENTS) await access(join(dir, name));
+    assert.equal(entryPath, join(dir, ENTRY_AGENT));
+    // o agente de entrada é o roteador/ciclo de vida
+    const entry = await readFile(entryPath, "utf8");
+    assert.match(entry, /roteador|Roteamento/);
   });
 });
 
-test("init aborta se o guia já existe sem --force", async () => {
+test("init aborta se um agente de bootstrap já existe sem --force", async () => {
   await withTempDir(async (dir) => {
     await initProject({ targetDir: dir, force: false });
     await assert.rejects(

@@ -9,7 +9,6 @@
   "files": [
     "dist",
     "!dist/**/*.test.js",
-    "assets",
     "common",
     "profile-cli",
     "profile-ssr"
