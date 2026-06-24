@@ -142,10 +142,19 @@ async function runUpdate(values: {
       result.mode === "legacy"
         ? "⚠ Sem manifesto — modo legado (comparação 2-way normalizada).\n"
         : "";
+    // Aviso crítico: normalização pedida mas Prettier ausente → REVISAR pode
+    // estar inflado só por diferença de formatação.
+    const formatNote =
+      !(values["no-format-normalize"] ?? false) && !result.prettierFound
+        ? "⚠ Prettier não encontrado em node_modules/.bin — comparei SEM normalizar\n" +
+          "  formatação. Arquivos podem cair em REVISAR só por estilo (aspas, tabelas).\n" +
+          "  Rode `npm install` no projeto e tente de novo, ou use --no-format-normalize\n" +
+          "  pra silenciar este aviso.\n"
+        : "";
     const header = dryRun
       ? "Plano de update — NADA será escrito.\n"
       : "Update aplicado.\n";
-    console.log(modeNote + header);
+    console.log(modeNote + formatNote + header);
     console.log(renderPlan(result));
 
     const { add, automerge, review, uptodate } = result.counts;

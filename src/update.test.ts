@@ -160,6 +160,20 @@ test("modo legado: sem manifesto exige --profile e re-adiciona faltantes", async
   });
 });
 
+test("sinaliza quando Prettier não está disponível (normalização degradada)", async () => {
+  await withProject(async (dir) => {
+    // projeto de teste não tem node_modules/.bin/prettier
+    const res = await update({
+      targetDir: dir,
+      dryRun: true,
+      normalizeLinks: false,
+      formatNormalize: true,
+    });
+    assert.equal(res.prettierFound, false);
+    assert.equal(res.formatActive, false);
+  });
+});
+
 test("gerar handoffs preserva o marcador .last-check", async () => {
   await withProject(async (dir) => {
     // marcador de data pré-existente na pasta de trabalho
