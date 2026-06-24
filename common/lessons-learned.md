@@ -409,6 +409,24 @@ entrada passam a mentir sobre "qual a próxima spec". A spec em si é
 autocontida (não bloqueia), mas o roadmap desatualizado confunde. Issue de
 roadmap precisa de candidato e fechamento, igual bug.
 
+### Status se lê do conteúdo, não do índice
+**Quando se aplica:** ao responder "em que etapa estamos / qual a próxima"
+ou "X está pronto?", tipicamente ao orientar no início de uma sessão.
+**Por que importa:** numa sessão de orientação o agente respondeu a partir
+das tabelas de status (`_overview`, tabela de estado do `CLAUDE.md`) — lidas
+ainda por cima **truncadas** (`head -N`) — sem abrir nenhuma spec. Dois
+estragos: (1) quase repassou a divergência do índice (que driftou, ver lição
+acima) como verdade; (2) confundiu "Decisões de implementação preenchidas"
+(rastro do **estágio 4**, por M1) com "review feito" (**estágio 5**, que tem
+rastro próprio — o veredito do Review.Code), e por isso não viu que o próximo
+passo era **rodar os fluxos de review**. O índice é HDoc do status: derivado
+e sujeito a drift; a fonte é o **conteúdo da spec**. Regra: status se
+descobre pelo **rastro nos artefatos** (tabela em [pipeline](./pipeline.md), "Em que
+estágio estou?"), nunca da tabela de status, nunca de leitura truncada.
+Mesma raiz da lição anterior, agora no ato de **orientar**, não de
+implementar — e por isso a correção foi tornar o procedimento explícito no
+`CLAUDE.md`/`pipeline`, não só descrever a falha.
+
 ### Briefing congelado precisa de nota, não de reescrita
 **Quando se aplica:** quando um snapshot canônico (ex.: `Kickoff.md`) fica
 obsoleto.

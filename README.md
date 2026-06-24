@@ -12,10 +12,10 @@ templates/
 │   ├── design-principles.md
 │   ├── spec-guide.md
 │   ├── claude-md.template.md
-│   ├── _overview.template.md
-│   ├── _open-issues.template.md
 │   ├── lessons-learned.md
-│   └── agents/              ← diretivas do pipeline (kickoff, conceituação,
+│   ├── specs/              ← seeds preenchidos no projeto (_overview, _open-issues)
+│   │   └── …
+│   └── agents/              ← diretivas do pipeline (pdb, kickoff, conceituação,
 │       └── …                  doc-funcional, gerador-spec, protocolo-de-gates)
 ├── profile-cli/             ← extensões pra CLI / script Node
 │   ├── README.md
@@ -28,6 +28,51 @@ templates/
     ├── ui-patterns.md
     └── claude-md.extension.md
 ```
+
+### Estrutura depois de aplicado num projeto
+
+A árvore acima é a **do template** (este repo). Quando você roda o scaffold
+num projeto, o CLI copia `common/` + `profile-{cli|ssr}/` pra `docs/` (sem os
+fragmentos de CLAUDE.md), manda os seeds de `common/specs/` pra `specs/` na
+raiz, gera o `CLAUDE.md` raiz (merge template + extensão do perfil) e escreve
+o manifesto. O resultado, **perfil `ssr`**:
+
+```
+meu-projeto/
+├── CLAUDE.md                          ← merge template + extensão do perfil
+├── docs/
+│   ├── .project-docs-blueprints.json  ← manifesto (marca o projeto como "gerido")
+│   ├── pipeline.md
+│   ├── design-principles.md
+│   ├── spec-guide.md
+│   ├── lessons-learned.md
+│   ├── README.md                      ← do perfil
+│   ├── code-patterns.md
+│   ├── api-patterns.md                ← só ssr
+│   ├── ui-patterns.md                 ← só ssr
+│   ├── DESIGN-SYSTEM.md               ← só ssr
+│   └── agents/
+│       ├── README.md
+│       ├── agente-pdb.md              ← porta de entrada (roteia kickoff/manutenção/adoção)
+│       ├── agente-kickoff.md
+│       ├── agente-conceituacao.md
+│       ├── agente-documentacao-funcional.md
+│       ├── agente-gerador-spec.md
+│       ├── agente-review-code.md
+│       ├── agente-review-llm.md
+│       ├── agente-review-product.md
+│       ├── agente-user-review.md
+│       └── protocolo-de-gates.md
+└── specs/
+    ├── _overview.md                   ← visão geral (você preenche)
+    └── _open-issues.md                ← issues abertas (você preenche)
+```
+
+> `docs/.pdb-update/` aparece só **durante** um `update` (handoffs efêmeros) —
+> mande pro `.gitignore`.
+
+O **perfil `cli`** é igual, mas sem `api-patterns.md`, `ui-patterns.md` e
+`DESIGN-SYSTEM.md` (que são exclusivos do `ssr`).
 
 ## Como usar pra começar projeto novo
 

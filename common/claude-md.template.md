@@ -37,9 +37,11 @@ Antes de implementar uma spec, consultar o doc relevante:
 - [code-patterns](./docs/code-patterns.md) — schemas Zod, services, padrões de código
 - [spec-guide](./docs/spec-guide.md) — como ler, escrever e implementar specs
   (inclui critérios meta M1, M2, M3 — e M4 em specs de UI)
-- [pipeline](./docs/pipeline.md) — como uma ideia vira spec: discovery → conceituação →
-  doc-funcional → geração de spec → implementação. Agentes em
-  [agents/](./docs/agents/README.md); gates em [protocolo-de-gates](./docs/agents/protocolo-de-gates.md)
+- [pipeline](./docs/pipeline.md) — como uma ideia vira spec **e código**: discovery → conceituação →
+  doc-funcional → geração de spec → implementação → **review** (Review.Code →
+  User Review → Review.Product → Review.LLM). Agentes em
+  [agents/](./docs/agents/README.md); gates em [protocolo-de-gates](./docs/agents/protocolo-de-gates.md).
+  Para descobrir em que etapa o projeto está, ver "Em que etapa o projeto está" abaixo
 - {Outros docs do perfil — [api-patterns](./docs/api-patterns.md) / [ui-patterns](./docs/ui-patterns.md) no SSR}
 
 ## Padrão de dados
@@ -100,10 +102,17 @@ da implementação.
 ### Ciclo
 
 1. Cowork analisa, escreve spec, grava em `specs/`.
-2. Claude Code implementa.
-3. Cowork revisa contra critérios de aceite, preenche
-   "Decisões de implementação" na própria spec (se Code esqueceu).
+2. Claude Code implementa e preenche "Decisões de implementação" na própria
+   spec (critério M1).
+3. **Review** (sub-cadeia, por incremento): Review.Code cruza cada critério
+   com o código real → User Review (usabilidade) → Review.Product (roteia
+   feedback) → Review.LLM (corrige o pipeline). Detalhe em
+   [pipeline](./docs/pipeline.md) §5.
 4. Próxima spec.
+
+> Nota: preencher "Decisões de implementação" é rastro do passo 2
+> (implementação), **não** do passo 3 (review). O review deixa rastro
+> próprio (veredito do Review.Code). Ver "Em que etapa o projeto está".
 
 ### Ao implementar uma spec (Claude Code)
 
@@ -158,12 +167,32 @@ parêntese, condição invertida, ajuste de mensagem), fix direto.
 
 ## Estado do refactor / desenvolvimento
 
+> **Índice derivado, não fonte.** Esta tabela e o [_overview](./specs/_overview.md) são
+> conveniência e **drift-am**. O estado real de cada spec mora **no conteúdo
+> da spec** (critérios marcados, veredito de review), não aqui. Mesmo
+> princípio LDoc→HDoc. Se a tabela diverge da spec, a **spec ganha**.
+
 Roadmap completo em [_overview](./specs/_overview.md).
 
 | #   | Spec                        | Status                     |
 | --- | --------------------------- | -------------------------- |
 | 00  | {Primeira spec}             | {⏳ pendente / ✅ feito}   |
 | ... | ...                         | ...                        |
+
+### Em que etapa o projeto está
+
+Antes de dizer "qual a próxima etapa" ou "X está pronto?": **descubra pelo
+rastro no conteúdo das specs**, não pela tabela acima.
+
+- Cada estágio do pipeline deixa rastro detectável na spec/artefato; o
+  **primeiro estágio sem rastro é o próximo passo**. Tabela de rastros em
+  [pipeline](./docs/pipeline.md) ("Em que estágio estou?").
+- **Cuidado:** "Decisões de implementação" preenchidas são rastro da
+  **implementação** (estágio 4, critério M1), **não** do review. O review
+  deixa rastro próprio (veredito do Review.Code). Não confunda — se não há
+  veredito de review, o próximo passo é **rodar os fluxos de review**.
+- A spec é a fonte; `_overview` e a tabela acima são índice derivado que
+  drift-a. Nunca responda status a partir de leitura truncada (`head -N`).
 
 ## Manutenção dos protocolos de doc
 
