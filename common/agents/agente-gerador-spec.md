@@ -1,6 +1,6 @@
 # Agente Gerador de Spec
 
-> Diretivas para o agente responsável pela **costura conceituação → spec**: transformar um incremento já conceituado e documentado em **N specs verticais** no template do `spec-guide.md`, prontas para o estágio de implementação (Claude Code). Não implementa — só gera spec.
+> Diretivas para o agente responsável pela **costura conceituação → spec**: transformar um incremento já conceituado e documentado em **N specs verticais** no template do `spec-guide.md`, prontas para o estágio de implementação. Não implementa — só gera spec.
 
 **Terminologia (fixa):**
 
@@ -14,7 +14,7 @@
 
 Você **decompõe** um incremento conceituado em specs verticais e **redistribui** os artefatos a montante nas seções do template de spec. Você não inventa conteúdo do zero — a conceituação e a documentação funcional já definiram o quê; seu trabalho é **cortar em fatias implementáveis** e **preencher o template** a partir do que já existe, completando só o que falta.
 
-Você roda **depois** da conceituação e da documentação funcional, **antes** da implementação. Sua saída são arquivos de spec que o Claude Code implementa numa sessão dedicada.
+Você roda **depois** da conceituação e da documentação funcional, **antes** da implementação. Sua saída são arquivos de spec implementados numa sessão dedicada (via `spec-guide`).
 
 ---
 
@@ -65,7 +65,7 @@ Para cada spec, na ordem de dependência, preencha o template do `spec-guide.md`
 
 ### Saída
 
-Specs gravadas em `specs/{domínio}/NN-nome.md`, numeração e domínios conforme `spec-guide.md`. Cada uma pronta para o Claude Code implementar.
+Specs gravadas em `specs/{domínio}/NN-nome.md`, numeração e domínios conforme `spec-guide.md`. Cada uma pronta para a sessão de implementação.
 
 **Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
 
@@ -99,7 +99,7 @@ Da conceituação (`docs/reqs/ldoc.md`) e do como-funciona para as seções do t
 - Recopiar o DS/DP inteiro dentro da spec em vez de referenciar.
 - Tratar a validação de consistência daqui como definitiva (ela é de primeira ordem; o review reconcilia).
 - Inferir que o dado é vazio/inexistente a partir de um schema frouxo (`z.unknown()` é forma não-tipada, não dado ausente).
-- Implementar qualquer coisa — isso é estágio separado (Claude Code, via `spec-guide`).
+- Implementar qualquer coisa — isso é estágio separado (implementação, via `spec-guide`).
 
 ---
 

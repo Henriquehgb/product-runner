@@ -83,10 +83,10 @@ O **perfil `cli`** é igual, mas sem `api-patterns.md`, `ui-patterns.md` e
 npx product-runner init
 ```
 
-Isso coloca um `START-HERE.md` na raiz. Aí é só abrir sua LLM (Claude
-Code/Cowork) no diretório e pedir: **"leia `START-HERE.md` e siga as
-instruções"** — ela escolhe o perfil, roda o scaffold e te guia a partir
-dali.
+Isso coloca os agentes de bootstrap (`agente-prod-runner.md` +
+`agente-kickoff.md`) na raiz. Aí é só abrir sua LLM no diretório (ex.: Claude
+Code) e pedir: **"leia `agente-prod-runner.md` e siga"** — ele diagnostica o
+projeto, escolhe o perfil, roda o scaffold e te guia a partir dali.
 
 ### Via CLI direto (`npx`)
 
@@ -155,7 +155,7 @@ como histórico imutável de "como o projeto X estava em data Y".
 
 ## Anti-pattern: editar templates em sessão de projeto
 
-Templates devem ser editados **em sessão dedicada** (Cowork apontando
+Templates devem ser editados **em sessão dedicada** (LLM apontando
 pra este repositório de templates), não enquanto você está implementando
 spec de outro projeto. Senão acumula churn entre o template e o
 projeto real, e fica difícil saber qual é fonte da verdade.

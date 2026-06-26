@@ -92,29 +92,31 @@ Detalhes em [code-patterns](./docs/code-patterns.md).
 Spec-first: cada mudança não-trivial passa por uma spec antes
 da implementação.
 
-### Onde mora cada coisa
+### Ciclo (fluxo arquivo → arquivo)
 
-| Etapa                                     | Ferramenta                                       |
-| ----------------------------------------- | ------------------------------------------------ |
-| Análise, decisão, escrita de spec, review | Cowork (Claude.ai com acesso aos arquivos)       |
-| Implementação                             | Claude Code (sessão dedicada apontando pro repo) |
+Tudo roda no mesmo ambiente (app que roda LLM no repo). A fronteira de sessão é a
+**execução de um agente**; o bastão entre sessões é o **arquivo de output**, não o
+contexto. Visão geral do fluxo em [pipeline](./docs/pipeline.md).
 
-### Ciclo
+| Estágio | Agente | Inputs (arquivos) | Outputs (arquivos) |
+| --- | --- | --- | --- |
+| Entrada / roteamento | `agente-prod-runner` | estado do repo (manifesto, docs, código) | `prod-runner-diagnostico.md` (ao rotear p/ kickoff) |
+| 0 · Discovery | `agente-kickoff` | `prod-runner-diagnostico.md` (se houver) | `Kickoff.md` |
+| 1 · Conceituação | `agente-conceituacao` | `Kickoff.md`; re-entry: `reqs/ldoc.md` + `reqs/review-result-inc{N}.md` | `reqs/ldoc.md`, `reqs/hdoc.md` · `llm-report-inc{N}.md` |
+| 2 · Doc funcional | `agente-documentacao-funcional` | `reqs/ldoc.md`; DS/DP+patterns; `funcional/como-funciona.ldoc.md` (Inc 2+) | `funcional/como-funciona.ldoc.md`, `.hdoc.md` · `llm-report-inc{N}.md` |
+| 3 · Gerador de spec | `agente-gerador-spec` | `reqs/ldoc.md`, `funcional/como-funciona.ldoc.md`, `spec-guide.md`, DS/DP | `specs/{domínio}/NN-*.md` · `llm-report-inc{N}.md` |
+| 4 · Implementação | (via `spec-guide`) | `specs/{domínio}/NN-*.md`, patterns | código, testes, "Decisões de implementação" na spec, report · `llm-report-inc{N}.md` |
+| 5 · Review.Code | `agente-review-code` | spec, código/repo, report | veredito (na spec); achados → spec / `specs/_open-issues.md` · `llm-report-inc{N}.md` |
+| 5 · User Review | `agente-user-review` | `funcional/como-funciona.ldoc.md`, consolidado do inc | ajuste→spec; caso-de-uso→`reqs/review-result-inc{N}.md`; mais-que-ajuste→`product-issues.md` · `llm-report-inc{N}.md` |
+| 5 · Review.Product | `agente-review-product` | `product-issues.md`, artefatos | roteamento; concepção→`reqs/review-result-inc{N}.md`; processo→`docs/agents/review-llm-fila-meta.md` · `llm-report-inc{N}.md` |
+| 5 · Review.LLM | `agente-review-llm` | `llm-report-inc{N}.md` + git diff + logs de sessão (**lê, não escreve**) | correções em diretivas; `docs/agents/review-llm-fila-meta.md` (classifica/mantém); `.md` de marco |
+| transversal | `protocolo-de-gates` | herdado por todos | — |
 
-1. Cowork analisa, escreve spec, grava em `specs/`.
-2. Claude Code implementa e preenche "Decisões de implementação" na própria
-   spec (critério M1).
-3. **Review** (sub-cadeia, por incremento): Review.Code cruza cada critério
-   com o código real → User Review (usabilidade) → Review.Product (roteia
-   feedback) → Review.LLM (corrige o pipeline). Detalhe em
-   [pipeline](./docs/pipeline.md) §5.
-4. Próxima spec.
+> Nota: "Decisões de implementação" preenchidas são rastro do **estágio 4**
+> (implementação, M1), **não** do review (estágio 5, que tem rastro próprio — o
+> veredito do Review.Code). Ver "Em que etapa o projeto está".
 
-> Nota: preencher "Decisões de implementação" é rastro do passo 2
-> (implementação), **não** do passo 3 (review). O review deixa rastro
-> próprio (veredito do Review.Code). Ver "Em que etapa o projeto está".
-
-### Ao implementar uma spec (Claude Code)
+### Ao implementar uma spec
 
 1. Ler a spec inteira antes de começar.
 2. Verificar "Depende de" — se a dependência não está implementada, parar.

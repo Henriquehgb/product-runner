@@ -64,6 +64,9 @@ critério de aceite explícito da spec.
 Tabela "quem faz o quê" no `spec-guide.md` do tradeBot. Estava
 implícito no DocManager.
 **Aplicado em:** `tradeBot/docs/spec-guide.md`
+> **Superada** pelo modelo de ambiente único: a tabela "quem faz o quê" agora
+> distingue por **sessão/agente** (não por app), e o handoff é o arquivo de output.
+> Mantida como registro de decisão.
 
 ### Não criar templates separados por perfil ainda
 

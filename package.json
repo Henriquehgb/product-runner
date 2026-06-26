@@ -1,6 +1,6 @@
 {
   "name": "product-runner",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Scaffold de docs para projetos TypeScript com desenvolvimento assistido por AI: gera CLAUDE.md + docs/ a partir de templates vivos (common + perfil cli/ssr).",
   "type": "module",
   "repository": {

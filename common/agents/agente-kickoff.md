@@ -7,7 +7,7 @@
 **Terminologia (fixa em todo o documento):**
 
 - **Estágio do pipeline** — uma posição no pipeline maior; este documento define o **Estágio 0** (discovery/kickoff). Os estágios seguintes (conceituação, doc-funcional, gerador-spec) consomem a saída daqui.
-- **Briefing** — o artefato de saída do discovery (ex.: `Kickoff.md`): as decisões consolidadas que alimentam a conceituação. Não é o LDoc do produto — é a entrada que destrava o LDoc.
+- **Briefing** — o artefato de saída do discovery, gravado na **raiz** do projeto como `Kickoff.md`: as decisões consolidadas que alimentam a conceituação. Não é o LDoc do produto — é a entrada que destrava o LDoc.
 - **Perfil** — o conjunto de templates a aplicar, decidido pela stack: `profile-cli` (script/loop) ou `profile-ssr` (web). A escolha do perfil é saída deste estágio e alimenta o scaffolder.
 
 ---
@@ -103,7 +103,7 @@ Ao fechar as três etapas, **consolide o briefing** e colete OK humano antes de 
 
 Ao final, o Estágio 0 entrega:
 
-- **Briefing** (ex.: `Kickoff.md`): problema e público, resultado do build-vs-buy, orçamento de serviços externos, limitações da plataforma, volume, decisões de stack/deploy/padrões **com o porquê**, **perfil escolhido** (`cli`|`ssr`) e o **esboço** do modelo de dados. Inclui explicitamente o que fica **deferido** para a conceituação.
+- **Briefing** — grave na **raiz** do projeto como `Kickoff.md`: problema e público, resultado do build-vs-buy, orçamento de serviços externos, limitações da plataforma, volume, decisões de stack/deploy/padrões **com o porquê**, **perfil escolhido** (`cli`|`ssr`) e o **esboço** do modelo de dados. Inclui explicitamente o que fica **deferido** para a conceituação.
 - **Handoff:** passe o bastão ao `agente-conceituacao` (Estágio 1), que parte deste briefing para conceito, casos de uso, roadmap de incrementos, DER amplo e Incremento 1 detalhado → produz `reqs/ldoc.md` + `reqs/hdoc.md`.
 
 > **Bootstrap do projeto.** A montagem física de `docs/` + `CLAUDE.md` é feita pelo scaffolder (`npx product-runner …`) a partir do **perfil** decidido na Etapa 2 — não monte esses arquivos à mão. Visão geral do método em `pipeline.md`; workflow de specs e critérios meta no `spec-guide.md`.

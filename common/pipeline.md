@@ -2,12 +2,12 @@
 
 Como uma ideia vira código neste método. É a **espinha** que conecta o
 discovery, os agentes de conceituação/documentação/spec ([agents/](./agents/README.md)),
-o protocolo de gates e o ciclo Cowork↔Claude Code do [spec-guide](./spec-guide.md).
+o protocolo de gates e o ciclo spec → implementação → review do [spec-guide](./spec-guide.md).
 
 ## Visão geral
 
 ```
-0 discovery → 1 conceituação → 2 doc-funcional → 3 gerador-spec → 4 Claude Code → 5 review
+0 discovery → 1 conceituação → 2 doc-funcional → 3 gerador-spec → 4 implementação → 5 review
   (kickoff)     (reqs/ldoc+hdoc)  (como-funciona)    (specs/)        (código+report)    │
                       └────────────── protocolo-de-gates governa os gates ───────────┘  │
                                                                                          ↓
@@ -41,7 +41,7 @@ specs verticais no template do [spec-guide](./spec-guide.md), redistribuindo os 
 a montante. Gate de corte (alto risco). Saída: `specs/{domínio}/NN.md` +
 [_overview](../specs/_overview.md) + [_open-issues](../specs/_open-issues.md).
 
-**4 · Implementação** — Claude Code, **uma spec por sessão**: lê
+**4 · Implementação** — **uma spec por sessão** (via `spec-guide`): lê
 [CLAUDE.md](../CLAUDE.md) → a spec → os `docs/` referenciados →
 implementa → reporta (critérios ✅/❌ + decisões). Detalhe do ciclo e das
 regras operacionais no [spec-guide](./spec-guide.md).
@@ -143,12 +143,17 @@ cada estágio, não apêndice.
 
 ## Onde mora cada coisa
 
-| Estágio | Ferramenta |
+Tudo roda no **mesmo ambiente** (app que roda LLM no repo). A fronteira de sessão é
+a **execução de um agente**; o bastão entre sessões é o **arquivo de output**, não o
+contexto. O mapa completo (agente → inputs → outputs) está na tabela **Ciclo** do
+`CLAUDE.md`.
+
+| Estágio | Como roda |
 | --- | --- |
-| Discovery (0) | Skill `project-kickoff` + humano |
-| Conceituação, doc-funcional, gerador-spec, review (1-3, 5) | Cowork (sessão com acesso aos arquivos) |
-| Implementação (4) | Claude Code (sessão dedicada apontando pro repo) |
-| Gates | Transversal — [protocolo-de-gates](./agents/protocolo-de-gates.md) |
+| Discovery (0) | `agente-kickoff` (porta humana: skill `project-kickoff`) |
+| Conceituação, doc-funcional, gerador-spec, review (1-3, 5) | um agente por sessão; handoff por arquivo |
+| Implementação (4) | sessão dedicada, uma spec por sessão (via `spec-guide`) |
+| Gates | transversal — [protocolo-de-gates](./agents/protocolo-de-gates.md) |
 
 ---
 

@@ -73,7 +73,7 @@ de declarar pronto:
 
 ## Skill de UI/UX (suporte externo)
 
-Considerar invocar a skill `ui-design-system` (Cowork) ao revisar
+Considerar invocar a skill `ui-design-system` ao revisar
 componentes novos pra obter:
 - Análise de hierarquia visual.
 - Identificação de inconsistências com design system existente.
