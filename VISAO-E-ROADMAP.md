@@ -4,8 +4,8 @@
 > percorrido (em etapas/releases) e os horizontes que enxergamos. Vivo —
 > atualizar conforme o método e a marca evoluem.
 >
-> Estado atual: **v0.5.0** (rename em revisão no PR #9). Repo ainda em
-> `Henriquehgb/project-docs-blueprints`; npm `product-runner` livre, não publicado.
+> Estado atual: **v0.5.0** (rename em revisão no PR #9). Repo já renomeado para
+> **`Henriquehgb/product-runner`**; npm `product-runner` livre, **não publicado**.
 
 ---
 
@@ -142,7 +142,7 @@ trade-bot-painel (Incremento 1) — método vivo, tratado como hipótese.
 
 ### H1 — Curto: fechar a marca e publicar _(próximo)_
 - [ ] **Mergear o PR #9** (0.5.0) na `main`.
-- [ ] **Renomear o repo** no GitHub para `product-runner` (mantém stars/issues, redireciona URLs).
+- [x] **Renomear o repo** no GitHub para `product-runner` — feito (URLs antigas redirecionam).
 - [ ] **Publicar no npm** a 0.5.0 (`npm publish`) — aloca o nome globalmente.
 - [ ] (Opcional) **Registrar domínio** `product-runner.dev` para landing/docs.
 - [ ] Acompanhar CI/review do PR.
