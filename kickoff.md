@@ -2,7 +2,7 @@
 name: project-kickoff
 description: >
   Processo para levar um projeto novo do problema ao código com ferramentas
-  AI (Claude Code, Cowork). Cobre o discovery — levantamento de requisitos,
+  AI (Claude Code). Cobre o discovery — levantamento de requisitos,
   decisões de arquitetura e modelo de dados — e entrega o projeto ao
   pipeline de specs. Ativar quando o usuário quiser começar um projeto novo,
   planejar um sistema do zero, ou montar a estrutura de desenvolvimento com
