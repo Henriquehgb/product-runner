@@ -66,7 +66,7 @@ ela, como o **M1** (Decisões de implementação) é seção obrigatória da spe
 Curto — perto de "alguns bullets no fim do estágio", não um relatório:
 
 ```
-## {estágio} — {data}
+## {estágio/agente} — {data} — session:{id se disponível}
 **Fez (mecânico):** {arquivos tocados, comandos, commits — extraível de git/fs}
 **Decidiu:** {decisões em bifurcações — uma linha cada}
 **Porquê:** {a razão de cada decisão — fato sobre o raciocínio}
@@ -77,6 +77,11 @@ pra versão 0.5.1 que saiu no processo". Se não houve, omitir.}
 
 > A linha **"Fora do óbvio"** é o coração do mecanismo — pede o **fato** ("rodei X"),
 > não a interpretação ("desviei"). O agente relata o não-default; o Review.LLM julga.
+
+**`session:{id}` é oportunista e não-bloqueante.** Registre o id da sessão **se o
+ambiente o expuser** ao agente; se não houver como obtê-lo, **omita o campo**. É um
+ponteiro para o Review.LLM reconstruir o que a sessão fez — não uma exigência
+cumprível por todo ambiente.
 
 ---
 
@@ -94,9 +99,9 @@ pra versão 0.5.1 que saiu no processo". Se não houve, omitir.}
 
 Ganha uma **segunda fonte** de candidatos, além de "falha que o humano trouxe":
 
-- **Lê o rastro** e **levanta candidatos** a falha de processo (desvios relatados como fato).
+- **Lê o rastro** e **cruza com o git diff** (evidência primária) — e com o log da sessão, se o `session:{id}` permitir e o log existir. Persegue os **gaps relato × realidade** e **levanta candidatos** a falha de processo.
 - **Propõe ao gate, não conclui.** Ler o report gera **falsos positivos** — nem todo "fora do óbvio" é falha. O Review.LLM **aponta**; o humano **decide**. O report tira o humano de *sensor*, não de *juiz*.
-- Daí, o fluxo normal: validar que é real, classificar por tipo, checar reincidência na fila meta, propor correção com gate.
+- Daí, o fluxo normal: validar que é real, classificar por tipo, checar reincidência na fila meta, propor correção com gate. Detalhe da investigação em [agente-review-llm](./agente-review-llm.md) (Fase 0).
 
 ---
 
@@ -104,7 +109,8 @@ Ganha uma **segunda fonte** de candidatos, além de "falha que o humano trouxe":
 
 Uma linha no contrato de saída de **cada** agente que roda num incremento
 (conceituação, doc-funcional, gerador-spec, implementação, Review.Code, User
-Review, Review.Product, Review.LLM):
+Review, Review.Product). O **Review.LLM é a exceção**: ele **consome** o report
+(não anexa) — auto-anexar seria auditar o próprio rastro.
 
 > **Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md`**
 > (fez / decidiu / porquê / fora-do-óbvio). Critério de conclusão — o estágio não
