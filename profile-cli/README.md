@@ -22,7 +22,7 @@ Use o CLI — ele copia `common/` + este perfil pra `docs/` e gera o
 `CLAUDE.md` raiz (mescla template + extension, substitui `{...}`):
 
 ```bash
-npx project-docs-blueprints --name meu-projeto --profile cli --dir .
+npx product-runner --name meu-projeto --profile cli --dir .
 ```
 
 Equivalente manual, se preferir sem npm:

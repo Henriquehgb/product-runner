@@ -73,7 +73,15 @@ interface Manifest {
 }
 
 /** Subpasta (dentro de docs/) onde vão os artefatos de handoff dos conflitos. */
-export const HANDOFF_DIR = ".pdb-update";
+export const HANDOFF_DIR = ".prod-runner-update";
+
+/**
+ * Nome do manifesto ANTES do rename para `product-runner` (migration 0.5.0).
+ * Projetos scaffoldados em versões anteriores têm o manifesto com este nome; o
+ * `readManifest` cai pra ele pra ainda achar o cursor — e a migration 0.5.0
+ * renomeia o arquivo no disco. Literal de propósito (não derivar do novo nome).
+ */
+const LEGACY_MANIFEST_FILENAME = ".project-docs-blueprints.json";
 
 /** Diretórios que nunca entram na varredura do projeto. */
 const SKIP_DIRS = new Set([
@@ -234,19 +242,24 @@ async function classify(
 // --- Plano + aplicação ----------------------------------------------------
 
 async function readManifest(targetDir: string): Promise<Manifest | null> {
-  const p = join(targetDir, "docs", MANIFEST_FILENAME);
-  if (!(await exists(p))) return null;
-  try {
-    return JSON.parse(await readFile(p, "utf8")) as Manifest;
-  } catch {
-    return null;
+  // nome atual primeiro; cai pro legado pra ainda achar o cursor de projetos
+  // pré-rename (a migration 0.5.0 renomeia o arquivo no disco no mesmo update).
+  for (const name of [MANIFEST_FILENAME, LEGACY_MANIFEST_FILENAME]) {
+    const p = join(targetDir, "docs", name);
+    if (!(await exists(p))) continue;
+    try {
+      return JSON.parse(await readFile(p, "utf8")) as Manifest;
+    } catch {
+      return null;
+    }
   }
+  return null;
 }
 
 function handoffContent(item: PlanItem, projectRaw: string): string {
   return `# Handoff de update — ${item.templatePath}
 
-> Gerado pelo \`project-docs-blueprints update\`. O CLI **não** alterou o arquivo
+> Gerado pelo \`product-runner update\`. O CLI **não** alterou o arquivo
 > original; isto é material pra você (ou uma sessão Claude) classificar e decidir.
 
 - **Arquivo no projeto:** \`${item.projectPath}\`${item.moved ? " (movido em relação ao template)" : ""}
@@ -277,7 +290,7 @@ ${item.art.content.trimEnd()}
 function migrationHandoff(mig: Migration): string {
   return `# Migration ${mig.version} — ${mig.title}
 
-> Migration **conduzida** (não-automática) do \`project-docs-blueprints\`. O CLI
+> Migration **conduzida** (não-automática) do \`product-runner\`. O CLI
 > não aplicou nada; conduza as instruções abaixo com o humano.
 ${mig.previous ? `\n- **De:** ${mig.previous} → **${mig.version}**` : ""}
 ${mig.risk ? `- **Risco:** ${mig.risk}` : ""}

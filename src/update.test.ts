@@ -10,7 +10,7 @@ async function withProject(
   fn: (dir: string) => Promise<void>,
   profile: "cli" | "ssr" = "ssr",
 ): Promise<void> {
-  const dir = await mkdtemp(join(tmpdir(), "pdb-up-"));
+  const dir = await mkdtemp(join(tmpdir(), "prod-runner-up-"));
   try {
     await scaffold({ name: "proj", profile, targetDir: dir, port: "3000", force: false });
     await fn(dir);
@@ -223,8 +223,35 @@ test("migration 0.3.0: renomeia _overview.template -> specs/ e gera handoff cond
       await readFile(join(dir, "specs", "_overview.md"), "utf8"),
       /roadmap do projeto/,
     );
-    // handoff conduzido (parte não-mecânica: CLAUDE.md -> agente-pdb)
+    // handoff conduzido (parte não-mecânica: CLAUDE.md -> agente-prod-runner)
     await access(join(dir, "docs", HANDOFF_DIR, "MIGRATION-0.3.0.md"));
+  });
+});
+
+test("migration 0.5.0: fallback lê manifesto no nome antigo e renomeia pro novo", async () => {
+  await withProject(async (dir) => {
+    // simula projeto pré-rename: manifesto no nome ANTIGO, cursor 0.4.0
+    const m = await readManifest(dir); // lê o nome novo escrito pelo scaffold
+    m.version = "0.4.0";
+    await writeFile(
+      join(dir, "docs", ".project-docs-blueprints.json"),
+      JSON.stringify(m, null, 2) + "\n",
+    );
+    await rm(manifestPath(dir)); // remove o nome novo → só sobra o antigo
+
+    const res = await update({
+      targetDir: dir,
+      dryRun: false,
+      normalizeLinks: false,
+      formatNormalize: false,
+    });
+
+    // a migration 0.5.0 está no caminho (0.4.0 -> pkg) e renomeou o arquivo
+    assert.ok(res.migrations.some((x) => x.version === "0.5.0"));
+    await access(manifestPath(dir)); // manifesto agora no nome novo
+    await assert.rejects(
+      access(join(dir, "docs", ".project-docs-blueprints.json")), // antigo sumiu
+    );
   });
 });
 

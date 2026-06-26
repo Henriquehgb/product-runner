@@ -12,7 +12,7 @@ código.
 1. Lê o `version` do manifesto do projeto (o "cursor").
 2. Junta as migrations no intervalo `(cursor, versão-do-pacote]`, em ordem.
 3. Roda-as **antes** do diff de estado: as `autoApply` aplicam seus `ops`
-   mecânicos; as demais viram handoff (`docs/.pdb-update/MIGRATION-<v>.md`) pra
+   mecânicos; as demais viram handoff (`docs/.prod-runner-update/MIGRATION-<v>.md`) pra
    conduzir com o humano.
 4. Depois o diff de estado reconcilia o que sobrou.
 

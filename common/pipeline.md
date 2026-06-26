@@ -22,7 +22,7 @@ o protocolo de gates e o ciclo Cowork↔Claude Code do [spec-guide](./spec-guide
 solução: build-vs-buy, orçamento de serviços externos, o que o framework
 NÃO faz, volume, decisões de stack e **esboço** de modelo de dados. A porta
 de entrada humana é a skill `project-kickoff` (quando instalada) ou `npx
-project-docs-blueprints init`; o [agente-kickoff](./agents/agente-kickoff.md) é a diretriz
+product-runner init`; o [agente-kickoff](./agents/agente-kickoff.md) é a diretriz
 versionada do estágio, copiada para `docs/agents/` no scaffold. Saída:
 decisões consolidadas num briefing (ex.: `Kickoff.md`) + perfil escolhido.
 

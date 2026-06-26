@@ -1,12 +1,12 @@
 <!--
 Extensão do CLAUDE.md — Perfil SSR.
 Este arquivo NÃO é concatenado: cada bloco abaixo declara, via diretiva
-`pdb-merge`, como dobra numa seção do template-base (common/claude-md.template.md).
+`prod-runner-merge`, como dobra numa seção do template-base (common/claude-md.template.md).
 Modos: replace (troca a seção), append (acrescenta ao fim da seção),
 after (insere logo após a seção). Edite o conteúdo, não as diretivas.
 -->
 
-<!-- pdb-merge: append section="Stack" -->
+<!-- prod-runner-merge: append section="Stack" -->
 
 - **Framework:** Next.js (Pages Router)
 - **ORM:** Prisma + PostgreSQL (ou outro adapter quando configurado)
@@ -18,7 +18,7 @@ after (insere logo após a seção). Edite o conteúdo, não as diretivas.
 - **Deploy:** Docker + VPS (Vercel não cobre storage persistente +
   background jobs)
 
-<!-- pdb-merge: replace section="Princípio central" -->
+<!-- prod-runner-merge: replace section="Princípio central" -->
 
 ### Princípio central
 
@@ -26,7 +26,7 @@ Lógica de domínio desacoplada do framework. Services são TypeScript
 puro. API routes são cascas finas que validam e delegam pros services.
 Componentes UI consomem outputs tipados dos services.
 
-<!-- pdb-merge: replace section="Estrutura de pastas" -->
+<!-- prod-runner-merge: replace section="Estrutura de pastas" -->
 
 ### Estrutura de pastas
 
@@ -55,7 +55,7 @@ Componentes UI consomem outputs tipados dos services.
 └── docker-compose.yml                ← infra (Postgres, Redis se aplicável)
 ```
 
-<!-- pdb-merge: append section="Convenções de código" -->
+<!-- prod-runner-merge: append section="Convenções de código" -->
 
 ### API Routes (SSR)
 
@@ -79,7 +79,7 @@ Insubstituível — `tsc --noEmit` pega erros de tipo mas não de
 comportamento. Smoke check humano em mobile (375x667) e desktop
 (1280x720) faz parte do M4.
 
-<!-- pdb-merge: replace section="Comandos úteis" -->
+<!-- prod-runner-merge: replace section="Comandos úteis" -->
 
 ## Comandos úteis
 
@@ -99,7 +99,7 @@ Configurar port fixo no `package.json` (`"dev": "next dev -p {PORT}"`) pra
 evitar mudança entre sessões. Code deve reportar o port real no output ao
 iniciar o dev server.
 
-<!-- pdb-merge: replace section="Configuração" -->
+<!-- prod-runner-merge: replace section="Configuração" -->
 
 ## Configuração
 
