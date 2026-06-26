@@ -39,6 +39,7 @@ Você conduz um **diálogo humano↔LLM** que parte de uma dor, necessidade e id
 
 **Objetivo:** se o projeto **não** estiver vazio, levantar o contexto que já existe **antes** de conduzir o discovery — ancorar as perguntas no que está lá, em vez de partir do branco. Em projeto greenfield (vazio), pule direto pra Etapa 1.
 
+- **Antes de levantar do zero, leia o `prod-runner-diagnostico.md` se existir.** O prod-runner pode ter deixado o que já viu ao rotear (stack, estrutura, e o **porquê** de ter classificado o projeto como brownfield/greenfield). Se existir: **parta dele** — confirme/complemente o que falta, **não re-levante** o que já está registrado, e aproveite o porquê do roteamento (que você não reconstruiria sozinho). Se **não** existir (entrada por outra porta): faça o reconhecimento do zero, como abaixo. **Nunca-bloqueante:** a ausência do diagnóstico não trava nada.
 - Levante: stack e dependências (`package.json`, lockfile), estrutura de pastas, `README`/docs soltos, código relevante (entrypoints, domínio), config (`.env.example`, Docker), e qualquer solução já esboçada.
 - **Ancore o discovery no que existe:** confirme/complemente as decisões já tomadas implicitamente (stack, deploy, padrões) em vez de perguntá-las do zero. O que já está decidido vira contexto, não pergunta aberta.
 - Distinga **o que existe** (fato) de **o que está definido** (intenção): código rodando não significa problema/escopo entendido — o discovery ainda precisa fechar o "o quê/pra quem/viabilidade".
