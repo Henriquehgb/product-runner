@@ -1,8 +1,16 @@
 {
   "name": "product-runner",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Scaffold de docs para projetos TypeScript com desenvolvimento assistido por AI: gera CLAUDE.md + docs/ a partir de templates vivos (common + perfil cli/ssr).",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Henriquehgb/product-runner.git"
+  },
+  "homepage": "https://github.com/Henriquehgb/product-runner#readme",
+  "bugs": {
+    "url": "https://github.com/Henriquehgb/product-runner/issues"
+  },
   "bin": {
     "product-runner": "dist/cli.js"
   },
