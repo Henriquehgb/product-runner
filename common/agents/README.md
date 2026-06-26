@@ -16,6 +16,7 @@ pipeline. Visão geral e costura com o resto do método em [pipeline](../pipelin
 | [agente-review-product](./agente-review-product.md) | Review.Product (Estágio 5) | Feedback classificado por causa-raiz e roteado ao destino + fila de produto |
 | [agente-review-llm](./agente-review-llm.md) | Review.LLM (Estágio 5, meta) | Correção do **próprio pipeline** a partir de falha já diagnosticada |
 | [protocolo-de-gates](./protocolo-de-gates.md) | (transversal) | Regras de gate e calibragem por stakes, comuns a todos os agentes |
+| [review-result](./review-result.md) | (volta → conceituação) | Canal das **correções de concepção** da volta (`reqs/review-result-inc{N}.md`): User Review/Review.Product anexam, a conceituação lê no re-entry — sem poluir o ldoc |
 | [rastro-por-incremento](./rastro-por-incremento.md) | (transversal) | Rastro factual por incremento (`llm-report-inc{N}.md`) que cada estágio anexa e o Review.LLM consome pra levantar candidatos a falha de processo |
 
 ## Como se conectam

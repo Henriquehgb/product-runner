@@ -72,7 +72,10 @@ e escala por User Review → Review.Product → Conceituação; só o humano
 bypassa. A **volta de reconciliação** (corrigir conceituação/funcional
 contra o que foi construído) é coberta por Review.Product → destino — antes
 era fase futura, agora está especificada nos agentes. Tratar como
-recém-especificado: método vivo até acumular runs.
+recém-especificado: método vivo até acumular runs. As correções de
+**concepção** da volta não vão direto pro ldoc — passam pelo
+`reqs/review-result-inc{N}.md`, que a conceituação lê no re-entry (canônico em
+[review-result](./agents/review-result.md)).
 
 ## Em que estágio estou? (orientar pelo rastro)
 

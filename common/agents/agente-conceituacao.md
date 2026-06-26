@@ -99,6 +99,8 @@ O HDoc é para **humano ler, revisar e dar OK ou feedback**.
 
 Cada incremento seguinte é uma **nova execução deste estágio**, não uma continuação da anterior. A diferença em relação à primeira passada: a entrada já inclui o macro pronto (conceito, casos de uso, roadmap, DER amplo, versionados), então a execução **pula a Fase 1** e entra direto no drilldown do próximo incremento (Fase 2 → Fase 3). Cada execução abre e fecha no seu próprio Gate 3; "fim da execução" é por incremento, e o estágio só se encerra de vez quando não há mais incrementos a detalhar.
 
+**Reconcilie a volta antes de conceber (primeira ação do re-entry).** Antes de conceber o incremento novo, **leia `reqs/review-result-inc{N}.md`** (do incremento anterior) se existir e **reconcilie as correções de concepção primeiro** — inclusive refazendo um caso de uso anterior se a entrada pedir (`Refaz UC anterior? = sim`). Feche a reconciliação (com os gates de praxe — alterar UC/DER fechado é alto risco) **antes** de abrir o incremento novo; não misture corrigir o passado com conceber o futuro. O `review-result` é uma das peças do briefing do re-entry, ao lado do ldoc/roadmap. Mecanismo em [review-result](./review-result.md). _(Ausência do arquivo = a volta não pediu correção de concepção; siga normal.)_
+
 Mas o plano não é congelado. Construir o último incremento pode ter contradito o que se imaginou. Por isso, **antes de drillar o próximo incremento**, um checkpoint curto:
 
 **Checkpoint de revisão de macro.** Pergunte ao humano (e avalie pelos artefatos do último incremento): construir o último incremento mudou algo no conceito, nos casos de uso, no roadmap ou no DER amplo?

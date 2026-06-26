@@ -70,7 +70,7 @@ Com o corte confirmado, cada achado vai para um lugar — **cada natureza, um lu
 | Achado | Destino |
 | --- | --- |
 | **Ajuste de código** (falha visual confirmada, comportamento errado simples) | **Seção de pendências da spec atual** — onde o Code lê no retrabalho. Não vira fila nova. |
-| **Ajuste de caso de uso** (o cenário/aceite estava errado ou incompleto) | Volta para a **conceituação** ajustar o caso de uso. |
+| **Ajuste de caso de uso** (o cenário/aceite estava errado ou incompleto) | **Anexa a correção em `reqs/review-result-inc{N}.md`** (não escreve no ldoc direto); a conceituação reconcilia no re-entry. Ver [review-result](./review-result.md). |
 | **Mais-que-ajuste** | **`product-issues.md`** (fila própria) — o Review.Product consome e faz a classificação fina. |
 | **Adjacente / fora de escopo** (bug em algo que não era do incremento, notado durante o teste) | **`_open-issues.md`** (pela regra do `spec-guide`: adjacente vira issue). |
 
