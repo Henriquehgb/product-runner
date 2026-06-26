@@ -67,6 +67,8 @@ Todo achado cai num de três baldes, e o balde define o destino:
 
 **Gate:** o veredito de **critério binário** não precisa de gate — é objetivo (o grep retorna vazio ou não; o teste passa ou não), você decide passou/falhou. Mas **⚠️ pendente-humano** e **Impeditivo (bloqueio)** sempre voltam para o humano.
 
+**Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
 ---
 
 ## Encaminhamento

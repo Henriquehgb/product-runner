@@ -68,6 +68,8 @@ Apresente o par (ou o HDoc, com o LDoc disponível) e colete **OK** seguindo o `
 
 Com o OK, o **`como-funciona.ldoc.md` atualizado** entra como input do gerador de spec, junto com conceituação + DS/DP.
 
+**Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
 ---
 
 ## Fronteira de audiência (não confundir com o HDoc da conceituação)

@@ -120,6 +120,16 @@ verificáveis (contas, critérios) = alto risco automático. Os critérios
 meta **M1-M3** do [spec-guide](./spec-guide.md) são a **aplicação** desse princípio à
 etapa de spec (checklist binário vence atenção textual — mesmo aprendizado).
 
+## Rastro por incremento (transversal)
+
+Cada estágio que roda num incremento deixa um **rastro factual** (fez / decidiu /
+porquê / fora-do-óbvio) num `llm-report-inc{N}.md`. O **Review.LLM** consome esse
+rastro pra levantar candidatos a falha de processo **sozinho** — em vez de depender
+de o humano ter percebido o desvio. É o mesmo princípio do "índice derivado vs
+fonte": rastro factual consumido por um auditor de fora. Canônico em
+[rastro-por-incremento](./agents/rastro-por-incremento.md); é critério de conclusão de
+cada estágio, não apêndice.
+
 ## Pipeline inteiro vs trecho curto
 
 - **Projeto novo de produto:** pipeline inteiro (0→5). O discovery e a
