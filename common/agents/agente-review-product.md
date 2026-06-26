@@ -78,7 +78,7 @@ Apresente a classificação como **lista numerada**: para cada item, a causa-rai
 Com a confirmação:
 - **Despache** cada item para o(s) destino(s) confirmado(s) (registro do roteamento — o quê, pra onde, por quê).
 - **Acumule** os itens de produto na fila de produto (Princípio 5), para a retrospectiva de produto por marco.
-- Itens roteados ao Review.LLM seguem para lá; a fila meta é mantida **por ele**, não por você.
+- Itens roteados ao **Review.LLM** (causa de **processo**) você **anexa em `review-llm-fila-meta.md`** (na pasta dos agentes) — é o depósito do item roteado. Quem **classifica e mantém** a fila é o Review.LLM, não você. Ver [agente-review-llm](./agente-review-llm.md).
 
 **Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
 

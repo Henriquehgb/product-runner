@@ -96,17 +96,17 @@ e por que importa.
 **Quando se aplica:** ao montar estratégia de skills/docs.
 **Por que importa:** 1 CLAUDE.md completo + docs de referência supera 9 CLAUDE.md espalhados. Manutenção de 9 arquivos sincronizados é overhead que não compensa.
 
-### Conhecer o formato de cada ferramenta antes de gerar artefatos
-**Quando se aplica:** ao criar skills, configs, templates pra ferramentas.
-**Por que importa:** o Cowork exige YAML frontmatter nas skills. Gerar sem e descobrir pelo erro custou retrabalho. Verificar o formato esperado antes de gerar evita isso.
+### Conhecer o formato de cada artefato antes de gerar
+**Quando se aplica:** ao criar skills, configs, templates.
+**Por que importa:** skills exigem YAML frontmatter; gerar sem e descobrir pelo erro custou retrabalho. Verificar o formato esperado de cada artefato antes de gerar evita isso.
 
-### Divisão de responsabilidade entre ferramentas deve ser explícita
-**Quando se aplica:** projetos que usam múltiplas ferramentas AI.
-**Por que importa:** sem definição clara, você mistura — pede pro chat o que o Cowork faz melhor, ou pro Claude Code o que é um fix do Cowork. Definir no kickoff: chat = pensar, Cowork = agir nos arquivos, Code = implementar.
+### Divisão entre agentes, não entre apps
+**Quando se aplica:** qualquer projeto que roda pelo pipeline.
+**Por que importa:** o que separa concepção de implementação **não é o app — é o agente**. Cada execução de um `agente*.md` é uma sessão; tudo roda no **mesmo ambiente**. A disciplina de não misturar conceber com implementar vive nos **gates de cada agente**, não numa fronteira de app. _(Antes amarrávamos a apps — chat = pensar / Cowork = agir / Code = implementar; era frágil porque o handoff atravessava apps. A proteção nunca foi o app, sempre foi o agente — então unificar o ambiente não perde nada.)_
 
-### Padrão de comunicação entre ferramentas
-**Quando se aplica:** workflow multi-ferramenta.
-**Por que importa:** "discutir aqui → instrução copiável → cola lá" surgiu organicamente mas deveria ser definido no kickoff. Sem esse padrão, cada handoff é improvisado.
+### O handoff entre sessões é o arquivo versionado
+**Quando se aplica:** todo o pipeline (ida e volta).
+**Por que importa:** o bastão de uma sessão para a próxima é o **arquivo no repo** (spec, ldoc, como-funciona, report, filas, `review-result`, `llm-report`), **não** o contexto da conversa. "Discutir aqui → instrução copiável → cola lá" entre apps deixa de existir: cada agente lê o arquivo de output do anterior. Remove a fragilidade do copy-paste manual e do contexto que se perde entre apps.
 
 ### Regras operacionais no CLAUDE.md fazem diferença real
 **Quando se aplica:** qualquer projeto com Claude Code.
@@ -184,17 +184,20 @@ e por que importa.
 Explorar uso de `inbox/instructions.md` como meio de comunicação
 entre Claude.ai e Cowork — tanto pra instruções quanto pra outputs.
 Evita copy-paste manual. Não validado ainda.
+> **Superada** pelo modelo de ambiente único (handoff = arquivo de output no repo). Mantida como registro de decisão.
 
 ### Estrutura multi-agente de referência
 Setup mais poderoso possível com ferramentas atuais:
 - Cowork = orquestrador (arquivos + Chrome connector)
 - Claude Code = implementador (Agent Teams + Chrome)
 - Claude.ai = arquiteto (sem conexão direta — humano é ponte)
+> **Superada** pelo modelo de ambiente único (um app rodando LLM no repo; papéis são os agentes, não apps). Mantida como registro de decisão.
 
 ### Chrome como ponte automática
 Testar Claude in Chrome lendo a aba do Claude.ai como ponte.
 Promissor mas frágil — não recomendar como prática padrão
 até validar em projetos reais.
+> **Superada** pelo modelo de ambiente único (sem ponte entre apps). Mantida como registro de decisão.
 
 ### Regras de lint customizadas pro DocManager
 Avaliar adicionar: services não importam de `next`,

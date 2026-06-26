@@ -210,27 +210,30 @@ Em mudança pequena, a spec é escrita direto neste template.
 
 ### Quem faz o quê
 
-| Etapa                     | Onde                       | Quem                                |
-| ------------------------- | -------------------------- | ----------------------------------- |
-| Análise, gap, decisão     | Cowork (esta sessão)       | LLM + você                          |
-| Escrita da spec           | Cowork                     | LLM ([agente-gerador-spec](./agents/agente-gerador-spec.md) no pipeline) + validação sua |
-| Implementação             | Claude Code (outra sessão) | LLM em sessão dedicada              |
-| Review                    | Cowork (volta aqui)        | LLM + você                          |
-| Decisões de implementação | Cowork (review preenche)   | LLM + você                          |
+Tudo no mesmo ambiente; o que distingue é a **sessão** (execução de um agente),
+e o handoff entre sessões é o **arquivo**, não o contexto.
+
+| Etapa                     | Sessão                                  | Quem                                |
+| ------------------------- | --------------------------------------- | ----------------------------------- |
+| Análise, gap, decisão     | sessão de spec (esta)                   | LLM + você                          |
+| Escrita da spec           | idem ([agente-gerador-spec](./agents/agente-gerador-spec.md) no pipeline) | LLM + validação sua |
+| Implementação             | sessão dedicada (outra), via `spec-guide` | LLM                               |
+| Review                    | sessão de review (lê os arquivos)       | LLM + você                          |
+| Decisões de implementação | na própria spec (review preenche se faltou) | LLM + você                      |
 
 ### Ciclo
 
-1. Cowork escreve spec → grava em `specs/.../NN-nome.md`.
-2. Você abre Claude Code apontando pro repo.
-3. Pede ao Code: "implementa `specs/.../NN-nome.md`".
-4. Code implementa, reporta no chat.
-5. Você traz o report de volta pra Cowork.
-6. Cowork revisa contra critérios, preenche "Decisões de implementação".
-7. Cowork escreve próxima spec.
+1. Escreva a spec → grava em `specs/.../NN-nome.md`.
+2. Abra uma **sessão de implementação** apontando pro repo.
+3. Peça: "implementa `specs/.../NN-nome.md`".
+4. A implementação roda e grava o **report** (na spec + saída no repo).
+5. O report é o **arquivo no repo** — é o que a sessão de review lê (sem copy-paste de contexto).
+6. O review revisa contra critérios e preenche "Decisões de implementação" na spec.
+7. Próxima spec.
 
 ---
 
-## Como o Claude Code lê
+## Como a implementação lê
 
 Ordem sugerida (ele conhece esse padrão):
 
@@ -288,7 +291,7 @@ Ordem sugerida (ele conhece esse padrão):
 
 ## Como o review funciona
 
-Trazer o report do Code de volta pra Cowork. A revisão:
+O review lê o report e o estado do repo (o report é o **arquivo**, não contexto de outra sessão). A revisão:
 
 1. Cruza critérios da spec com o estado real do código (não apenas
    o report).

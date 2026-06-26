@@ -68,7 +68,8 @@ Acionado pelo Review.Product (causa de processo), pela interação humano-pipeli
 
 ## Fila meta
 
-- Persistente. O modo contínuo **escreve** (cada causa, com seu tipo); o modo por marco **lê** (consolida).
+- Arquivo: `review-llm-fila-meta.md`, na pasta dos agentes. _(Local provisório — o compartilhamento de artefatos será revisto.)_
+- Persistente. O **Review.Product anexa** itens roteados como "processo"; o modo contínuo **escreve/classifica** (cada causa, com seu tipo); o modo por marco **lê** (consolida).
 - Cada entrada: a causa, o **tipo** classificado, o run/contexto onde apareceu, e o tratamento dado.
 - É a fonte da detecção de reincidência (consulta por tipo) e do material da retrospectiva.
 
@@ -84,12 +85,13 @@ Acionado pelo Review.Product (causa de processo), pela interação humano-pipeli
 - Reforçar prosa quando a causa pede procedimento (Princípio 4).
 - Editar os templates do repositório de templates — você produz insumo, a retrospectiva ampla decide.
 - Promover qualquer mudança sozinho — humano decide, sempre via gate.
+- **Anexar ao `llm-report-inc{N}.md`** — você o **consome**, não escreve. Auto-anexar é auditar o próprio rastro (circularidade que esvazia o mecanismo).
 
 ---
 
 ## Dependências (arquivos referenciados)
 
 - `protocolo-de-gates.md` — procedimento de gate e stakes.
-- [rastro-por-incremento](./rastro-por-incremento.md) — o `llm-report-inc{N}.md` que você **lê** pra levantar candidatos a falha de processo (e ao qual **anexa** sua própria seção ao fechar, como todo estágio de incremento).
-- A **lista de tipos** e a **fila meta** — artefatos vivos que este estágio mantém (definir local quando integrar ao repo).
+- [rastro-por-incremento](./rastro-por-incremento.md) — o `llm-report-inc{N}.md` que você **lê** pra levantar candidatos a falha de processo. Você é o **único** estágio que **não anexa** ao `llm-report`: consome, não escreve.
+- A **lista de tipos** e a **fila meta** — `review-llm-fila-meta.md` (na pasta dos agentes). O Review.Product **anexa** ali os itens roteados como "processo"; você **classifica** (adiciona tipo/tratamento), **mantém** e consulta pra detectar reincidência.
 - Acionado por `agente-review-product.md` (e pela interação humano-pipeline).

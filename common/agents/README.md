@@ -22,8 +22,8 @@ pipeline. Visão geral e costura com o resto do método em [pipeline](../pipelin
 ## Como se conectam
 
 ```
-discovery → conceituação → doc funcional → gerador de spec → Claude Code → review
- (briefing)   (ldoc/hdoc)   (como-funciona)    (specs/)       (implementa)    │
+discovery → conceituação → doc funcional → gerador de spec → implementação → review
+ (briefing)   (ldoc/hdoc)   (como-funciona)    (specs/)       (via spec-guide)  │
                   └────────── protocolo-de-gates governa os gates ────────────┘
                                                                                │
 review (Estágio 5):  Review.Code → User Review → Review.Product → Review.LLM

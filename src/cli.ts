@@ -65,7 +65,7 @@ async function runInit(dir: string, force: boolean): Promise<void> {
     console.log(`✔ Agentes de bootstrap criados (${files.length}):`);
     for (const f of files) console.log(`  ${f}`);
     console.log("\nPróximo passo:");
-    console.log(`  Abra sua LLM (Claude Code/Cowork) neste diretório e peça:`);
+    console.log(`  Abra sua LLM no repositório (ex.: Claude Code) e peça:`);
     console.log(`  "leia ${ENTRY_AGENT} e siga as instruções".`);
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
