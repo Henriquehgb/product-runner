@@ -36,6 +36,16 @@ review (Estágio 5):  Review.Code → User Review → Review.Product → Review.
   periódica de atualização. No `init` ele vem na raiz junto do `kickoff`; depois
   do scaffold vive aqui em `docs/agents/`.
 
+  Ao rotear pro kickoff, a costura **não é muda** — passa por um artefato de rastro:
+
+  ```
+  agente-prod-runner → prod-runner-diagnostico.md (oportunista) → agente-kickoff
+  ```
+
+  O prod-runner registra **o que viu e por que roteou** (factual); o kickoff lê e
+  **parte dali** em vez de re-levantar o básico. Nunca-bloqueante: sem o arquivo,
+  o kickoff faz o reconhecimento do zero.
+
 - O `kickoff` é o **Estágio 0**: faz o discovery (problema, arquitetura,
   esboço de dados) e **entrega o briefing** à conceituação. Como o discovery
   acontece antes de o projeto existir, a porta de entrada humana é a skill

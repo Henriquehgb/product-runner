@@ -39,6 +39,18 @@ Leia os sinais do projeto **na raiz** e despache:
 
 > Quando houver ambiguidade (sinais misturados), **não chute**: descreva ao humano o que encontrou e pergunte qual galho seguir.
 
+### Diagnóstico de roteamento (ao despachar para o kickoff)
+
+Ao rotear para o [agente-kickoff](./agente-kickoff.md) (galhos **greenfield** ou **brownfield sem docs**), escreva um `prod-runner-diagnostico.md` na raiz **antes de despachar**. É insumo oportunista para o kickoff — registra o que você já viu ao diagnosticar, para ele não re-levantar o básico e para o **porquê** do roteamento não se perder.
+
+Registre, **factual** (não interpretativo):
+
+- **O que encontrei:** stack/deps observados, estrutura de pastas, docs/código relevante, sinais de solução já esboçada (ou a ausência deles).
+- **Galho escolhido:** `greenfield` | `brownfield-sem-docs` — e **por quê** (qual sinal levou à classificação).
+- **O que NÃO verifiquei:** o que ficou fora do diagnóstico de roteamento (o aprofundamento é do kickoff).
+
+Não aprofunde além do que o roteamento exigiu — o levantamento para o discovery é do kickoff. Este arquivo **encurta** a Etapa 0 dele, não a substitui.
+
 ---
 
 ## Bootstrap (scaffold de um projeto novo)
