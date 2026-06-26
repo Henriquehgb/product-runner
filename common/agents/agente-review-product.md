@@ -57,6 +57,8 @@ Você é acionado **após** uma revisão a montante (tipicamente o User Review; 
 
 Um item pode ir para mais de um destino (ex.: P&L errado **e** confuso → Conceituação + DS).
 
+> **Destino Conceituação → não reescreva o ldoc.** Item roteado como **concepção** (modelo/casos de uso/roadmap/DER) é **anexado em `reqs/review-result-inc{N}.md`** — a conceituação o lê como primeira coisa do re-entry e reconcilia lá. Ver [review-result](./review-result.md).
+
 ---
 
 ## Fluxo
