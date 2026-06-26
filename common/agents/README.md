@@ -16,6 +16,7 @@ pipeline. Visão geral e costura com o resto do método em [pipeline](../pipelin
 | [agente-review-product](./agente-review-product.md) | Review.Product (Estágio 5) | Feedback classificado por causa-raiz e roteado ao destino + fila de produto |
 | [agente-review-llm](./agente-review-llm.md) | Review.LLM (Estágio 5, meta) | Correção do **próprio pipeline** a partir de falha já diagnosticada |
 | [protocolo-de-gates](./protocolo-de-gates.md) | (transversal) | Regras de gate e calibragem por stakes, comuns a todos os agentes |
+| [rastro-por-incremento](./rastro-por-incremento.md) | (transversal) | Rastro factual por incremento (`llm-report-inc{N}.md`) que cada estágio anexa e o Review.LLM consome pra levantar candidatos a falha de processo |
 
 ## Como se conectam
 
@@ -69,6 +70,10 @@ review (Estágio 5):  Review.Code → User Review → Review.Product → Review.
 - O `protocolo-de-gates` é a **fonte canônica** de gate/stakes; os
   critérios meta M1-M3 do [spec-guide](../spec-guide.md) são a aplicação dele à etapa de
   spec (checklist binário vence atenção textual).
+- O [rastro-por-incremento](./rastro-por-incremento.md) é **transversal**: cada estágio
+  anexa uma seção factual (fez/decidiu/porquê/fora-do-óbvio) ao `llm-report-inc{N}.md`,
+  e o **Review.LLM** lê esse rastro pra levantar candidatos a falha de processo
+  sozinho — tirando o humano do papel de *sensor* (segue *juiz* no gate).
 
 ## Origem
 

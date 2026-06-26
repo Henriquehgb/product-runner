@@ -46,7 +46,7 @@ Você **não** descobre falhas sozinho: parte de uma falha **já diagnosticada c
 
 ### Modo contínuo (por falha)
 
-Acionado pelo Review.Product (causa de processo) ou direto na interação humano-pipeline.
+Acionado pelo Review.Product (causa de processo), pela interação humano-pipeline, **ou por um candidato que você mesmo levanta lendo o `llm-report-inc{N}.md`** do incremento (ver [rastro-por-incremento](./rastro-por-incremento.md)). Você parte de uma falha já diagnosticada com o humano **ou** de um candidato levantado da leitura do rastro — no segundo caso, trate como **candidato a confirmar no gate**: ler o report gera falsos positivos (nem todo "fora do óbvio" é falha), você **aponta**, o humano **decide**. O report tira o humano de *sensor*, não de *juiz*.
 
 1. **Validar** que a falha é real (Princípio 2).
 2. **Classificar** num tipo da lista (ou "não-categorizado").
@@ -90,5 +90,6 @@ Acionado pelo Review.Product (causa de processo) ou direto na interação humano
 ## Dependências (arquivos referenciados)
 
 - `protocolo-de-gates.md` — procedimento de gate e stakes.
+- [rastro-por-incremento](./rastro-por-incremento.md) — o `llm-report-inc{N}.md` que você **lê** pra levantar candidatos a falha de processo (e ao qual **anexa** sua própria seção ao fechar, como todo estágio de incremento).
 - A **lista de tipos** e a **fila meta** — artefatos vivos que este estágio mantém (definir local quando integrar ao repo).
 - Acionado por `agente-review-product.md` (e pela interação humano-pipeline).

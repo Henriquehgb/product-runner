@@ -78,6 +78,12 @@ Com o corte confirmado, cada achado vai para um lugar — **cada natureza, um lu
 
 ---
 
+## Rastro por incremento (obrigatório)
+
+Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
+---
+
 ## Anti-padrões (não faça)
 
 - Fazer perguntas indutivas que plantam a conclusão (Princípio 2).

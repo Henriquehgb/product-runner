@@ -67,6 +67,8 @@ Para cada spec, na ordem de dependência, preencha o template do `spec-guide.md`
 
 Specs gravadas em `specs/{domínio}/NN-nome.md`, numeração e domínios conforme `spec-guide.md`. Cada uma pronta para o Claude Code implementar.
 
+**Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
 ---
 
 ## Mapeamento origem → destino
