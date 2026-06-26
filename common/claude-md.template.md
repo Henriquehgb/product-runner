@@ -122,6 +122,9 @@ da implementação.
 4. Implementar mudanças.
 5. Rodar critérios de aceite — confirmar cada um.
 6. Reportar: critérios ✅/❌/⚠️ + decisões de implementação + notas.
+7. Anexar a seção do estágio ao `llm-report-inc{N}.md` (fez / decidiu / porquê /
+   fora-do-óbvio) — critério de conclusão, não apêndice; registre **fato**, nunca
+   julgamento. Detalhe em [rastro-por-incremento](./docs/agents/rastro-por-incremento.md).
 
 ### Regras operacionais
 

@@ -80,6 +80,8 @@ Com a confirmação:
 - **Acumule** os itens de produto na fila de produto (Princípio 5), para a retrospectiva de produto por marco.
 - Itens roteados ao Review.LLM seguem para lá; a fila meta é mantida **por ele**, não por você.
 
+**Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
 ---
 
 ## Anti-padrões (não faça)

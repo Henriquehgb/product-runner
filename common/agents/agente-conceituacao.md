@@ -130,6 +130,8 @@ Ao final de cada execução, o Estágio 1 do pipeline entrega:
 
 Ambos versionáveis. O HDoc é sempre reproduzível a partir do LDoc.
 
+**Rastro por incremento (obrigatório).** Antes de fechar o estágio, anexe sua seção ao `llm-report-inc{N}.md` (fez / decidiu / porquê / fora-do-óbvio) — critério de conclusão, não apêndice. Registre **fato**, nunca julgamento sobre acerto. Mecanismo em [rastro-por-incremento](./rastro-por-incremento.md).
+
 ---
 
 ## Anti-padrões (não faça)
