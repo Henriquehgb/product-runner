@@ -1,0 +1,49 @@
+name: Publish to npm
+
+# Dispara em todo push na main (merge de PR = push). Publica SÓ quando a versão
+# do package.json difere da publicada no npm — então merge sem bump (ex.: doc)
+# roda os testes mas não tenta republicar (que falharia).
+#
+# Autenticação via Trusted Publishing (OIDC) — NÃO usa token/secret. Requer
+# configurar o publisher confiável no npm (Settings do pacote → Trusted Publisher):
+#   GitHub Actions · repo Henriquehgb/product-runner · workflow publish.yml
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC: necessário para Trusted Publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # traz npm >= 11 (suporte a Trusted Publishing/OIDC)
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Publish if version changed
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          LOCAL=$(node -p "require('./package.json').version")
+          REMOTE=$(npm view "$NAME" version 2>/dev/null || echo "none")
+          echo "package=$NAME local=$LOCAL npm=$REMOTE"
+          if [ "$LOCAL" = "$REMOTE" ]; then
+            echo "Versão $LOCAL já está no npm — nada a publicar."
+          else
+            echo "Publicando $LOCAL (npm tem $REMOTE)…"
+            npm publish
+          fi
