@@ -1,7 +1,26 @@
-# Templates — projetos TypeScript com AI-assisted development
+# Product Runner
 
-Templates vivos pra começar projetos novos. **Versionados em git;
-evoluem conforme aprendizados de projetos reais.**
+## TL;DR
+
+**Product Runner** é um conjunto de harness, agentes e runners que conduz a **construção e a evolução de um produto** com low/vibe-coding assistido — do **briefing e discovery** até a **supervisão e aprovação da arquitetura** — mantendo consistência e fazendo o próprio processo evoluir a cada incremento.
+
+```
+npx product-runner init   # entrega os agentes de bootstrap; a LLM lê o agente-prod-runner e conduz
+```
+
+> Este produto ainda é uma versão Alfa. Método vivo, validado ponta a ponta poucas vezes. Ainda com muitos pontos com oportunidade de evolução e outros tratados como hipótese até acumular runs. Fique à vontade para propor melhorias e sugestões.
+
+Não é "mais um spec-driven": o spec é só um estágio. O que tem dentro:
+
+- 🔗 **Pipeline ponta a ponta** — discovery → conceituação → doc funcional → spec → implementação → review, um agente por estágio (cada um se conecta ao próximo).
+- 🚦 **Gates calibrados por risco** — alto risco pede confirmação item a item; "ok" genérico não fecha.
+- 🤝 **Handoff por protocolos, ferramentas e arquivos — independente de LLM/conta/sessão** — o bastão entre etapas é por **protocolos automáticos de output no repo git**, não o contexto da conversa. A construção e a evolução do produto não ficam presas a uma LLM, conta ou app: **multi-LLM, multi-conta e múltiplos usuários** podem assumir etapas diferentes do mesmo fluxo.
+- 🏗️ **Scaffold por perfil** — gera `CLAUDE.md` + `docs/` a partir de templates vivos (`cli`/`ssr`).
+
+Além disso, o que faz ele ser um pacote de _product runner_ pra valer:
+
+- 🔁 **Método versionado com migrations** — `npx product-runner update` propaga melhorias do processo pra projetos já existentes (não é "instale uma vez").
+- 🧠 **Processo auto-evolutivo** — cada estágio deixa um rastro factual por incremento; o **Review.LLM** lê esse rastro e corrige o próprio pipeline quando uma falha reincide.
 
 ## Estrutura
 
