@@ -1,7 +1,7 @@
 {
   "name": "product-runner",
   "version": "0.5.4",
-  "description": "Scaffold de docs para projetos TypeScript com desenvolvimento assistido por AI: gera CLAUDE.md + docs/ a partir de templates vivos (common + perfil cli/ssr).",
+  "description": "Harness, agentes e runners que conduzem a construção e a evolução de um produto assistido por IA — do discovery à aprovação da arquitetura. Método versionado (migrations) e auto-evolutivo.",
   "type": "module",
   "repository": {
     "type": "git",
