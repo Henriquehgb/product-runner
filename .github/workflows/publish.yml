@@ -1,0 +1,48 @@
+name: Publish to npm
+
+# Dispara em todo push na main (merge de PR = push). Publica SÓ quando a versão
+# do package.json difere da publicada no npm — então merge sem bump (ex.: doc)
+# roda os testes mas não tenta republicar (que falharia).
+on:
+  push:
+    branches: [main]
+
+# evita dois publishes correndo em paralelo
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # necessário para provenance (supply-chain)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Publish if version changed
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          LOCAL=$(node -p "require('./package.json').version")
+          REMOTE=$(npm view "$NAME" version 2>/dev/null || echo "none")
+          echo "package=$NAME local=$LOCAL npm=$REMOTE"
+          if [ "$LOCAL" = "$REMOTE" ]; then
+            echo "Versão $LOCAL já está no npm — nada a publicar."
+          else
+            echo "Publicando $LOCAL (npm tem $REMOTE)…"
+            npm publish --provenance --access public
+          fi
