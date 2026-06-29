@@ -1,6 +1,6 @@
 {
   "name": "product-runner",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Harness, agentes e runners que conduzem a construção e a evolução de um produto assistido por IA — do discovery à aprovação da arquitetura. Método versionado (migrations) e auto-evolutivo.",
   "type": "module",
   "repository": {
