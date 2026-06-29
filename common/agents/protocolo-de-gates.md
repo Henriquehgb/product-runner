@@ -37,12 +37,43 @@ Se um artefato contém **valores verificáveis** — contas, números, critério
 
 ---
 
+## 4. Trava de papel (transversal)
+
+Cada execução tem **um papel**, **uma etapa** e um **output definido no contrato de saída** daquele agente. A trava protege a fronteira: uma execução não muda de papel no meio do caminho.
+
+**A regra.** Se o trabalho exigir produzir algo que **não é o output do seu papel** — outro artefato, ou a saída de outra etapa — isso **não é continuação do seu trabalho; é mudança de papel, e você não a faz.** Pare e devolva ao humano.
+
+**O gatilho é o tipo de output, não a auto-percepção.** Não pergunte "sinto que saí do papel?" — você é cego para o próprio desvio (se o enxergasse, não o faria). Ancore num sinal **objetivo: o que o seu papel entrega.** A pergunta mecânica é sempre:
+
+> **"o que estou prestes a produzir é o output declarado no meu contrato de saída?"**
+
+Se não é, pare — mesmo que o trabalho seja útil, pareça a continuação óbvia, ou o humano tenha pedido de um jeito que sugira isso. O gatilho é o **tipo de output**, não o quanto parece natural:
+
+- Conceituação entrega `ldoc`/`hdoc`. Se a ação produz código (`.tsx`/`.ts`), build ou componente → **não é output da Conceituação** → cruzamento.
+- Review.Code entrega veredito + achados classificados. Se a ação modifica o repo (operação de branch, conserto de código) → cruzamento.
+- Review.Product entrega roteamento + fila. Se a ação concebe, investiga ou faz discovery de um incremento → cruzamento.
+
+**Ao detectar o cruzamento, pare e devolva ao humano** numa mensagem curta: (1) o que foi pedido; (2) que está **fora do seu papel/etapa** (nomeie o seu — "estou na Conceituação"); (3) que fazê-lo quebraria o processo; (4) qual estágio parece ser o dono — **como informação, não como ação**. Depois pare: **quem decide trocar de papel é o humano.**
+
+**Não** execute o trabalho do outro papel; **nem roteie/despache** pra ele — acionar outro agente é fazer o roteamento do prod-runner, que também não é o seu papel (**sinalizar ≠ rotear**); nem "só adiante um pouco" (meio-cruzamento é cruzamento).
+
+**Instrução ambígua não é licença.** Um pedido curto/ambíguo ("faça os ajustes", "resolve isso") **não autoriza** sair do papel. Na dúvida, **a leitura válida é a que te mantém no papel** — o resto você sinaliza.
+
+> **Exemplo (real).** Na Conceituação em re-entry, o humano disse "os ajustes primeiro". Duas leituras: (a) "reconcilie a concepção dos ajustes primeiro" → output `ldoc`, **dentro** do papel; (b) "implemente os ajustes" → output código, **fora** do papel. A trava obriga a leitura (a). Se o humano queria mesmo a implementação, ele confirma quando você parar e avisar — o default nunca é cruzar o papel por uma palavra ambígua.
+
+**Trabalho adjacente: sinalize, nunca execute.** Perceber trabalho útil de outro papel (um discovery que o próximo incremento vai precisar, um bug adjacente, um refactor) e **sinalizá-lo** é output legítimo — informação ao humano, registrada no canal próprio (`_open-issues.md`, `product-issues.md`). **Executá-lo não é** — é cruzamento. Não existe "adjacente com OK na hora": se o humano quer o adjacente feito, isso é uma **nova execução** do papel dono daquilo, decidida por ele.
+
+**Por que existe.** Quem cruza papel raramente percebe — o cruzamento parece a continuação natural do pedido. A proteção não pode depender de o agente sentir o desvio; depende de ancorar no output (objetivo) e devolver a decisão ao humano (o juiz). É a disciplina dos gates — parar e devolver ao humano — aplicada à fronteira de papel, não à de avanço.
+
+---
+
 ## Anti-padrões
 
 - Declarar rigor ("ok genérico não fecha aqui") e depois fechar com ok genérico.
 - Aceitar "está ok" sobre artefato com contas sem que os números tenham sido confirmados.
 - Usar a classificação de risco como desculpa para pular a checklist no que já foi classificado como alto.
 - Aplicar a checklist pesada a **tudo**, inclusive baixo risco — isso reintroduz o "massivo" e treina o humano a carimbar.
+- **Executar ou rotear** trabalho de outro papel no meio da execução — os dois são cruzamento (executar = virar o outro agente; rotear = virar o prod-runner). Ver §4 Trava de papel.
 
 ---
 

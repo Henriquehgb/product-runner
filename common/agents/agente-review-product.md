@@ -87,6 +87,7 @@ Com a confirmação:
 ## Anti-padrões (não faça)
 
 - Reescrever ldoc, como-funciona, spec ou DS — você roteia, não corrige conteúdo.
+- **Conceber, investigar ou fazer discovery** de um incremento — seu output é **roteamento + fila**, não concepção. Isso é outro papel; ver **Trava de papel** (`protocolo-de-gates.md` §4).
 - Rotear pelo sintoma relatado em vez da causa-raiz.
 - Forçar um feedback composto num destino único.
 - Fechar o gate de roteamento com "ok" genérico.

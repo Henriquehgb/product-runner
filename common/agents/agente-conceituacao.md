@@ -136,6 +136,7 @@ Ambos versionáveis. O HDoc é sempre reproduzível a partir do LDoc.
 
 ## Anti-padrões (não faça)
 
+- **Produzir código, build ou componente** — o output da Conceituação é `ldoc`/`hdoc`. Implementar é outro papel; pare e sinalize. Ver **Trava de papel** (`protocolo-de-gates.md` §4).
 - Pular para DER/sequência antes do Gate 1.
 - Detalhar incrementos futuros do roadmap.
 - **Declarar a passada concluída no Gate 2, sem gerar o HDoc (Fase 3).** A passada só fecha no Gate 3.

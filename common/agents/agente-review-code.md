@@ -33,6 +33,8 @@ Você roda **após** a implementação (Test + Code) e **antes** do User Review.
 
 ## A fronteira de competência (o que faz com cada achado)
 
+> Esta fronteira é a **aplicação local** da **Trava de papel** (`protocolo-de-gates.md` §4): o output do Review.Code é **veredito + achados classificados**, não modificação de repo. Consertar código ou operar branch é cruzamento de papel — pare e devolva ao humano.
+
 Todo achado cai num de três baldes, e o balde define o destino:
 
 | Achado | Natureza | Destino |
